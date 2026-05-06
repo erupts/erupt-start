@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>start.erupt.xyz — Bootstrap your Erupt project</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.4.21/vue.global.prod.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+  <style>
+    :root {
+      --primary: #7c3aed;
+      --primary-hover: #6d28d9;
+      --primary-light: #ede9fe;
+      --primary-border: #c4b5fd;
+      --bg: #f8fafc;
+      --surface: #fff;
+      --border: #e2e8f0;
+      --text: #0f172a;
+      --muted: #64748b;
+      --light: #94a3b8;
+      --r: 8px;
+      --rl: 12px;
+      --sh: 0 1px 3px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.05);
+      --shmd: 0 4px 6px -1px rgba(0,0,0,.07),0 2px 4px rgba(0,0,0,.05);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); font-size: 14px; min-height: 100vh; }
+
+    /* Header */
+    header { background: var(--surface); border-bottom: 1px solid var(--border); height: 56px; padding: 0 32px; display: flex; align-items: center; gap: 10px; box-shadow: var(--sh); }
+    .logo { font-size: 21px; font-weight: 800; color: var(--primary); text-decoration: none; display: flex; align-items: center; gap: 8px; }
+    .logo-badge { font-size: 11px; font-weight: 600; background: var(--primary-light); color: var(--primary); padding: 2px 7px; border-radius: 20px; }
+    header nav { margin-left: auto; display: flex; gap: 20px; }
+    header nav a { color: var(--muted); text-decoration: none; font-size: 13px; font-weight: 500; transition: color .15s; }
+    header nav a:hover { color: var(--primary); }
+
+    /* Layout */
+    .page { max-width: 1100px; margin: 0 auto; padding: 30px 24px 80px; }
+    .subtitle { color: var(--muted); font-size: 13px; margin-bottom: 26px; }
+    .cols { display: grid; grid-template-columns: 330px 1fr; gap: 22px; align-items: start; }
+    @media (max-width: 740px) { .cols { grid-template-columns: 1fr; } }
+
+    /* Card */
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--rl); box-shadow: var(--sh); overflow: hidden; margin-bottom: 20px; }
+    .card:last-child { margin-bottom: 0; }
+    .card-head { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); padding: 13px 18px; border-bottom: 1px solid var(--border); background: #fafafa; }
+    .card-body { padding: 18px; }
+
+    /* Field */
+    .field { margin-bottom: 18px; }
+    .field:last-child { margin-bottom: 0; }
+    .field-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin-bottom: 7px; }
+    .toggles { display: flex; gap: 6px; flex-wrap: wrap; }
+    .tbtn { padding: 7px 15px; border: 1.5px solid var(--border); border-radius: 6px; background: var(--surface); color: var(--text); font-size: 13px; font-weight: 500; cursor: pointer; transition: all .15s; user-select: none; }
+    .tbtn:hover { border-color: var(--primary); color: var(--primary); }
+    .tbtn.on { background: var(--primary-light); border-color: var(--primary); color: var(--primary); font-weight: 600; }
+
+    /* Inputs */
+    .igroup { margin-bottom: 12px; }
+    .igroup:last-child { margin-bottom: 0; }
+    .ilabel { font-size: 12px; font-weight: 500; color: var(--muted); margin-bottom: 4px; display: block; }
+    input[type=text] { width: 100%; padding: 8px 11px; border: 1.5px solid var(--border); border-radius: 6px; font-size: 13px; color: var(--text); background: var(--surface); outline: none; transition: border-color .15s; font-family: 'SF Mono','Fira Code',monospace; }
+    input[type=text]:focus { border-color: var(--primary); }
+
+    /* Module grid */
+    .mods-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 9px; padding: 14px; }
+    .mod { border: 1.5px solid var(--border); border-radius: 8px; padding: 11px 13px; cursor: pointer; transition: all .15s; user-select: none; position: relative; }
+    .mod:hover { border-color: var(--primary-border); background: #faf8ff; }
+    .mod.on { border-color: var(--primary); background: var(--primary-light); }
+    .mod.on::after { content: '✓'; position: absolute; top: 7px; right: 9px; color: var(--primary); font-size: 11px; font-weight: 700; }
+    .mod-icon { font-size: 19px; margin-bottom: 5px; }
+    .mod-name { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
+    .mod-desc { font-size: 11px; color: var(--muted); line-height: 1.4; }
+    .mod-tag { display: inline-block; font-size: 10px; font-weight: 600; padding: 1px 6px; border-radius: 10px; margin-top: 4px; background: #dcfce7; color: #166534; }
+
+    /* Selected tags */
+    .sel-tags { padding: 2px 14px 14px; display: flex; flex-wrap: wrap; gap: 6px; min-height: 18px; }
+    .sel-tag { display: flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 600; background: var(--primary-light); color: var(--primary); padding: 3px 8px; border-radius: 20px; }
+    .sel-tag button { background: none; border: none; color: var(--primary); cursor: pointer; font-size: 13px; line-height: 1; padding: 0; opacity: .7; }
+    .sel-tag button:hover { opacity: 1; }
+    .hint { font-size: 12px; color: var(--light); font-style: italic; }
+
+    /* Divider / misc */
+    .hr { height: 1px; background: var(--border); margin: 14px 0; }
+    .sample-row { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); cursor: pointer; user-select: none; }
+    .sample-row input { cursor: pointer; accent-color: var(--primary); width: 14px; height: 14px; }
+    code { font-size: 11px; background: #f1f5f9; padding: 1px 5px; border-radius: 3px; font-family: 'SF Mono',monospace; }
+    .ver-row { display: flex; gap: 8px; flex-wrap: wrap; }
+    .ver-badge { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; color: var(--muted); background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 3px 10px; }
+    .dot { width: 6px; height: 6px; background: #22c55e; border-radius: 50%; }
+
+    /* Action bar */
+    .bar { position: fixed; bottom: 0; left: 0; right: 0; background: var(--surface); border-top: 1px solid var(--border); padding: 13px 32px; display: flex; align-items: center; justify-content: center; gap: 12px; box-shadow: 0 -4px 12px rgba(0,0,0,.06); z-index: 100; }
+    .btn { display: inline-flex; align-items: center; gap: 6px; padding: 9px 22px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; border: none; transition: all .15s; }
+    .btn-p { background: var(--primary); color: #fff; }
+    .btn-p:hover { background: var(--primary-hover); transform: translateY(-1px); box-shadow: var(--shmd); }
+    .btn-p:active { transform: none; }
+    .btn-s { background: var(--surface); color: var(--text); border: 1.5px solid var(--border); }
+    .btn-s:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-light); }
+    .hint-kbd { font-size: 11px; color: var(--muted); }
+    kbd { background: var(--border); border-radius: 3px; padding: 1px 5px; font-size: 10px; font-family: monospace; }
+
+    /* Modal */
+    .overlay { position: fixed; inset: 0; background: rgba(0,0,0,.5); display: flex; align-items: center; justify-content: center; z-index: 200; padding: 20px; }
+    .modal { background: var(--surface); border-radius: var(--rl); box-shadow: 0 20px 40px rgba(0,0,0,.15); width: 100%; max-width: 820px; max-height: 86vh; display: flex; flex-direction: column; overflow: hidden; }
+    .modal-head { display: flex; align-items: center; padding: 14px 18px; border-bottom: 1px solid var(--border); gap: 10px; }
+    .modal-head h3 { font-size: 15px; font-weight: 600; flex: 1; }
+    .mclose { background: none; border: none; font-size: 20px; cursor: pointer; color: var(--muted); line-height: 1; padding: 4px; }
+    .mclose:hover { color: var(--text); }
+    .modal-body { display: flex; flex: 1; overflow: hidden; }
+    .ftree { width: 200px; border-right: 1px solid var(--border); padding: 8px 0; overflow-y: auto; flex-shrink: 0; }
+    .fdir { padding: 10px 14px 4px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--light); }
+    .fitem { padding: 6px 14px; font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 5px; color: var(--muted); transition: background .1s; font-family: 'SF Mono','Fira Code',monospace; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .fitem:hover { background: var(--bg); }
+    .fitem.on { background: var(--primary-light); color: var(--primary); font-weight: 500; }
+    .fitem.indent { padding-left: 26px; }
+    .fcontent { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+    .fcontent-head { padding: 9px 14px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+    .fcontent-head span { font-size: 12px; color: var(--muted); font-family: monospace; }
+    .fcontent pre { flex: 1; overflow: auto; padding: 14px; font-size: 12px; font-family: 'SF Mono','Fira Code','Menlo',monospace; line-height: 1.6; color: var(--text); background: #fafafa; white-space: pre; }
+    .btn-sm { font-size: 11px; padding: 4px 10px; border-radius: 4px; border: 1px solid var(--border); background: var(--surface); cursor: pointer; color: var(--muted); font-weight: 500; }
+    .btn-sm:hover { border-color: var(--primary); color: var(--primary); }
+  </style>
+</head>
+<body>
+<div id="app">
+
+  <header>
+    <a class="logo" href="/">🦞 erupt <span class="logo-badge">start</span></a>
+    <nav>
+      <a href="https://www.erupt.xyz" target="_blank">Website</a>
+      <a href="https://www.yuque.com/erupts/erupt" target="_blank">Docs</a>
+      <a href="https://github.com/erupts/erupt" target="_blank">GitHub ★</a>
+    </nav>
+  </header>
+
+  <div class="page">
+    <p class="subtitle">Generate a pre-configured Erupt + Spring Boot project. Pick your options and hit Generate.</p>
+
+    <div class="cols">
+
+      <!-- Left -->
+      <div>
+        <div class="card">
+          <div class="card-head">Project</div>
+          <div class="card-body">
+            <div class="field">
+              <div class="field-label">Build Tool</div>
+              <div class="toggles">
+                <button class="tbtn" :class="{on: form.build==='maven'}"    @click="form.build='maven'">Maven</button>
+                <button class="tbtn" :class="{on: form.build==='gradle'}"   @click="form.build='gradle'">Gradle (Kotlin)</button>
+              </div>
+            </div>
+            <div class="field">
+              <div class="field-label">Java</div>
+              <div class="toggles">
+                <button class="tbtn" :class="{on: form.java==='17'}" @click="form.java='17'">17</button>
+                <button class="tbtn" :class="{on: form.java==='21'}" @click="form.java='21'">21</button>
+              </div>
+            </div>
+            <div class="field">
+              <div class="field-label">Database</div>
+              <div class="toggles">
+                <button class="tbtn" :class="{on: form.db===k}" @click="form.db=k" v-for="(v,k) in DB" :key="k">{{ k.toUpperCase() }}</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-head">Metadata</div>
+          <div class="card-body">
+            <div class="igroup">
+              <label class="ilabel">Group</label>
+              <input type="text" v-model="form.group" spellcheck="false" autocomplete="off" @input="syncPkg" />
+            </div>
+            <div class="igroup">
+              <label class="ilabel">Artifact</label>
+              <input type="text" v-model="form.artifact" spellcheck="false" autocomplete="off" @input="onArtifact" />
+            </div>
+            <div class="igroup">
+              <label class="ilabel">Name</label>
+              <input type="text" v-model="form.name" spellcheck="false" autocomplete="off" @input="nameEdited=true" />
+            </div>
+            <div class="igroup">
+              <label class="ilabel">Package name</label>
+              <input type="text" v-model="form.pkg" spellcheck="false" autocomplete="off" @input="pkgEdited=true" />
+            </div>
+            <div class="igroup">
+              <label class="ilabel">Version</label>
+              <input type="text" v-model="form.version" spellcheck="false" autocomplete="off" />
+            </div>
+            <div class="hr"></div>
+            <label class="sample-row">
+              <input type="checkbox" v-model="form.sample" />
+              Include sample <code>@Erupt</code> entity
+            </label>
+          </div>
+        </div>
+
+        <div class="ver-row">
+          <div class="ver-badge"><span class="dot"></span> Erupt {{ ERUPT_VER }}</div>
+          <div class="ver-badge"><span class="dot"></span> Spring Boot {{ BOOT_VER }}</div>
+        </div>
+      </div>
+
+      <!-- Right -->
+      <div class="card" style="margin-bottom:0">
+        <div class="card-head">
+          Modules
+          <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--light);margin-left:4px;">— click to add</span>
+        </div>
+        <div class="mods-grid">
+          <div class="mod" :class="{on: selectedMods.includes(m.id)}" v-for="m in MODULES" :key="m.id" @click="toggleMod(m.id)">
+            <div class="mod-icon">{{ m.icon }}</div>
+            <div class="mod-name">{{ m.name }}</div>
+            <div class="mod-desc">{{ m.desc }}</div>
+            <span class="mod-tag" v-if="m.tag">{{ m.tag }}</span>
+          </div>
+        </div>
+        <div style="padding:4px 14px 5px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);">Selected</div>
+        <div class="sel-tags">
+          <span class="hint" v-if="selectedMods.length===0">No extra modules — core only</span>
+          <span class="sel-tag" v-for="id in selectedMods" :key="id">
+            {{ MODULES.find(m=>m.id===id)?.icon }} {{ MODULES.find(m=>m.id===id)?.name || id }}
+            <button @click.stop="toggleMod(id)">×</button>
+          </span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Action bar -->
+  <div class="bar">
+    <span class="hint-kbd">Press <kbd>⌘</kbd><kbd>↵</kbd> to generate</span>
+    <button class="btn btn-s" @click="openExplore">🔍 Explore</button>
+    <button class="btn btn-p" @click="generate">⬇ Generate</button>
+  </div>
+
+  <!-- Explore modal -->
+  <div class="overlay" v-if="modal.open" @click.self="modal.open=false">
+    <div class="modal">
+      <div class="modal-head">
+        <h3>{{ form.artifact }} — project preview</h3>
+        <button class="btn-sm" @click="generate">⬇ Download</button>
+        <button class="mclose" @click="modal.open=false">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="ftree">
+          <template v-for="(entry, i) in treeEntries" :key="i">
+            <div class="fdir" v-if="entry.type==='dir'">📁 {{ entry.label }}</div>
+            <div class="fitem" :class="{on: modal.activeFile===entry.path, indent: entry.indent}"
+                 v-else @click="modal.activeFile=entry.path">
+              {{ fileIcon(entry.path) }} {{ entry.label }}
+            </div>
+          </template>
+        </div>
+        <div class="fcontent">
+          <div class="fcontent-head">
+            <span>{{ modal.activeFile }}</span>
+            <button class="btn-sm" @click="copyFile">{{ modal.copied ? 'Copied!' : 'Copy' }}</button>
+          </div>
+          <pre>{{ previewFiles[modal.activeFile] }}</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const { createApp, reactive, ref, computed, watch, onMounted } = Vue;
+
+const ERUPT_VER = '1.14.2';
+const BOOT_VER  = '3.4.5';
+
+const MODULES = [
+  { id: 'erupt-ai',           name: 'AI',          icon: '🤖', desc: 'Integrate 50+ LLMs: GPT, Claude, DeepSeek…',     tag: 'NEW' },
+  { id: 'erupt-ai-claw',      name: 'AI Claw',     icon: '🦞', desc: 'Control your server via natural language',        tag: 'NEW', requires: 'erupt-ai' },
+  { id: 'erupt-job',          name: 'Job',         icon: '⏱',  desc: 'Scheduled task management (Quartz-backed)' },
+  { id: 'erupt-monitor',      name: 'Monitor',     icon: '📡', desc: 'Dashboard: CPU, memory, disk, JVM metrics' },
+  { id: 'erupt-notice',       name: 'Notice',      icon: '🔔', desc: 'In-app notifications with email support' },
+  { id: 'erupt-terminal',     name: 'Terminal',    icon: '💻', desc: 'Web SSH / shell terminal in the admin UI' },
+  { id: 'erupt-websocket',    name: 'WebSocket',   icon: '⚡', desc: 'Real-time interaction via WebSocket' },
+  { id: 'erupt-tpl',          name: 'TPL',         icon: '🎨', desc: 'Custom page template framework' },
+  { id: 'erupt-generator',    name: 'Generator',   icon: '⚙️', desc: 'Assisted code generation IDE' },
+  { id: 'erupt-magic-api',    name: 'Magic API',   icon: '🪄', desc: 'Online API development IDE' },
+  { id: 'erupt-print',        name: 'Print',       icon: '🖨',  desc: 'Print plugin for @Erupt entities' },
+  { id: 'erupt-cloud-server', name: 'Cloud',       icon: '☁️', desc: 'Distributed cloud-native cluster support' },
+];
+
+const DB = {
+  h2: {
+    mvn:    `        <dependency>\n            <groupId>com.h2database</groupId>\n            <artifactId>h2</artifactId>\n            <scope>runtime</scope>\n        </dependency>`,
+    gradle: `    runtimeOnly("com.h2database:h2")`,
+    yml: a => `spring:\n  datasource:\n    url: jdbc:h2:file:./${a};AUTO_SERVER=TRUE;MODE=MySQL;CASE_INSENSITIVE_IDENTIFIERS=TRUE\n    driver-class-name: org.h2.Driver\n    username: sa\n    password:\n  jpa:\n    show-sql: false\n    generate-ddl: true\n    database: h2\n    properties:\n      hibernate:\n        globally_quoted_identifiers: true\n        type.enumeration.use_named: false`,
+  },
+  mysql: {
+    mvn:    `        <dependency>\n            <groupId>com.mysql</groupId>\n            <artifactId>mysql-connector-j</artifactId>\n            <scope>runtime</scope>\n        </dependency>`,
+    gradle: `    runtimeOnly("com.mysql:mysql-connector-j")`,
+    yml: a => `spring:\n  datasource:\n    url: jdbc:mysql://localhost:3306/${a}?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai\n    driver-class-name: com.mysql.cj.jdbc.Driver\n    username: root\n    password:\n  jpa:\n    show-sql: false\n    generate-ddl: true\n    database: mysql\n    properties:\n      hibernate:\n        globally_quoted_identifiers: true\n        type.enumeration.use_named: false`,
+  },
+  postgresql: {
+    mvn:    `        <dependency>\n            <groupId>org.postgresql</groupId>\n            <artifactId>postgresql</artifactId>\n            <scope>runtime</scope>\n        </dependency>`,
+    gradle: `    runtimeOnly("org.postgresql:postgresql")`,
+    yml: a => `spring:\n  datasource:\n    url: jdbc:postgresql://localhost:5432/${a}\n    driver-class-name: org.postgresql.Driver\n    username: postgres\n    password:\n  jpa:\n    show-sql: false\n    generate-ddl: true\n    database: postgresql\n    properties:\n      hibernate:\n        globally_quoted_identifiers: true\n        type.enumeration.use_named: false`,
+  },
+};
+
+createApp({
+  setup() {
+    const form = reactive({
+      build: 'maven', java: '17', db: 'h2',
+      group: 'com.example', artifact: 'demo', name: 'Demo',
+      pkg: 'com.example.demo', version: '0.0.1-SNAPSHOT',
+      sample: true,
+    });
+
+    const selectedMods = ref([]);
+    const pkgEdited  = ref(false);
+    const nameEdited = ref(false);
+
+    const modal = reactive({ open: false, activeFile: '', copied: false });
+
+    // ── helpers ──────────────────────────────────
+    function toClass(name) {
+      return name.replace(/[^a-zA-Z0-9 ]/g,' ').split(/\s+/).filter(Boolean)
+        .map(w => w[0].toUpperCase() + w.slice(1)).join('');
+    }
+    function pkgToPath(pkg) { return pkg.split('.').join('/'); }
+
+    // ── metadata sync ─────────────────────────────
+    function syncPkg() {
+      if (pkgEdited.value) return;
+      const a = form.artifact.replace(/-/g,'').toLowerCase();
+      if (form.group && a) form.pkg = form.group + '.' + a;
+    }
+    function onArtifact() {
+      syncPkg();
+      if (!nameEdited.value)
+        form.name = form.artifact ? form.artifact[0].toUpperCase() + form.artifact.slice(1) : '';
+    }
+
+    // ── module toggle ─────────────────────────────
+    function toggleMod(id) {
+      const arr = selectedMods.value;
+      const idx = arr.indexOf(id);
+      if (idx > -1) {
+        arr.splice(idx, 1);
+        // remove dependents
+        MODULES.forEach(m => {
+          if (m.requires === id) {
+            const di = arr.indexOf(m.id);
+            if (di > -1) arr.splice(di, 1);
+          }
+        });
+      } else {
+        const mod = MODULES.find(m => m.id === id);
+        if (mod?.requires && !arr.includes(mod.requires)) arr.push(mod.requires);
+        arr.push(id);
+      }
+    }
+
+    // ── template renderers ────────────────────────
+    function renderPom() {
+      const modDeps = selectedMods.value.map(id =>
+`        <dependency>
+            <groupId>xyz.erupt</groupId>
+            <artifactId>${id}</artifactId>
+            <version>${ERUPT_VER}</version>
+        </dependency>`).join('\n');
+
+      return `<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>${BOOT_VER}</version>
+        <relativePath/>
+    </parent>
+
+    <groupId>${form.group}</groupId>
+    <artifactId>${form.artifact}</artifactId>
+    <version>${form.version}</version>
+    <name>${form.name}</name>
+    <description>Erupt project — ${form.name}</description>
+
+    <properties>
+        <java.version>${form.java}</java.version>
+    </properties>
+
+    <dependencies>
+        <!-- Erupt core (UPMS, JPA, security) -->
+        <dependency>
+            <groupId>xyz.erupt</groupId>
+            <artifactId>erupt-admin</artifactId>
+            <version>${ERUPT_VER}</version>
+        </dependency>
+        <!-- Erupt frontend (Angular UI bundled in JAR) -->
+        <dependency>
+            <groupId>xyz.erupt</groupId>
+            <artifactId>erupt-web</artifactId>
+            <version>${ERUPT_VER}</version>
+        </dependency>
+${modDeps ? modDeps + '\n\n' : ''}        <!-- Database -->
+${DB[form.db].mvn}
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>`;
+    }
+
+    function renderGradle() {
+      const modDeps = selectedMods.value.map(id =>
+        `    implementation("xyz.erupt:${id}:${ERUPT_VER}")`).join('\n');
+      return `plugins {
+    id("org.springframework.boot") version "${BOOT_VER}"
+    id("io.spring.dependency-management") version "1.1.7"
+    java
+}
+
+group = "${form.group}"
+version = "${form.version}"
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(${form.java})
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation("xyz.erupt:erupt-admin:${ERUPT_VER}")
+    implementation("xyz.erupt:erupt-web:${ERUPT_VER}")
+${modDeps ? modDeps + '\n' : ''}    ${DB[form.db].gradle}
+
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+}
+
+tasks.withType<Test> {
+    useJUnitPlatform()
+}`;
+    }
+
+    function renderYml() {
+      return `${DB[form.db].yml(form.artifact)}\n\nserver:\n  port: 8080\n\nerupt:\n  upms:\n    default-account: erupt\n    default-password: erupt`;
+    }
+
+    function renderApp() {
+      const cls = toClass(form.name) + 'Application';
+      return `package ${form.pkg};
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
+import xyz.erupt.core.annotation.EruptScan;
+
+@SpringBootApplication
+@EruptScan
+@EntityScan
+public class ${cls} {
+
+    public static void main(String[] args) {
+        SpringApplication.run(${cls}.class, args);
+    }
+
+}`;
+    }
+
+    function renderSample() {
+      const isMongo = form.db === 'mongodb';
+      return `package ${form.pkg}.model;
+
+import lombok.Getter;
+import lombok.Setter;
+import xyz.erupt.annotation.Erupt;
+import xyz.erupt.annotation.EruptField;
+import xyz.erupt.annotation.sub_erupt.Power;
+import xyz.erupt.annotation.sub_field.Edit;
+import xyz.erupt.annotation.sub_field.View;
+import xyz.erupt.annotation.sub_field.sub_edit.Search;
+${isMongo ? '' : 'import jakarta.persistence.Entity;\nimport jakarta.persistence.Table;\n'}import ${isMongo ? 'xyz.erupt.mongodb.model.BaseModel' : 'xyz.erupt.jpa.model.BaseModel'};
+
+import java.util.Date;
+
+@Erupt(name = "Sample", power = @Power(export = true, importable = true))
+${isMongo ? '' : '@Table(name = "t_sample")\n@Entity\n'}@Getter
+@Setter
+public class SampleModel extends BaseModel {
+
+    @EruptField(
+            views = @View(title = "Name"),
+            edit = @Edit(title = "Name", notNull = true, search = @Search(vague = true))
+    )
+    private String name;
+
+    @EruptField(
+            views = @View(title = "Description"),
+            edit = @Edit(title = "Description")
+    )
+    private String description;
+
+    @EruptField(
+            views = @View(title = "Active"),
+            edit = @Edit(title = "Active", search = @Search)
+    )
+    private Boolean active = true;
+
+    @EruptField(
+            views = @View(title = "Date", sortable = true),
+            edit = @Edit(title = "Date", search = @Search(vague = true))
+    )
+    private Date date;
+
+}`;
+    }
+
+    function renderGitignore() {
+      return `target/\nbuild/\n.gradle/\n!.mvn/wrapper/maven-wrapper.jar\n\n.idea/\n*.iml\n.vscode/\n\n# Erupt runtime\n.erupt/\n*.mv.db\n*.trace.db\n\n.DS_Store\nThumbs.db`;
+    }
+
+    function renderReadme() {
+      const run = form.build === 'maven' ? '```bash\nmvn spring-boot:run\n```' : '```bash\n./gradlew bootRun\n```';
+      return `# ${form.name}
+
+> Generated by [start.erupt.xyz](https://start.erupt.xyz)
+
+## Quick Start
+
+${run}
+
+Open [http://localhost:8080](http://localhost:8080) — login: \`erupt / erupt\`
+
+## Stack
+
+- Java ${form.java} · Spring Boot ${BOOT_VER} · Erupt ${ERUPT_VER}
+- Database: ${form.db.toUpperCase()}${selectedMods.value.length ? '\n- Modules: ' + selectedMods.value.join(', ') : ''}
+
+## Docs
+
+[https://www.yuque.com/erupts/erupt](https://www.yuque.com/erupts/erupt)
+`;
+    }
+
+    // ── file map ──────────────────────────────────
+    const previewFiles = computed(() => {
+      const pp  = pkgToPath(form.pkg);
+      const cls = toClass(form.name) + 'Application';
+      const bf  = form.build === 'maven' ? 'pom.xml' : 'build.gradle.kts';
+      const files = {
+        [bf]:                                         form.build === 'maven' ? renderPom() : renderGradle(),
+        'src/main/resources/application.yml':         renderYml(),
+        [`src/main/java/${pp}/${cls}.java`]:          renderApp(),
+        '.gitignore':                                 renderGitignore(),
+        'README.md':                                  renderReadme(),
+      };
+      if (form.sample)
+        files[`src/main/java/${pp}/model/SampleModel.java`] = renderSample();
+      return files;
+    });
+
+    // ── tree builder ──────────────────────────────
+    const treeEntries = computed(() => {
+      const entries = [];
+      const roots = [], byDir = {};
+      Object.keys(previewFiles.value).forEach(path => {
+        const parts = path.split('/');
+        if (parts.length === 1) { roots.push(path); return; }
+        const dir = parts.slice(0, -1).join('/');
+        (byDir[dir] = byDir[dir] || []).push(path);
+      });
+      roots.forEach(f => entries.push({ type: 'file', path: f, label: f, indent: false }));
+      Object.entries(byDir).forEach(([dir, files]) => {
+        entries.push({ type: 'dir', label: dir.split('/').slice(-2).join('/') });
+        files.forEach(f => entries.push({ type: 'file', path: f, label: f.split('/').pop(), indent: true }));
+      });
+      return entries;
+    });
+
+    function fileIcon(name) {
+      if (name.endsWith('.xml') || name.endsWith('.kts')) return '📦';
+      if (name.endsWith('.yml'))  return '⚙️';
+      if (name.endsWith('.java')) return '☕';
+      if (name === '.gitignore')  return '🙈';
+      if (name.endsWith('.md'))   return '📝';
+      return '📄';
+    }
+
+    // ── explore ───────────────────────────────────
+    function openExplore() {
+      modal.activeFile = Object.keys(previewFiles.value)[0];
+      modal.open = true;
+    }
+
+    function copyFile() {
+      navigator.clipboard.writeText(previewFiles.value[modal.activeFile] || '');
+      modal.copied = true;
+      setTimeout(() => modal.copied = false, 1500);
+    }
+
+    // ── generate ──────────────────────────────────
+    async function generate() {
+      const zip = new JSZip();
+      const folder = zip.folder(form.artifact);
+      Object.entries(previewFiles.value).forEach(([path, content]) => folder.file(path, content));
+      const blob = await zip.generateAsync({ type: 'blob' });
+      saveAs(blob, `${form.artifact}.zip`);
+    }
+
+    onMounted(() => {
+      document.addEventListener('keydown', e => {
+        if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') generate();
+        if (e.key === 'Escape') modal.open = false;
+      });
+    });
+
+    return {
+      ERUPT_VER, BOOT_VER, MODULES, DB,
+      form, selectedMods, pkgEdited, nameEdited,
+      modal, previewFiles, treeEntries,
+      syncPkg, onArtifact, toggleMod,
+      openExplore, copyFile, generate, fileIcon,
+    };
+  }
+}).mount('#app');
+</script>
+</body>
+</html>

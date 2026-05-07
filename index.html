@@ -7,6 +7,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.4.21/vue.global.prod.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     <style>
         :root {
             --primary: #7c3aed;
@@ -52,22 +54,39 @@
         }
 
         .logo {
-            font-size: 21px;
-            font-weight: 800;
-            color: var(--primary);
             text-decoration: none;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
         }
 
-        .logo-badge {
-            font-size: 11px;
-            font-weight: 600;
-            background: var(--primary-light);
+        .logo-mark {
+            width: 32px;
+            height: 32px;
+            flex-shrink: 0;
+        }
+
+        .logo-text {
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--text);
+            letter-spacing: -0.02em;
+            line-height: 1;
+        }
+
+        .logo-text em {
+            font-style: normal;
             color: var(--primary);
-            padding: 2px 7px;
-            border-radius: 20px;
+        }
+
+        .logo-sub {
+            display: block;
+            font-size: 10px;
+            font-weight: 500;
+            color: var(--muted);
+            letter-spacing: .06em;
+            text-transform: uppercase;
+            margin-top: 2px;
         }
 
         header nav {
@@ -594,8 +613,16 @@
             font-family: 'SF Mono', 'Fira Code', 'Menlo', monospace;
             line-height: 1.6;
             color: var(--text);
-            background: #fafafa;
+            background: #fafafa !important;
             white-space: pre;
+        }
+
+        .fcontent pre code.hljs {
+            padding: 0;
+            background: transparent;
+            font-size: inherit;
+            font-family: inherit;
+            line-height: inherit;
         }
 
         .btn-sm {
@@ -619,7 +646,10 @@
 <div id="app">
 
     <header>
-        <a class="logo" href="/">🚀 ERUPT <span class="logo-badge">start</span></a>
+        <a class="logo" href="/">
+            <img class="logo-mark" src="logo.png" alt="Erupt"/>
+            <span class="logo-text">erupt<em>.xyz</em><span class="logo-sub">Project Generator</span></span>
+        </a>
         <nav>
             <a href="https://www.erupt.xyz" target="_blank">Website</a>
             <a href="https://www.yuque.com/erupts/erupt" target="_blank">Docs</a>
@@ -768,7 +798,7 @@
                         <span>{{ modal.activeFile }}</span>
                         <button class="btn-sm" @click="copyFile">{{ modal.copied ? 'Copied!' : 'Copy' }}</button>
                     </div>
-                    <pre>{{ previewFiles[modal.activeFile] }}</pre>
+                    <pre v-html="highlightedContent"></pre>
                 </div>
             </div>
         </div>
@@ -800,7 +830,6 @@
         {id: 'erupt-tpl', name: 'TPL', icon: '🎨', desc: 'Custom page template framework'},
         {id: 'erupt-generator', name: 'Generator', icon: '⚙️', desc: 'Assisted code generation IDE'},
         {id: 'erupt-magic-api', name: 'Magic API', icon: '🪄', desc: 'Online API development IDE'},
-        {id: 'erupt-print', name: 'Print', icon: '🖨', desc: 'Print plugin for @Erupt entities'},
         {id: 'erupt-cloud-server', name: 'Cloud', icon: '☁️', desc: 'Distributed cloud-native cluster support'},
     ];
 
@@ -1130,6 +1159,27 @@ Open [http://localhost:8080](http://localhost:8080) — login: \`erupt / erupt\`
             }
 
             // ── explore ───────────────────────────────────
+            // ── syntax highlight ──────────────────────────
+            function hlLang(path) {
+                if (!path) return 'plaintext';
+                if (path.endsWith('.java')) return 'java';
+                if (path.endsWith('.xml')) return 'xml';
+                if (path.endsWith('.yml')) return 'yaml';
+                if (path.endsWith('.kts')) return 'kotlin';
+                if (path.endsWith('.md')) return 'markdown';
+                return 'plaintext';
+            }
+
+            const highlightedContent = computed(() => {
+                const content = previewFiles.value[modal.activeFile] || '';
+                const lang = hlLang(modal.activeFile);
+                try {
+                    return hljs.highlight(content, {language: lang}).value;
+                } catch {
+                    return hljs.highlightAuto(content).value;
+                }
+            });
+
             function openExplore() {
                 modal.activeFile = Object.keys(previewFiles.value)[0];
                 modal.open = true;
@@ -1162,7 +1212,7 @@ Open [http://localhost:8080](http://localhost:8080) — login: \`erupt / erupt\`
                 form, selectedMods, pkgEdited, nameEdited,
                 modal, previewFiles, treeEntries,
                 syncPkg, onArtifact, toggleMod,
-                openExplore, copyFile, generate, fileIcon,
+                openExplore, copyFile, generate, fileIcon, highlightedContent,
             };
         }
     }).mount('#app');

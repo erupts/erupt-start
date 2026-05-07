@@ -4,53 +4,47 @@
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>start.erupt.xyz — Bootstrap your Erupt project</title>
+    <link rel="stylesheet" href="https://unpkg.com/element-plus@2.9.1/dist/index.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.4.21/vue.global.prod.min.js"></script>
+    <script src="https://unpkg.com/element-plus@2.9.1/dist/index.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     <style>
         :root {
             --primary: #7c3aed;
-            --primary-hover: #6d28d9;
-            --primary-light: #ede9fe;
-            --primary-border: #c4b5fd;
-            --bg: #f8fafc;
-            --surface: #fff;
-            --border: #e2e8f0;
-            --text: #0f172a;
-            --muted: #64748b;
-            --light: #94a3b8;
-            --r: 8px;
-            --rl: 12px;
-            --sh: 0 1px 3px rgba(0, 0, 0, .08), 0 1px 2px rgba(0, 0, 0, .05);
-            --shmd: 0 4px 6px -1px rgba(0, 0, 0, .07), 0 2px 4px rgba(0, 0, 0, .05);
+            --el-color-primary: #7c3aed;
+            --el-color-primary-light-3: #a78bfa;
+            --el-color-primary-light-5: #c4b5fd;
+            --el-color-primary-light-7: #ddd6fe;
+            --el-color-primary-light-8: #ede9fe;
+            --el-color-primary-light-9: #f5f3ff;
+            --el-color-primary-dark-2: #6d28d9;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+        *, *::before, *::after { box-sizing: border-box; }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-            background: var(--bg);
-            color: var(--text);
+            background: #f0f2f5;
+            color: #1f2937;
             font-size: 14px;
             min-height: 100vh;
         }
 
-        /* Header */
+        /* ── Header ─────────────────────────── */
         header {
-            background: var(--surface);
-            border-bottom: 1px solid var(--border);
-            height: 56px;
-            padding: 0 32px;
+            background: #fff;
+            border-bottom: 1px solid #e5e7eb;
+            height: 60px;
+            padding: 0 36px;
             display: flex;
             align-items: center;
-            gap: 10px;
-            box-shadow: var(--sh);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 1px 4px rgba(0,0,0,.06);
         }
 
         .logo {
@@ -60,335 +54,222 @@
             gap: 10px;
         }
 
-        .logo-mark {
+        .logo img {
             width: 32px;
             height: 32px;
-            flex-shrink: 0;
         }
 
-        .logo-text {
+        .logo-title {
             font-size: 17px;
             font-weight: 700;
-            color: var(--text);
-            letter-spacing: -0.02em;
-            line-height: 1;
+            color: #111827;
+            letter-spacing: -.03em;
+            line-height: 1.1;
         }
 
-        .logo-text em {
-            font-style: normal;
-            color: var(--primary);
-        }
+        .logo-title em { font-style: normal; color: var(--primary); }
 
         .logo-sub {
             display: block;
             font-size: 10px;
             font-weight: 500;
-            color: var(--muted);
-            letter-spacing: .06em;
+            color: #9ca3af;
+            letter-spacing: .05em;
             text-transform: uppercase;
             margin-top: 2px;
         }
 
-        header nav {
-            margin-left: auto;
-            display: flex;
-            gap: 20px;
-        }
+        header nav { margin-left: auto; display: flex; gap: 24px; align-items: center; }
 
         header nav a {
-            color: var(--muted);
+            color: #6b7280;
             text-decoration: none;
             font-size: 13px;
             font-weight: 500;
             transition: color .15s;
         }
 
-        header nav a:hover {
-            color: var(--primary);
-        }
+        header nav a:hover { color: var(--primary); }
 
-        /* Layout */
+        /* ── Page ───────────────────────────── */
         .page {
-            max-width: 1100px;
+            max-width: 1120px;
             margin: 0 auto;
-            padding: 30px 24px 80px;
+            padding: 28px 24px 96px;
         }
 
         .subtitle {
-            color: var(--muted);
-            font-size: 13px;
-            margin-bottom: 26px;
+            font-size: 13.5px;
+            color: #6b7280;
+            margin-bottom: 24px;
         }
 
-        .cols {
+        .layout {
             display: grid;
-            grid-template-columns: 330px 1fr;
-            gap: 22px;
+            grid-template-columns: 340px 1fr;
+            gap: 18px;
             align-items: start;
         }
 
-        @media (max-width: 740px) {
-            .cols {
-                grid-template-columns: 1fr;
-            }
+        @media (max-width: 768px) {
+            .layout { grid-template-columns: 1fr; }
         }
 
-        /* Card */
-        .card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: var(--rl);
-            box-shadow: var(--sh);
+        /* ── Panel ──────────────────────────── */
+        .panel {
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,.05);
             overflow: hidden;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
         }
 
-        .card:last-child {
-            margin-bottom: 0;
-        }
+        .panel:last-child { margin-bottom: 0; }
 
-        .card-head {
-            font-size: 11px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: .08em;
-            color: var(--muted);
-            padding: 13px 18px;
-            border-bottom: 1px solid var(--border);
+        .panel-head {
+            padding: 13px 20px;
+            border-bottom: 1px solid #f3f4f6;
+            font-size: 12.5px;
+            font-weight: 600;
+            color: #374151;
             background: #fafafa;
+            display: flex;
+            align-items: center;
+            gap: 7px;
         }
 
-        .card-body {
-            padding: 18px;
-        }
-
-        /* Field */
-        .field {
-            margin-bottom: 18px;
-        }
-
-        .field:last-child {
-            margin-bottom: 0;
-        }
+        .panel-body { padding: 20px; }
 
         .field-label {
             font-size: 11px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: .06em;
-            color: var(--muted);
-            margin-bottom: 7px;
-        }
-
-        .toggles {
-            display: flex;
-            gap: 6px;
-            flex-wrap: wrap;
-        }
-
-        .tbtn {
-            padding: 7px 15px;
-            border: 1.5px solid var(--border);
-            border-radius: 6px;
-            background: var(--surface);
-            color: var(--text);
-            font-size: 13px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all .15s;
-            user-select: none;
-        }
-
-        .tbtn:hover {
-            border-color: var(--primary);
-            color: var(--primary);
-        }
-
-        .tbtn.on {
-            background: var(--primary-light);
-            border-color: var(--primary);
-            color: var(--primary);
             font-weight: 600;
+            color: #9ca3af;
+            text-transform: uppercase;
+            letter-spacing: .07em;
+            margin-bottom: 9px;
         }
 
-        /* Inputs */
-        .igroup {
-            margin-bottom: 12px;
-        }
+        .field-group { margin-bottom: 18px; }
+        .field-group:last-child { margin-bottom: 0; }
 
-        .igroup:last-child {
-            margin-bottom: 0;
-        }
-
-        .ilabel {
-            font-size: 12px;
-            font-weight: 500;
-            color: var(--muted);
-            margin-bottom: 4px;
-            display: block;
-        }
-
-        input[type=text] {
-            width: 100%;
-            padding: 8px 11px;
-            border: 1.5px solid var(--border);
-            border-radius: 6px;
-            font-size: 13px;
-            color: var(--text);
-            background: var(--surface);
-            outline: none;
-            transition: border-color .15s;
-            font-family: 'SF Mono', 'Fira Code', monospace;
-        }
-
-        input[type=text]:focus {
-            border-color: var(--primary);
-        }
-
-        /* Module grid */
+        /* ── Module grid ────────────────────── */
         .mods-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-columns: repeat(3, 1fr);
             gap: 9px;
             padding: 14px;
         }
 
         .mod {
-            border: 1.5px solid var(--border);
-            border-radius: 8px;
-            padding: 11px 13px;
+            border: 1.5px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 12px 13px;
             cursor: pointer;
             transition: all .15s;
             user-select: none;
             position: relative;
+            background: #fff;
         }
 
         .mod:hover {
-            border-color: var(--primary-border);
+            border-color: #c4b5fd;
             background: #faf8ff;
+            box-shadow: 0 3px 10px rgba(124,58,237,.08);
         }
 
         .mod.on {
             border-color: var(--primary);
-            background: var(--primary-light);
+            background: #f5f3ff;
         }
 
-        .mod.on::after {
-            content: '✓';
+        .mod-check {
             position: absolute;
-            top: 7px;
+            top: 8px;
             right: 9px;
-            color: var(--primary);
-            font-size: 11px;
+            width: 17px;
+            height: 17px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 9px;
             font-weight: 700;
+            line-height: 1;
         }
 
-        .mod-icon {
-            font-size: 19px;
-            margin-bottom: 5px;
-        }
+        .mod.on .mod-check { display: flex; }
+
+        .mod-icon { font-size: 20px; margin-bottom: 5px; }
 
         .mod-name {
-            font-size: 13px;
+            font-size: 12.5px;
             font-weight: 600;
+            color: #111827;
             margin-bottom: 2px;
         }
 
         .mod-desc {
             font-size: 11px;
-            color: var(--muted);
-            line-height: 1.4;
+            color: #9ca3af;
+            line-height: 1.45;
         }
 
-        .mod-tag {
+        .mod-badge {
             display: inline-block;
-            font-size: 10px;
-            font-weight: 600;
-            padding: 1px 6px;
-            border-radius: 10px;
-            margin-top: 4px;
+            font-size: 9px;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 20px;
+            margin-top: 5px;
             background: #dcfce7;
             color: #166534;
+            letter-spacing: .04em;
         }
 
-        /* Selected tags */
-        .sel-tags {
-            padding: 2px 14px 14px;
+        /* ── Selected area ──────────────────── */
+        .sel-area {
+            padding: 4px 14px 14px;
             display: flex;
             flex-wrap: wrap;
             gap: 6px;
-            min-height: 18px;
+            min-height: 42px;
+            align-items: flex-start;
         }
 
-        .sel-tag {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            font-size: 11px;
-            font-weight: 600;
-            background: var(--primary-light);
-            color: var(--primary);
-            padding: 3px 8px;
-            border-radius: 20px;
-        }
-
-        .sel-tag button {
-            background: none;
-            border: none;
-            color: var(--primary);
-            cursor: pointer;
-            font-size: 13px;
-            line-height: 1;
-            padding: 0;
-            opacity: .7;
-        }
-
-        .sel-tag button:hover {
-            opacity: 1;
-        }
-
-        .hint {
+        .sel-empty {
             font-size: 12px;
-            color: var(--light);
+            color: #d1d5db;
             font-style: italic;
+            padding-top: 4px;
         }
 
-        /* Divider / misc */
-        .hr {
-            height: 1px;
-            background: var(--border);
-            margin: 14px 0;
-        }
-
-        .sample-row {
+        /* ── Action bar ─────────────────────── */
+        .bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255,255,255,.92);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-top: 1px solid #e5e7eb;
+            padding: 13px 36px;
             display: flex;
             align-items: center;
-            gap: 8px;
-            font-size: 13px;
-            color: var(--muted);
-            cursor: pointer;
-            user-select: none;
+            justify-content: center;
+            gap: 10px;
+            z-index: 100;
         }
 
-        .sample-row input {
-            cursor: pointer;
-            accent-color: var(--primary);
-            width: 14px;
-            height: 14px;
-        }
-
-        code {
-            font-size: 11px;
-            background: #f1f5f9;
-            padding: 1px 5px;
-            border-radius: 3px;
-            font-family: 'SF Mono', monospace;
-        }
-
-        .ver-row {
+        .bar-left {
+            position: absolute;
+            left: 36px;
             display: flex;
             gap: 8px;
-            flex-wrap: wrap;
+            align-items: center;
         }
 
         .ver-badge {
@@ -396,154 +277,38 @@
             align-items: center;
             gap: 5px;
             font-size: 12px;
-            color: var(--muted);
-            background: var(--surface);
-            border: 1px solid var(--border);
+            color: #9ca3af;
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
             border-radius: 20px;
             padding: 3px 10px;
         }
 
-        .dot {
-            width: 6px;
-            height: 6px;
-            background: #22c55e;
-            border-radius: 50%;
-        }
+        .dot { width: 6px; height: 6px; background: #22c55e; border-radius: 50%; flex-shrink: 0; }
 
-        /* Action bar */
-        .bar {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: var(--surface);
-            border-top: 1px solid var(--border);
-            padding: 13px 32px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            box-shadow: 0 -4px 12px rgba(0, 0, 0, .06);
-            z-index: 100;
-        }
-
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 9px 22px;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            border: none;
-            transition: all .15s;
-        }
-
-        .btn-p {
-            background: var(--primary);
-            color: #fff;
-        }
-
-        .btn-p:hover {
-            background: var(--primary-hover);
-            transform: translateY(-1px);
-            box-shadow: var(--shmd);
-        }
-
-        .btn-p:active {
-            transform: none;
-        }
-
-        .btn-s {
-            background: var(--surface);
-            color: var(--text);
-            border: 1.5px solid var(--border);
-        }
-
-        .btn-s:hover {
-            border-color: var(--primary);
-            color: var(--primary);
-            background: var(--primary-light);
-        }
-
-        .hint-kbd {
-            font-size: 11px;
-            color: var(--muted);
-        }
+        .hint-key { font-size: 12px; color: #9ca3af; }
 
         kbd {
-            background: var(--border);
+            background: #f3f4f6;
+            border: 1px solid #d1d5db;
             border-radius: 3px;
             padding: 1px 5px;
             font-size: 10px;
             font-family: monospace;
         }
 
-        /* Modal */
-        .overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, .5);
+        /* ── Explorer (inside dialog) ───────── */
+        .explorer {
             display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 200;
-            padding: 20px;
-        }
-
-        .modal {
-            background: var(--surface);
-            border-radius: var(--rl);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, .15);
-            width: 100%;
-            max-width: 820px;
-            max-height: 86vh;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
-
-        .modal-head {
-            display: flex;
-            align-items: center;
-            padding: 14px 18px;
-            border-bottom: 1px solid var(--border);
-            gap: 10px;
-        }
-
-        .modal-head h3 {
-            font-size: 15px;
-            font-weight: 600;
-            flex: 1;
-        }
-
-        .mclose {
-            background: none;
-            border: none;
-            font-size: 20px;
-            cursor: pointer;
-            color: var(--muted);
-            line-height: 1;
-            padding: 4px;
-        }
-
-        .mclose:hover {
-            color: var(--text);
-        }
-
-        .modal-body {
-            display: flex;
-            flex: 1;
-            overflow: hidden;
+            height: 500px;
         }
 
         .ftree {
-            width: 200px;
-            border-right: 1px solid var(--border);
-            padding: 8px 0;
+            width: 210px;
+            border-right: 1px solid #e5e7eb;
             overflow-y: auto;
             flex-shrink: 0;
+            background: #fafafa;
         }
 
         .fdir {
@@ -552,7 +317,7 @@
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: .06em;
-            color: var(--light);
+            color: #9ca3af;
         }
 
         .fitem {
@@ -562,7 +327,7 @@
             display: flex;
             align-items: center;
             gap: 5px;
-            color: var(--muted);
+            color: #6b7280;
             transition: background .1s;
             font-family: 'SF Mono', 'Fira Code', monospace;
             white-space: nowrap;
@@ -570,19 +335,9 @@
             text-overflow: ellipsis;
         }
 
-        .fitem:hover {
-            background: var(--bg);
-        }
-
-        .fitem.on {
-            background: var(--primary-light);
-            color: var(--primary);
-            font-weight: 500;
-        }
-
-        .fitem.indent {
-            padding-left: 26px;
-        }
+        .fitem:hover { background: #f3f4f6; color: #374151; }
+        .fitem.on { background: #ede9fe; color: var(--primary); font-weight: 500; }
+        .fitem.indent { padding-left: 26px; }
 
         .fcontent {
             flex: 1;
@@ -593,15 +348,17 @@
 
         .fcontent-head {
             padding: 9px 14px;
-            border-bottom: 1px solid var(--border);
+            border-bottom: 1px solid #e5e7eb;
             display: flex;
             align-items: center;
             justify-content: space-between;
+            background: #fafafa;
+            flex-shrink: 0;
         }
 
         .fcontent-head span {
             font-size: 12px;
-            color: var(--muted);
+            color: #9ca3af;
             font-family: monospace;
         }
 
@@ -609,11 +366,11 @@
             flex: 1;
             overflow: auto;
             padding: 14px;
-            font-size: 12px;
+            font-size: 12.5px;
             font-family: 'SF Mono', 'Fira Code', 'Menlo', monospace;
-            line-height: 1.6;
-            color: var(--text);
-            background: #fafafa !important;
+            line-height: 1.65;
+            background: #fff !important;
+            margin: 0;
             white-space: pre;
         }
 
@@ -622,24 +379,34 @@
             background: transparent;
             font-size: inherit;
             font-family: inherit;
-            line-height: inherit;
         }
 
-        .btn-sm {
+        /* ── Misc ───────────────────────────── */
+        code {
             font-size: 11px;
-            padding: 4px 10px;
-            border-radius: 4px;
-            border: 1px solid var(--border);
-            background: var(--surface);
-            cursor: pointer;
-            color: var(--muted);
-            font-weight: 500;
+            background: #f1f5f9;
+            padding: 1px 5px;
+            border-radius: 3px;
+            font-family: 'SF Mono', monospace;
         }
 
-        .btn-sm:hover {
-            border-color: var(--primary);
-            color: var(--primary);
+        .divider { height: 1px; background: #f3f4f6; margin: 16px 0; }
+
+        /* ── Element Plus overrides ─────────── */
+        .el-dialog__body { padding: 0 !important; }
+        .el-form--label-top .el-form-item__label {
+            font-size: 11px !important;
+            font-weight: 600 !important;
+            color: #9ca3af !important;
+            text-transform: uppercase;
+            letter-spacing: .07em;
+            padding-bottom: 6px;
+            line-height: 1 !important;
         }
+        .el-form-item { margin-bottom: 14px !important; }
+        .el-form-item:last-of-type { margin-bottom: 0 !important; }
+        .el-input__inner { font-family: 'SF Mono', 'Fira Code', monospace !important; font-size: 13px !important; }
+        .el-radio-button__inner { font-size: 13px !important; }
     </style>
 </head>
 <body>
@@ -647,8 +414,11 @@
 
     <header>
         <a class="logo" href="/">
-            <img class="logo-mark" src="logo.png" alt="Erupt"/>
-            <span class="logo-text">erupt<em>.xyz</em><span class="logo-sub">Project Generator</span></span>
+            <img src="logo.png" alt="Erupt"/>
+            <span>
+                <span class="logo-title">erupt<em>.xyz</em></span>
+                <span class="logo-sub">Project Generator</span>
+            </span>
         </a>
         <nav>
             <a href="https://www.erupt.xyz" target="_blank">Website</a>
@@ -658,110 +428,95 @@
     </header>
 
     <div class="page">
-        <p class="subtitle">Generate a pre-configured Erupt + Spring Boot project. Pick your options and hit
-            Generate.</p>
+        <p class="subtitle">Generate a pre-configured Erupt + Spring Boot project. Pick your options and hit Generate.</p>
 
-        <div class="cols">
+        <div class="layout">
 
-            <!-- Left -->
+            <!-- Left column -->
             <div>
-                <div class="card">
-                    <div class="card-head">Project</div>
-                    <div class="card-body">
-                        <div class="field">
+                <div class="panel">
+                    <div class="panel-head">🏗 Project</div>
+                    <div class="panel-body">
+                        <div class="field-group">
                             <div class="field-label">Build Tool</div>
-                            <div class="toggles">
-                                <button class="tbtn" :class="{on: form.build==='maven'}" @click="form.build='maven'">
-                                    Maven
-                                </button>
-                                <button class="tbtn" :class="{on: form.build==='gradle'}" @click="form.build='gradle'">
-                                    Gradle (Kotlin)
-                                </button>
-                            </div>
+                            <el-radio-group v-model="form.build">
+                                <el-radio-button value="maven">Maven</el-radio-button>
+                                <el-radio-button value="gradle">Gradle (Kotlin)</el-radio-button>
+                            </el-radio-group>
                         </div>
-                        <div class="field">
+                        <div class="field-group">
                             <div class="field-label">Java</div>
-                            <div class="toggles">
-                                <button class="tbtn" :class="{on: form.java==='17'}" @click="form.java='17'">17</button>
-                                <button class="tbtn" :class="{on: form.java==='21'}" @click="form.java='21'">21</button>
-                            </div>
+                            <el-radio-group v-model="form.java">
+                                <el-radio-button value="17">17</el-radio-button>
+                                <el-radio-button value="21">21</el-radio-button>
+                            </el-radio-group>
                         </div>
-                        <div class="field">
+                        <div class="field-group" style="margin-bottom:0">
                             <div class="field-label">Database</div>
-                            <div class="toggles">
-                                <button class="tbtn" :class="{on: form.db===k}" @click="form.db=k" v-for="(v,k) in DB"
-                                        :key="k">{{ k.toUpperCase() }}
-                                </button>
-                            </div>
+                            <el-select v-model="form.db" style="width:100%">
+                                <el-option v-for="(v,k) in DB" :key="k" :value="k" :label="k.toUpperCase()"/>
+                            </el-select>
                         </div>
                     </div>
                 </div>
 
-                <div class="card">
-                    <div class="card-head">Metadata</div>
-                    <div class="card-body">
-                        <div class="igroup">
-                            <label class="ilabel">Group</label>
-                            <input type="text" v-model="form.group" spellcheck="false" autocomplete="off"
-                                   @input="syncPkg"/>
-                        </div>
-                        <div class="igroup">
-                            <label class="ilabel">Artifact</label>
-                            <input type="text" v-model="form.artifact" spellcheck="false" autocomplete="off"
-                                   @input="onArtifact"/>
-                        </div>
-                        <div class="igroup">
-                            <label class="ilabel">Name</label>
-                            <input type="text" v-model="form.name" spellcheck="false" autocomplete="off"
-                                   @input="nameEdited=true"/>
-                        </div>
-                        <div class="igroup">
-                            <label class="ilabel">Package name</label>
-                            <input type="text" v-model="form.pkg" spellcheck="false" autocomplete="off"
-                                   @input="pkgEdited=true"/>
-                        </div>
-                        <div class="igroup">
-                            <label class="ilabel">Version</label>
-                            <input type="text" v-model="form.version" spellcheck="false" autocomplete="off"/>
-                        </div>
-                        <div class="hr"></div>
-                        <label class="sample-row">
-                            <input type="checkbox" v-model="form.sample"/>
+                <div class="panel">
+                    <div class="panel-head">📋 Metadata</div>
+                    <div class="panel-body">
+                        <el-form label-position="top" :model="form">
+                            <el-form-item label="Group">
+                                <el-input v-model="form.group" @input="syncPkg" spellcheck="false" autocomplete="off" placeholder="com.example"/>
+                            </el-form-item>
+                            <el-form-item label="Artifact">
+                                <el-input v-model="form.artifact" @input="onArtifact" spellcheck="false" autocomplete="off" placeholder="demo"/>
+                            </el-form-item>
+                            <el-form-item label="Name">
+                                <el-input v-model="form.name" @input="nameEdited=true" spellcheck="false" autocomplete="off" placeholder="Demo"/>
+                            </el-form-item>
+                            <el-form-item label="Package name">
+                                <el-input v-model="form.pkg" @input="pkgEdited=true" spellcheck="false" autocomplete="off" placeholder="com.example.demo"/>
+                            </el-form-item>
+                            <el-form-item label="Version">
+                                <el-input v-model="form.version" spellcheck="false" autocomplete="off" placeholder="0.0.1-SNAPSHOT"/>
+                            </el-form-item>
+                        </el-form>
+                        <div class="divider"></div>
+                        <el-checkbox v-model="form.sample">
                             Include sample <code>@Erupt</code> entity
-                        </label>
+                        </el-checkbox>
                     </div>
-                </div>
-
-                <div class="ver-row">
-                    <div class="ver-badge"><span class="dot"></span> Erupt {{ ERUPT_VER }}</div>
-                    <div class="ver-badge"><span class="dot"></span> Spring Boot {{ BOOT_VER }}</div>
                 </div>
             </div>
 
-            <!-- Right -->
-            <div class="card" style="margin-bottom:0">
-                <div class="card-head">
-                    Modules
-                    <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--light);margin-left:4px;">— click to add</span>
+            <!-- Right column: Modules -->
+            <div class="panel" style="margin-bottom:0">
+                <div class="panel-head">
+                    🧩 Modules
+                    <span style="font-weight:400;color:#9ca3af;margin-left:4px;font-size:12px">— click to toggle</span>
                 </div>
                 <div class="mods-grid">
-                    <div class="mod" :class="{on: selectedMods.includes(m.id)}" v-for="m in MODULES" :key="m.id"
-                         @click="toggleMod(m.id)">
+                    <div class="mod" :class="{on: selectedMods.includes(m.id)}"
+                         v-for="m in MODULES" :key="m.id" @click="toggleMod(m.id)">
+                        <div class="mod-check">✓</div>
                         <div class="mod-icon">{{ m.icon }}</div>
                         <div class="mod-name">{{ m.name }}</div>
                         <div class="mod-desc">{{ m.desc }}</div>
-                        <span class="mod-tag" v-if="m.tag">{{ m.tag }}</span>
+                        <span class="mod-badge" v-if="m.tag">{{ m.tag }}</span>
                     </div>
                 </div>
-                <div style="padding:4px 14px 5px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);">
+                <div style="padding:8px 14px 4px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:#9ca3af;border-top:1px solid #f3f4f6">
                     Selected
                 </div>
-                <div class="sel-tags">
-                    <span class="hint" v-if="selectedMods.length===0">No extra modules — core only</span>
-                    <span class="sel-tag" v-for="id in selectedMods" :key="id">
-            {{ MODULES.find(m => m.id === id)?.icon }} {{ MODULES.find(m => m.id === id)?.name || id }}
-            <button @click.stop="toggleMod(id)">×</button>
-          </span>
+                <div class="sel-area">
+                    <span class="sel-empty" v-if="selectedMods.length===0">No extra modules — core only</span>
+                    <el-tag
+                        v-for="id in selectedMods" :key="id"
+                        closable
+                        type="primary"
+                        @close="toggleMod(id)"
+                    >
+                        {{ MODULES.find(m => m.id === id)?.icon }} {{ MODULES.find(m => m.id === id)?.name || id }}
+                    </el-tag>
                 </div>
             </div>
 
@@ -770,44 +525,52 @@
 
     <!-- Action bar -->
     <div class="bar">
-        <span class="hint-kbd">Press <kbd>⌘</kbd><kbd>↵</kbd> to generate</span>
-        <button class="btn btn-s" @click="openExplore">🔍 Explore</button>
-        <button class="btn btn-p" @click="generate">⬇ Generate</button>
+        <div class="bar-left">
+            <div class="ver-badge"><span class="dot"></span> Erupt {{ ERUPT_VER }}</div>
+            <div class="ver-badge"><span class="dot"></span> Spring Boot {{ BOOT_VER }}</div>
+        </div>
+        <span class="hint-key">Press <kbd>⌘</kbd> <kbd>↵</kbd> to generate</span>
+        <el-button @click="openExplore">🔍 Explore</el-button>
+        <el-button type="primary" @click="generate">⬇ Generate</el-button>
     </div>
 
-    <!-- Explore modal -->
-    <div class="overlay" v-if="modal.open" @click.self="modal.open=false">
-        <div class="modal">
-            <div class="modal-head">
-                <h3>{{ form.artifact }} — project preview</h3>
-                <button class="btn-sm" @click="generate">⬇ Download</button>
-                <button class="mclose" @click="modal.open=false">×</button>
-            </div>
-            <div class="modal-body">
-                <div class="ftree">
-                    <template v-for="(entry, i) in treeEntries" :key="i">
-                        <div class="fdir" v-if="entry.type==='dir'">📁 {{ entry.label }}</div>
-                        <div class="fitem" :class="{on: modal.activeFile===entry.path, indent: entry.indent}"
-                             v-else @click="modal.activeFile=entry.path">
-                            {{ fileIcon(entry.path) }} {{ entry.label }}
-                        </div>
-                    </template>
-                </div>
-                <div class="fcontent">
-                    <div class="fcontent-head">
-                        <span>{{ modal.activeFile }}</span>
-                        <button class="btn-sm" @click="copyFile">{{ modal.copied ? 'Copied!' : 'Copy' }}</button>
+    <!-- Explorer dialog -->
+    <el-dialog
+        v-model="modal.open"
+        :title="`${form.artifact} — project preview`"
+        width="860px"
+        top="8vh"
+        destroy-on-close
+    >
+        <template #footer>
+            <el-button @click="generate">⬇ Download</el-button>
+            <el-button type="primary" @click="modal.open=false">Close</el-button>
+        </template>
+        <div class="explorer">
+            <div class="ftree">
+                <template v-for="(entry, i) in treeEntries" :key="i">
+                    <div class="fdir" v-if="entry.type==='dir'">📁 {{ entry.label }}</div>
+                    <div class="fitem"
+                         :class="{on: modal.activeFile===entry.path, indent: entry.indent}"
+                         v-else @click="modal.activeFile=entry.path">
+                        {{ fileIcon(entry.path) }} {{ entry.label }}
                     </div>
-                    <pre v-html="highlightedContent"></pre>
+                </template>
+            </div>
+            <div class="fcontent">
+                <div class="fcontent-head">
+                    <span>{{ modal.activeFile }}</span>
+                    <el-button size="small" @click="copyFile">{{ modal.copied ? 'Copied!' : 'Copy' }}</el-button>
                 </div>
+                <pre v-html="highlightedContent"></pre>
             </div>
         </div>
-    </div>
+    </el-dialog>
 
 </div>
 
 <script>
-    const {createApp, reactive, ref, computed, watch, onMounted} = Vue;
+    const {createApp, reactive, ref, computed, onMounted} = Vue;
 
     const ERUPT_VER = '1.14.2';
     const BOOT_VER = '3.4.5';
@@ -828,7 +591,6 @@
         {id: 'erupt-cloud-server', name: 'Cloud', icon: '☁️', desc: 'Distributed cloud-native cluster support'},
         {id: 'erupt-job', name: 'Job', icon: '⏱', desc: 'Scheduled task management (Quartz-backed)'},
         {id: 'erupt-monitor', name: 'Monitor', icon: '📡', desc: 'Dashboard: CPU, memory, disk, JVM metrics'},
-
         {id: 'erupt-websocket', name: 'WebSocket', icon: '⚡', desc: 'Real-time interaction via WebSocket'},
         {id: 'erupt-generator', name: 'Generator', icon: '⚙️', desc: 'Assisted code generation IDE'},
         {id: 'erupt-tpl', name: 'TPL', icon: '🎨', desc: 'Custom page template framework'},
@@ -1125,6 +887,29 @@ public class SampleModel extends BaseModel {
 }`;
             }
 
+            function renderDockerfile() {
+                const jar = form.build === 'maven'
+                    ? 'target/*.jar'
+                    : 'build/libs/*.jar';
+                const buildCmd = form.build === 'maven'
+                    ? 'RUN --mount=type=cache,target=/root/.m2 mvn -q package -DskipTests'
+                    : 'RUN --mount=type=cache,target=/root/.gradle ./gradlew -q bootJar --no-daemon';
+                const copyBuild = form.build === 'maven'
+                    ? 'COPY pom.xml .'
+                    : 'COPY build.gradle.kts settings.gradle.kts* ./';
+                return `FROM eclipse-temurin:${form.java}-jdk-alpine AS builder
+WORKDIR /app
+${copyBuild}
+COPY src ./src
+${buildCmd}
+
+FROM eclipse-temurin:${form.java}-jre-alpine
+WORKDIR /app
+COPY --from=builder /app/${jar} app.jar
+EXPOSE 8080
+ENTRYPOINT ["java", "-jar", "app.jar"]`;
+            }
+
             function renderGitignore() {
                 return `target/\nbuild/\n.gradle/\n!.mvn/wrapper/maven-wrapper.jar\n\n.idea/\n*.iml\n.vscode/\n\n# Erupt runtime\n.erupt/\n*.mv.db\n*.trace.db\n\n.DS_Store\nThumbs.db`;
             }
@@ -1162,6 +947,7 @@ Open [http://localhost:8080](http://localhost:8080) — login: \`erupt / erupt\`
                     'src/main/resources/application.yml': renderYml(),
                     'src/main/resources/public/app.js': renderAppJs(),
                     [`src/main/java/${pp}/${cls}.java`]: renderApp(),
+                    'Dockerfile': renderDockerfile(),
                     '.gitignore': renderGitignore(),
                     'README.md': renderReadme(),
                 };
@@ -1195,14 +981,13 @@ Open [http://localhost:8080](http://localhost:8080) — login: \`erupt / erupt\`
                 if (name.endsWith('.xml') || name.endsWith('.kts')) return '📦';
                 if (name.endsWith('.yml')) return '⚙️';
                 if (name.endsWith('.java')) return '☕';
+                if (name === 'Dockerfile') return '🐳';
                 if (name === '.gitignore') return '🙈';
                 if (name.endsWith('.md')) return '📝';
                 if (name.endsWith('.js')) return '🌐';
                 return '📄';
             }
 
-            // ── explore ───────────────────────────────────
-            // ── syntax highlight ──────────────────────────
             function hlLang(path) {
                 if (!path) return 'plaintext';
                 if (path.endsWith('.java')) return 'java';
@@ -1211,6 +996,7 @@ Open [http://localhost:8080](http://localhost:8080) — login: \`erupt / erupt\`
                 if (path.endsWith('.kts')) return 'kotlin';
                 if (path.endsWith('.md')) return 'markdown';
                 if (path.endsWith('.js')) return 'javascript';
+                if (path === 'Dockerfile') return 'dockerfile';
                 return 'plaintext';
             }
 
@@ -1259,7 +1045,7 @@ Open [http://localhost:8080](http://localhost:8080) — login: \`erupt / erupt\`
                 openExplore, copyFile, generate, fileIcon, highlightedContent,
             };
         }
-    }).mount('#app');
+    }).use(ElementPlus).mount('#app');
 </script>
 </body>
 </html>

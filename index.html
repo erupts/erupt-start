@@ -822,15 +822,16 @@
             tag: 'NEW',
             requires: 'erupt-ai'
         },
-        {id: 'erupt-job', name: 'Job', icon: '⏱', desc: 'Scheduled task management (Quartz-backed)'},
-        {id: 'erupt-monitor', name: 'Monitor', icon: '📡', desc: 'Dashboard: CPU, memory, disk, JVM metrics'},
-        {id: 'erupt-notice', name: 'Notice', icon: '🔔', desc: 'In-app notifications with email support'},
         {id: 'erupt-terminal', name: 'Terminal', icon: '💻', desc: 'Web SSH / shell terminal in the admin UI'},
-        {id: 'erupt-websocket', name: 'WebSocket', icon: '⚡', desc: 'Real-time interaction via WebSocket'},
-        {id: 'erupt-tpl', name: 'TPL', icon: '🎨', desc: 'Custom page template framework'},
-        {id: 'erupt-generator', name: 'Generator', icon: '⚙️', desc: 'Assisted code generation IDE'},
+        {id: 'erupt-notice', name: 'Notice', icon: '🔔', desc: 'In-app notifications with sms support'},
         {id: 'erupt-magic-api', name: 'Magic API', icon: '🪄', desc: 'Online API development IDE'},
         {id: 'erupt-cloud-server', name: 'Cloud', icon: '☁️', desc: 'Distributed cloud-native cluster support'},
+        {id: 'erupt-job', name: 'Job', icon: '⏱', desc: 'Scheduled task management (Quartz-backed)'},
+        {id: 'erupt-monitor', name: 'Monitor', icon: '📡', desc: 'Dashboard: CPU, memory, disk, JVM metrics'},
+
+        {id: 'erupt-websocket', name: 'WebSocket', icon: '⚡', desc: 'Real-time interaction via WebSocket'},
+        {id: 'erupt-generator', name: 'Generator', icon: '⚙️', desc: 'Assisted code generation IDE'},
+        {id: 'erupt-tpl', name: 'TPL', icon: '🎨', desc: 'Custom page template framework'},
     ];
 
     const DB = {
@@ -848,6 +849,31 @@
             mvn: `        <dependency>\n            <groupId>org.postgresql</groupId>\n            <artifactId>postgresql</artifactId>\n            <scope>runtime</scope>\n        </dependency>`,
             gradle: `    runtimeOnly("org.postgresql:postgresql")`,
             yml: a => `spring:\n  datasource:\n    url: jdbc:postgresql://localhost:5432/${a}\n    driver-class-name: org.postgresql.Driver\n    username: postgres\n    password:\n  jpa:\n    show-sql: false\n    generate-ddl: true\n    database: postgresql\n    properties:\n      hibernate:\n        globally_quoted_identifiers: true\n        type.enumeration.use_named: false`,
+        },
+        oracle: {
+            mvn: `        <dependency>\n            <groupId>com.oracle.database.jdbc</groupId>\n            <artifactId>ojdbc11</artifactId>\n            <scope>runtime</scope>\n        </dependency>`,
+            gradle: `    runtimeOnly("com.oracle.database.jdbc:ojdbc11")`,
+            yml: a => `spring:\n  datasource:\n    url: jdbc:oracle:thin:@localhost:1521/${a}\n    driver-class-name: oracle.jdbc.OracleDriver\n    username: system\n    password:\n  jpa:\n    show-sql: false\n    generate-ddl: true\n    database: oracle\n    properties:\n      hibernate:\n        globally_quoted_identifiers: true\n        type.enumeration.use_named: false`,
+        },
+        sqlserver: {
+            mvn: `        <dependency>\n            <groupId>com.microsoft.sqlserver</groupId>\n            <artifactId>mssql-jdbc</artifactId>\n            <scope>runtime</scope>\n        </dependency>`,
+            gradle: `    runtimeOnly("com.microsoft.sqlserver:mssql-jdbc")`,
+            yml: a => `spring:\n  datasource:\n    url: jdbc:sqlserver://localhost:1433;databaseName=${a};encrypt=true;trustServerCertificate=true\n    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver\n    username: sa\n    password:\n  jpa:\n    show-sql: false\n    generate-ddl: true\n    database: sql_server\n    properties:\n      hibernate:\n        globally_quoted_identifiers: true\n        type.enumeration.use_named: false`,
+        },
+        mariadb: {
+            mvn: `        <dependency>\n            <groupId>org.mariadb.jdbc</groupId>\n            <artifactId>mariadb-java-client</artifactId>\n            <scope>runtime</scope>\n        </dependency>`,
+            gradle: `    runtimeOnly("org.mariadb.jdbc:mariadb-java-client")`,
+            yml: a => `spring:\n  datasource:\n    url: jdbc:mariadb://localhost:3306/${a}?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai\n    driver-class-name: org.mariadb.jdbc.Driver\n    username: root\n    password:\n  jpa:\n    show-sql: false\n    generate-ddl: true\n    database: mariadb\n    properties:\n      hibernate:\n        globally_quoted_identifiers: true\n        type.enumeration.use_named: false`,
+        },
+        dm: {
+            mvn: `        <!-- 达梦驱动需手动安装到本地 Maven 仓库 -->\n        <dependency>\n            <groupId>com.dameng</groupId>\n            <artifactId>DmJdbcDriver18</artifactId>\n            <version>8.1.3.140</version>\n            <scope>runtime</scope>\n        </dependency>`,
+            gradle: `    // 达梦驱动需手动安装到本地 Maven 仓库\n    runtimeOnly("com.dameng:DmJdbcDriver18:8.1.3.140")`,
+            yml: a => `spring:\n  datasource:\n    url: jdbc:dm://localhost:5236/${a}\n    driver-class-name: dm.jdbc.driver.DmDriver\n    username: SYSDBA\n    password:\n  jpa:\n    show-sql: false\n    generate-ddl: true\n    database: default\n    properties:\n      hibernate:\n        globally_quoted_identifiers: true\n        type.enumeration.use_named: false`,
+        },
+        kingbase: {
+            mvn: `        <!-- 人大金仓驱动需手动安装到本地 Maven 仓库 -->\n        <dependency>\n            <groupId>com.kingbase8</groupId>\n            <artifactId>kingbase8</artifactId>\n            <version>8.6.0</version>\n            <scope>runtime</scope>\n        </dependency>`,
+            gradle: `    // 人大金仓驱动需手动安装到本地 Maven 仓库\n    runtimeOnly("com.kingbase8:kingbase8:8.6.0")`,
+            yml: a => `spring:\n  datasource:\n    url: jdbc:kingbase8://localhost:54321/${a}\n    driver-class-name: com.kingbase8.Driver\n    username: system\n    password:\n  jpa:\n    show-sql: false\n    generate-ddl: true\n    database: default\n    properties:\n      hibernate:\n        dialect: org.hibernate.dialect.PostgreSQLDialect\n        globally_quoted_identifiers: true\n        type.enumeration.use_named: false`,
         },
     };
 
@@ -915,7 +941,7 @@
                     `        <dependency>
             <groupId>xyz.erupt</groupId>
             <artifactId>${id}</artifactId>
-            <version>${ERUPT_VER}</version>
+            <version>\${erupt.version}</version>
         </dependency>`).join('\n');
 
                 return `<?xml version="1.0" encoding="UTF-8"?>
@@ -939,6 +965,7 @@
 
     <properties>
         <java.version>${form.java}</java.version>
+        <erupt.version>${ERUPT_VER}</erupt.version>
     </properties>
 
     <dependencies>
@@ -946,13 +973,13 @@
         <dependency>
             <groupId>xyz.erupt</groupId>
             <artifactId>erupt-admin</artifactId>
-            <version>${ERUPT_VER}</version>
+            <version>\${erupt.version}</version>
         </dependency>
         <!-- Erupt frontend (Angular UI bundled in JAR) -->
         <dependency>
             <groupId>xyz.erupt</groupId>
             <artifactId>erupt-web</artifactId>
-            <version>${ERUPT_VER}</version>
+            <version>\${erupt.version}</version>
         </dependency>
 ${modDeps ? modDeps + '\n\n' : ''}        <!-- Database -->
 ${DB[form.db].mvn}

@@ -1042,6 +1042,20 @@ tasks.withType<Test> {
                 return `${DB[form.db].yml(form.artifact)}\n\nserver:\n  port: 8080\n\nerupt:\n  upms:\n    default-account: erupt\n    default-password: erupt`;
             }
 
+            function renderAppJs() {
+                return `window.eruptSiteConfig = {
+  // title
+  title: "${form.name}",
+  // description
+  desc: "description",
+  copyright: false,
+  // logo path, place the file in the public directory
+  logoPath: "erupt.svg",
+  // logo text
+  logoText: "APP",
+};`;
+            }
+
             function renderApp() {
                 const cls = toClass(form.name) + 'Application';
                 return `package ${form.pkg};
@@ -1146,6 +1160,7 @@ Open [http://localhost:8080](http://localhost:8080) — login: \`erupt / erupt\`
                 const files = {
                     [bf]: form.build === 'maven' ? renderPom() : renderGradle(),
                     'src/main/resources/application.yml': renderYml(),
+                    'src/main/resources/public/app.js': renderAppJs(),
                     [`src/main/java/${pp}/${cls}.java`]: renderApp(),
                     '.gitignore': renderGitignore(),
                     'README.md': renderReadme(),
@@ -1182,6 +1197,7 @@ Open [http://localhost:8080](http://localhost:8080) — login: \`erupt / erupt\`
                 if (name.endsWith('.java')) return '☕';
                 if (name === '.gitignore') return '🙈';
                 if (name.endsWith('.md')) return '📝';
+                if (name.endsWith('.js')) return '🌐';
                 return '📄';
             }
 
@@ -1194,6 +1210,7 @@ Open [http://localhost:8080](http://localhost:8080) — login: \`erupt / erupt\`
                 if (path.endsWith('.yml')) return 'yaml';
                 if (path.endsWith('.kts')) return 'kotlin';
                 if (path.endsWith('.md')) return 'markdown';
+                if (path.endsWith('.js')) return 'javascript';
                 return 'plaintext';
             }
 

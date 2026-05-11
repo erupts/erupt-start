@@ -681,24 +681,24 @@
                     <img src="logo.png" alt="Erupt"/>
                     <span>
                         <span class="logo-title">erupt<em>.xyz</em></span>
-                        <span class="logo-sub">Project Generator</span>
+                        <span class="logo-sub">{{ t('logoSub') }}</span>
                     </span>
                 </a>
                 <nav>
-                    <a href="https://www.erupt.xyz" target="_blank">Website</a>
-                    <a href="https://docs.erupt.xyz" target="_blank">Docs</a>
+                    <a href="https://www.erupt.xyz" target="_blank">{{ t('navWebsite') }}</a>
+                    <a href="https://docs.erupt.xyz" target="_blank">{{ t('navDocs') }}</a>
                     <a href="https://github.com/erupts/erupt" target="_blank">GitHub ★</a>
+                    <a href="#" @click.prevent="toggleLang" style="font-family:var(--mono);font-size:11px;letter-spacing:.06em">{{ t('langToggle') }}</a>
                 </nav>
             </div>
 
             <!-- §1 Hero row -->
-            <div class="r">
+            <div class="r bound">
                 <div class="g2">
                     <div class="c">
-                        <div class="hero-eyebrow">Project Generator</div>
+                        <div class="hero-eyebrow">{{ t('heroEyebrow') }}</div>
                         <div class="hero-title">Start <em>Erupt</em></div>
-                        <p class="hero-sub">Generate a pre-configured Erupt + Spring Boot project. Pick your stack,
-                            choose modules, and download a ready-to-run ZIP.</p>
+                        <p class="hero-sub">{{ t('heroSub') }}</p>
                         <div class="hero-badges">
                             <div class="ver-badge"><span class="dot"></span> Erupt {{ ERUPT_VER }}</div>
                             <div class="ver-badge"><span class="dot"></span> Spring Boot {{ BOOT_VER }}</div>
@@ -706,13 +706,13 @@
                     </div>
                     <div class="c" style="display:flex;flex-direction:column;justify-content:center;">
                         <ul class="hero-bullets">
-                            <li>Zero boilerplate — annotate a Java class and get a full CRUD admin UI</li>
-                            <li>Spring Boot 3 · JPA · multi-database support out of the box</li>
-                            <li>Extensible module ecosystem: AI, Terminal, Jobs, WebSocket and more</li>
-                            <li>Production-ready: Docker, .gitignore and README included</li>
+                            <li>{{ t('bullet1') }}</li>
+                            <li>{{ t('bullet2') }}</li>
+                            <li>{{ t('bullet3') }}</li>
+                            <li>{{ t('bullet4') }}</li>
                         </ul>
                         <div>
-                            <button class="wbtn wbtn-o" @click="generate">⬇ Generate Project</button>
+                            <button class="wbtn wbtn-o" @click="generate">{{ t('heroBtn') }}</button>
                         </div>
                     </div>
                 </div>
@@ -720,28 +720,28 @@
 
             <!-- §2 Configuration section label -->
             <div class="r g-bg bound">
-                <div class="sec-label">Configuration</div>
+                <div class="sec-label">{{ t('secConfig') }}</div>
             </div>
 
             <!-- §3 Build / Java / DB -->
             <div class="r reveal">
                 <div class="g3">
                     <div class="c">
-                        <div class="field-label">Build Tool</div>
+                        <div class="field-label">{{ t('fieldBuild') }}</div>
                         <el-radio-group v-model="form.build">
                             <el-radio-button value="maven">Maven</el-radio-button>
                             <el-radio-button value="gradle">Gradle (Kotlin)</el-radio-button>
                         </el-radio-group>
                     </div>
                     <div class="c">
-                        <div class="field-label">Java</div>
+                        <div class="field-label">{{ t('fieldJava') }}</div>
                         <el-radio-group v-model="form.java">
                             <el-radio-button value="17">17</el-radio-button>
                             <el-radio-button value="21">21</el-radio-button>
                         </el-radio-group>
                     </div>
                     <div class="c">
-                        <div class="field-label">Database</div>
+                        <div class="field-label">{{ t('fieldDb') }}</div>
                         <el-select v-model="form.db" style="width:100%">
                             <el-option v-for="(v,k) in DB" :key="k" :value="k" :label="k.toUpperCase()"/>
                         </el-select>
@@ -751,7 +751,7 @@
 
             <!-- §4 Metadata section label -->
             <div class="r g-bg bound">
-                <div class="sec-label">Metadata</div>
+                <div class="sec-label">{{ t('secMeta') }}</div>
             </div>
 
             <!-- §5 Metadata form fields -->
@@ -759,11 +759,11 @@
                 <div class="g3">
                     <div class="c">
                         <el-form label-position="top" :model="form">
-                            <el-form-item label="Group">
+                            <el-form-item :label="t('fGroup')">
                                 <el-input v-model="form.group" @input="syncPkg" spellcheck="false" autocomplete="off"
                                           placeholder="com.example"/>
                             </el-form-item>
-                            <el-form-item label="Artifact" style="margin-bottom:0!important">
+                            <el-form-item :label="t('fArtifact')" style="margin-bottom:0!important">
                                 <el-input v-model="form.artifact" @input="onArtifact" spellcheck="false"
                                           autocomplete="off" placeholder="demo"/>
                             </el-form-item>
@@ -771,11 +771,11 @@
                     </div>
                     <div class="c">
                         <el-form label-position="top" :model="form">
-                            <el-form-item label="Name">
+                            <el-form-item :label="t('fName')">
                                 <el-input v-model="form.name" @input="nameEdited=true" spellcheck="false"
                                           autocomplete="off" placeholder="Demo"/>
                             </el-form-item>
-                            <el-form-item label="Package name" style="margin-bottom:0!important">
+                            <el-form-item :label="t('fPkg')" style="margin-bottom:0!important">
                                 <el-input v-model="form.pkg" @input="pkgEdited=true" spellcheck="false"
                                           autocomplete="off" placeholder="com.example.demo"/>
                             </el-form-item>
@@ -783,13 +783,13 @@
                     </div>
                     <div class="c">
                         <el-form label-position="top" :model="form">
-                            <el-form-item label="Version">
+                            <el-form-item :label="t('fVersion')">
                                 <el-input v-model="form.version" spellcheck="false" autocomplete="off"
                                           placeholder="0.0.1-SNAPSHOT"/>
                             </el-form-item>
                         </el-form>
                         <el-checkbox v-model="form.sample">
-                            Include sample <code>@Erupt</code> entity
+                            {{ t('fSample') }}
                         </el-checkbox>
                     </div>
                 </div>
@@ -797,7 +797,7 @@
 
             <!-- §6 Modules section label -->
             <div class="r g-bg bound">
-                <div class="sec-label">Modules <span>— click to toggle</span></div>
+                <div class="sec-label">{{ t('secModules') }} <span>{{ t('secModulesHint') }}</span></div>
             </div>
 
             <!-- §7 Module grid -->
@@ -808,7 +808,7 @@
                              v-for="m in MODULES" :key="m.id" @click="toggleMod(m.id)">
                             <div class="mod-icon">{{ m.icon }}</div>
                             <div class="mod-name">{{ m.name }}</div>
-                            <div class="mod-desc">{{ m.desc }}</div>
+                            <div class="mod-desc">{{ locale === 'zh' ? m.descZh : m.desc }}</div>
                             <span class="mod-badge" v-if="m.tag">{{ m.tag }}</span>
                         </div>
                     </div>
@@ -818,9 +818,9 @@
             <!-- §8 Selected modules -->
             <div class="r" style="border-top:none">
                 <div class="c" style="border-right:none">
-                    <div class="sel-label">Selected</div>
+                    <div class="sel-label">{{ t('selLabel') }}</div>
                     <div class="sel-tags">
-                        <span class="sel-empty" v-if="selectedMods.length===0">No extra modules — core only</span>
+                        <span class="sel-empty" v-if="selectedMods.length===0">{{ t('selEmpty') }}</span>
                         <el-tag
                                 v-for="id in selectedMods" :key="id"
                                 closable
@@ -839,23 +839,23 @@
     <!-- Action bar -->
     <div class="bar">
         <div class="bar-left">
-            <span class="hint-key">Press <kbd>⌘</kbd> <kbd>↵</kbd> to generate</span>
+            <span class="hint-key">{{ t('barHint') }} <kbd>⌘</kbd> <kbd>↵</kbd> {{ t('barHintTo') }}</span>
         </div>
-        <button class="wbtn" @click="openExplore">🔍 Explore</button>
-        <button class="wbtn wbtn-o" @click="generate">⬇ Generate</button>
+        <button class="wbtn" @click="openExplore">{{ t('btnExplore') }}</button>
+        <button class="wbtn wbtn-o" @click="generate">{{ t('btnGenerate') }}</button>
     </div>
 
     <!-- Explorer dialog -->
     <el-dialog
             v-model="modal.open"
-            :title="`${form.artifact} — project preview`"
+            :title="`${form.artifact} — ${t('dlgPreview')}`"
             width="860px"
             top="8vh"
             destroy-on-close
     >
         <template #footer>
-            <el-button @click="generate">⬇ Download</el-button>
-            <el-button type="primary" @click="modal.open=false">Close</el-button>
+            <el-button @click="generate">{{ t('dlgDownload') }}</el-button>
+            <el-button type="primary" @click="modal.open=false">{{ t('dlgClose') }}</el-button>
         </template>
         <div class="explorer">
             <div class="ftree">
@@ -871,7 +871,7 @@
             <div class="fcontent">
                 <div class="fcontent-head">
                     <span>{{ modal.activeFile }}</span>
-                    <el-button size="small" @click="copyFile">{{ modal.copied ? 'Copied!' : 'Copy' }}</el-button>
+                    <el-button size="small" @click="copyFile">{{ modal.copied ? t('copied') : t('copy') }}</el-button>
                 </div>
                 <pre v-html="highlightedContent"></pre>
             </div>
@@ -886,25 +886,67 @@
     const ERUPT_VER = '1.14.2';
     const BOOT_VER = '3.4.5';
 
-    const MODULES = [
-        {id: 'erupt-ai', name: 'AI', icon: '🤖', desc: 'Integrate 50+ LLMs: GPT, Claude, DeepSeek…', tag: 'NEW'},
-        {
-            id: 'erupt-ai-claw',
-            name: 'AI Claw',
-            icon: '🦞',
-            desc: 'Control your server via natural language',
-            tag: 'NEW',
-            requires: 'erupt-ai'
+    const LANG = {
+        en: {
+            navWebsite: 'Website', navDocs: 'Docs', langToggle: '中文',
+            logoSub: 'Project Generator',
+            heroEyebrow: 'Project Generator',
+            heroSub: 'Generate a pre-configured Erupt + Spring Boot project. Pick your stack, choose modules, and download a ready-to-run ZIP.',
+            bullet1: 'Zero boilerplate — annotate a Java class and get a full CRUD admin UI',
+            bullet2: 'Spring Boot 3 · JPA · multi-database support out of the box',
+            bullet3: 'Extensible module ecosystem: AI, Terminal, Jobs, WebSocket and more',
+            bullet4: 'Production-ready: Docker, .gitignore and README included',
+            heroBtn: '⬇ Generate Project',
+            secConfig: 'Configuration', secMeta: 'Metadata',
+            secModules: 'Modules', secModulesHint: '— click to toggle',
+            fieldBuild: 'Build Tool', fieldJava: 'Java', fieldDb: 'Database',
+            fGroup: 'Group', fArtifact: 'Artifact', fName: 'Name',
+            fPkg: 'Package name', fVersion: 'Version',
+            fSample: 'Include sample @Erupt entity',
+            selLabel: 'Selected', selEmpty: 'No extra modules — core only',
+            barHint: 'Press', barHintTo: 'to generate',
+            btnExplore: '🔍 Explore', btnGenerate: '⬇ Generate',
+            dlgPreview: 'project preview',
+            dlgDownload: '⬇ Download', dlgClose: 'Close',
+            copy: 'Copy', copied: 'Copied!',
         },
-        {id: 'erupt-terminal', name: 'Terminal', icon: '💻', desc: 'Web SSH / shell terminal in the admin UI'},
-        {id: 'erupt-notice', name: 'Notice', icon: '🔔', desc: 'In-app notifications with sms support'},
-        {id: 'erupt-magic-api', name: 'Magic API', icon: '🪄', desc: 'Online API development IDE'},
-        {id: 'erupt-cloud-server', name: 'Cloud', icon: '☁️', desc: 'Distributed cloud-native cluster support'},
-        {id: 'erupt-job', name: 'Job', icon: '⏱', desc: 'Scheduled task management (Quartz-backed)'},
-        {id: 'erupt-monitor', name: 'Monitor', icon: '📡', desc: 'Dashboard: CPU, memory, disk, JVM metrics'},
-        {id: 'erupt-websocket', name: 'WebSocket', icon: '⚡', desc: 'Real-time interaction via WebSocket'},
-        {id: 'erupt-generator', name: 'Generator', icon: '⚙️', desc: 'Assisted code generation IDE'},
-        {id: 'erupt-tpl', name: 'TPL', icon: '🎨', desc: 'Custom page template framework'},
+        zh: {
+            navWebsite: '官网', navDocs: '文档', langToggle: 'EN',
+            logoSub: '项目生成器',
+            heroEyebrow: '项目生成器',
+            heroSub: '生成一个开箱即用的 Erupt + Spring Boot 项目。选择技术栈、勾选模块，下载即可运行。',
+            bullet1: '零样板代码 — 注解一个 Java 类，即得完整 CRUD 管理界面',
+            bullet2: 'Spring Boot 3 · JPA · 开箱即用的多数据库支持',
+            bullet3: '可扩展模块生态：AI、终端、定时任务、WebSocket 等',
+            bullet4: '生产就绪：已包含 Docker、.gitignore 和 README',
+            heroBtn: '⬇ 生成项目',
+            secConfig: '配置', secMeta: '项目信息',
+            secModules: '模块', secModulesHint: '— 点击切换',
+            fieldBuild: '构建工具', fieldJava: 'Java 版本', fieldDb: '数据库',
+            fGroup: 'Group', fArtifact: 'Artifact', fName: '项目名称',
+            fPkg: '包名', fVersion: '版本号',
+            fSample: '包含示例 @Erupt 实体',
+            selLabel: '已选模块', selEmpty: '未选额外模块，仅包含核心',
+            barHint: '按', barHintTo: '生成',
+            btnExplore: '🔍 预览', btnGenerate: '⬇ 生成',
+            dlgPreview: '项目预览',
+            dlgDownload: '⬇ 下载', dlgClose: '关闭',
+            copy: '复制', copied: '已复制！',
+        },
+    };
+
+    const MODULES = [
+        {id: 'erupt-ai', name: 'AI', icon: '🤖', desc: 'Integrate 50+ LLMs: GPT, Claude, DeepSeek…', descZh: '集成 50+ 大模型：GPT、Claude、DeepSeek…', tag: 'NEW'},
+        {id: 'erupt-ai-claw', name: 'AI Claw', icon: '🦞', desc: 'Control your server via natural language', descZh: '用自然语言控制你的服务器', tag: 'NEW', requires: 'erupt-ai'},
+        {id: 'erupt-terminal', name: 'Terminal', icon: '💻', desc: 'Web SSH / shell terminal in the admin UI', descZh: '管理界面内置 Web SSH / Shell 终端'},
+        {id: 'erupt-notice', name: 'Notice', icon: '🔔', desc: 'In-app notifications with sms support', descZh: '站内通知，支持短信推送'},
+        {id: 'erupt-magic-api', name: 'Magic API', icon: '🪄', desc: 'Online API development IDE', descZh: '在线 API 开发 IDE'},
+        {id: 'erupt-cloud-server', name: 'Cloud', icon: '☁️', desc: 'Distributed cloud-native cluster support', descZh: '分布式云原生集群支持'},
+        {id: 'erupt-job', name: 'Job', icon: '⏱', desc: 'Scheduled task management (Quartz-backed)', descZh: '定时任务管理（基于 Quartz）'},
+        {id: 'erupt-monitor', name: 'Monitor', icon: '📡', desc: 'Dashboard: CPU, memory, disk, JVM metrics', descZh: '仪表盘：CPU、内存、磁盘、JVM 监控'},
+        {id: 'erupt-websocket', name: 'WebSocket', icon: '⚡', desc: 'Real-time interaction via WebSocket', descZh: '基于 WebSocket 的实时交互'},
+        {id: 'erupt-generator', name: 'Generator', icon: '⚙️', desc: 'Assisted code generation IDE', descZh: '辅助代码生成 IDE'},
+        {id: 'erupt-tpl', name: 'TPL', icon: '🎨', desc: 'Custom page template framework', descZh: '自定义页面模板框架'},
     ];
 
     const DB = {
@@ -958,6 +1000,10 @@
                 pkg: 'com.example.demo', version: '0.0.1-SNAPSHOT',
                 sample: true,
             });
+
+            const locale = ref(navigator.language.startsWith('zh') ? 'zh' : 'en');
+            function t(key) { return LANG[locale.value][key]; }
+            function toggleLang() { locale.value = locale.value === 'en' ? 'zh' : 'en'; }
 
             const selectedMods = ref([]);
             const pkgEdited = ref(false);
@@ -1352,6 +1398,7 @@ Open [http://localhost:8080](http://localhost:8080) — login: \`erupt / erupt\`
                 ERUPT_VER, BOOT_VER, MODULES, DB,
                 form, selectedMods, pkgEdited, nameEdited,
                 modal, previewFiles, treeEntries,
+                locale, t, toggleLang,
                 syncPkg, onArtifact, toggleMod,
                 openExplore, copyFile, generate, fileIcon, highlightedContent,
             };

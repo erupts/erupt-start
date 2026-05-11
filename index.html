@@ -12,39 +12,48 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     <style>
-        :root {
-            --primary: #7c3aed;
-            --el-color-primary: #7c3aed;
-            --el-color-primary-light-3: #a78bfa;
-            --el-color-primary-light-5: #c4b5fd;
-            --el-color-primary-light-7: #ddd6fe;
-            --el-color-primary-light-8: #ede9fe;
-            --el-color-primary-light-9: #f5f3ff;
-            --el-color-primary-dark-2: #6d28d9;
+        body {
+            margin: 0;
         }
 
-        *, *::before, *::after { box-sizing: border-box; }
+        :root {
+            --accent: #FF5722;
+            --border: #E5E7EB;
+            --text: #0A0A0F;
+            --muted: #6B7280;
+            --mono: 'JetBrains Mono', 'SFMono-Regular', Consolas, monospace;
+            /* Element Plus */
+            --el-color-primary: #FF5722;
+            --el-color-primary-light-3: #ff8a65;
+            --el-color-primary-light-5: #ffab91;
+            --el-color-primary-light-7: #ffccbc;
+            --el-color-primary-light-8: #fbe9e7;
+            --el-color-primary-light-9: #fff3f0;
+            --el-color-primary-dark-2: #e64a19;
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-            background: #f0f2f5;
-            color: #1f2937;
+            font-family: Inter, -apple-system, 'PingFang SC', system-ui, sans-serif;
+            background: #fff;
+            color: var(--text);
             font-size: 14px;
             min-height: 100vh;
         }
 
-        /* ── Header ─────────────────────────── */
-        header {
-            background: #fff;
-            border-bottom: 1px solid #e5e7eb;
-            height: 60px;
-            padding: 0 36px;
+        /* ── Header row (inside .fr) ─────────── */
+        .fr-header {
             display: flex;
             align-items: center;
+            height: 58px;
+            padding: 0 32px;
             position: sticky;
             top: 0;
             z-index: 100;
-            box-shadow: 0 1px 4px rgba(0,0,0,.06);
+            background: #fff;
         }
 
         .logo {
@@ -55,249 +64,430 @@
         }
 
         .logo img {
-            width: 32px;
-            height: 32px;
+            width: 28px;
+            height: 28px;
         }
 
         .logo-title {
-            font-size: 17px;
+            font-size: 16px;
             font-weight: 700;
-            color: #111827;
+            color: var(--text);
             letter-spacing: -.03em;
             line-height: 1.1;
         }
 
-        .logo-title em { font-style: normal; color: var(--primary); }
+        .logo-title em {
+            font-style: normal;
+            color: var(--accent);
+        }
 
         .logo-sub {
             display: block;
-            font-size: 10px;
-            font-weight: 500;
-            color: #9ca3af;
-            letter-spacing: .05em;
+            font-size: 9.5px;
+            font-weight: 400;
+            color: var(--muted);
+            letter-spacing: .12em;
             text-transform: uppercase;
-            margin-top: 2px;
+            margin-top: 3px;
+            font-family: var(--mono);
         }
 
-        header nav { margin-left: auto; display: flex; gap: 24px; align-items: center; }
+        .fr-header nav {
+            margin-left: auto;
+            display: flex;
+            gap: 22px;
+            align-items: center;
+        }
 
-        header nav a {
-            color: #6b7280;
+        .fr-header nav a {
+            color: var(--muted);
             text-decoration: none;
             font-size: 13px;
             font-weight: 500;
             transition: color .15s;
         }
 
-        header nav a:hover { color: var(--primary); }
+        .fr-header nav a:hover {
+            color: var(--accent);
+        }
 
-        /* ── Page ───────────────────────────── */
-        .page {
-            max-width: 1120px;
+        /* ── Wrap + Frame ───────────────────── */
+        .wrap {
+            padding: 0 20px 55px
+        }
+
+        .fr {
+            max-width: 1200px;
             margin: 0 auto;
-            padding: 28px 24px 96px;
+            border: 1px solid var(--border);
+            position: relative;
         }
 
-        .subtitle {
-            font-size: 13.5px;
-            color: #6b7280;
-            margin-bottom: 24px;
+
+        /* ── Row ────────────────────────────── */
+        .r {
+            border-bottom: 1px solid var(--border);
+            position: relative;
         }
 
-        .layout {
+        .r:last-child {
+            border-bottom: none;
+        }
+
+        /* ── Section boundary marker — + shape ── */
+        .bound::before,
+        .bound::after {
+            content: '';
+            position: absolute;
+            top: -5px;
+            width: 9px;
+            height: 9px;
+            background: linear-gradient(var(--accent), var(--accent)) center / 1.5px 100% no-repeat,
+            linear-gradient(var(--accent), var(--accent)) center / 100% 1.5px no-repeat;
+        }
+
+        .bound::before {
+            left: -5px;
+        }
+
+        .bound::after {
+            right: -5px;
+        }
+
+        /* ── Grid layouts ───────────────────── */
+        .g2 {
             display: grid;
-            grid-template-columns: 340px 1fr;
-            gap: 18px;
-            align-items: start;
+            grid-template-columns: 1fr 1fr;
         }
 
-        @media (max-width: 768px) {
-            .layout { grid-template-columns: 1fr; }
+        .g3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
         }
 
-        /* ── Panel ──────────────────────────── */
-        .panel {
-            background: #fff;
-            border: 1px solid #e5e7eb;
-            border-radius: 12px;
-            box-shadow: 0 1px 3px rgba(0,0,0,.05);
-            overflow: hidden;
-            margin-bottom: 16px;
+        .g4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
         }
 
-        .panel:last-child { margin-bottom: 0; }
+        /* ── Cell ───────────────────────────── */
+        .c {
+            padding: 32px;
+            border-right: 1px solid var(--border);
+        }
 
-        .panel-head {
-            padding: 13px 20px;
-            border-bottom: 1px solid #f3f4f6;
-            font-size: 12.5px;
-            font-weight: 600;
-            color: #374151;
-            background: #fafafa;
+        .c:last-child {
+            border-right: none;
+        }
+
+        /* ── Dot-grid background ────────────── */
+        .g-bg {
+            background-image: radial-gradient(circle, rgba(0, 0, 0, 0.038) 1px, transparent 1px);
+            background-size: 24px 24px;
+            background-color: #fff;
+        }
+
+        /* ── Eyebrow tag (section label) ────── */
+        .sec-label {
+            padding: 10px 32px;
+            font-size: 10.5px;
+            font-weight: 400;
+            font-family: var(--mono);
+            text-transform: uppercase;
+            letter-spacing: .16em;
+            color: var(--accent);
             display: flex;
             align-items: center;
-            gap: 7px;
+            gap: 10px;
         }
 
-        .panel-body { padding: 20px; }
+        .sec-label span {
+            color: var(--muted);
+            letter-spacing: .04em;
+            font-family: inherit;
+        }
 
-        .field-label {
-            font-size: 11px;
-            font-weight: 600;
-            color: #9ca3af;
+        /* ── Blueprint buttons ──────────────── */
+        .wbtn {
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--text);
+            padding: 9px 20px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: border-color .15s, color .15s, background .15s;
+            font-family: inherit;
+            line-height: 1.4;
+            border-radius: 0;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .wbtn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        /* Orange outline → fill on hover */
+        .wbtn-o {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .wbtn-o:hover {
+            background: var(--accent);
+            color: #fff;
+        }
+
+        /* ── Hero ───────────────────────────── */
+        .hero-eyebrow {
+            font-family: var(--mono);
+            font-size: 10.5px;
+            letter-spacing: .16em;
             text-transform: uppercase;
-            letter-spacing: .07em;
-            margin-bottom: 9px;
+            color: var(--accent);
+            margin-bottom: 14px;
         }
 
-        .field-group { margin-bottom: 18px; }
-        .field-group:last-child { margin-bottom: 0; }
+        .hero-title {
+            font-size: clamp(32px, 4vw, 52px);
+            font-weight: 700;
+            letter-spacing: -.025em;
+            color: var(--text);
+            line-height: 1.1;
+            margin-bottom: 14px;
+        }
+
+        .hero-title em {
+            font-style: normal;
+            color: var(--accent);
+        }
+
+        .hero-sub {
+            font-size: 14.5px;
+            color: var(--muted);
+            margin-bottom: 24px;
+            line-height: 1.65;
+            max-width: 400px;
+        }
+
+        .hero-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .ver-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11.5px;
+            color: var(--muted);
+            border: 1px solid var(--border);
+            padding: 4px 10px;
+            font-family: var(--mono);
+        }
+
+        .dot {
+            width: 6px;
+            height: 6px;
+            background: #22c55e;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .hero-bullets {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 28px;
+        }
+
+        .hero-bullets li {
+            font-size: 13.5px;
+            color: var(--muted);
+            padding: 6px 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            line-height: 1.55;
+        }
+
+        .hero-bullets li::before {
+            content: '—';
+            color: var(--accent);
+            font-weight: 400;
+            flex-shrink: 0;
+            font-family: var(--mono);
+        }
+
+        /* ── Field helpers ──────────────────── */
+        .field-label {
+            font-size: 10.5px;
+            font-weight: 400;
+            font-family: var(--mono);
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: .12em;
+            margin-bottom: 10px;
+        }
 
         /* ── Module grid ────────────────────── */
         .mods-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 9px;
-            padding: 14px;
+            grid-template-columns: repeat(4, 1fr);
         }
 
         .mod {
-            border: 1.5px solid #e5e7eb;
-            border-radius: 10px;
-            padding: 12px 13px;
+            border-right: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            padding: 20px 24px;
             cursor: pointer;
-            transition: all .15s;
+            transition: background .12s;
             user-select: none;
             position: relative;
             background: #fff;
         }
 
+        .mods-grid .mod:nth-child(4n),
+        .mods-grid .mod:last-child {
+            border-right: none;
+        }
+
         .mod:hover {
-            border-color: #c4b5fd;
-            background: #faf8ff;
-            box-shadow: 0 3px 10px rgba(124,58,237,.08);
+            background: rgba(255, 87, 34, .018);
         }
 
         .mod.on {
-            border-color: var(--primary);
-            background: #f5f3ff;
+            background: rgba(255, 87, 34, .045);
         }
 
-        .mod-check {
+        .mod.on::after {
+            content: '✓';
             position: absolute;
             top: 8px;
             right: 9px;
             width: 17px;
             height: 17px;
-            background: var(--primary);
-            border-radius: 50%;
-            display: none;
-            align-items: center;
-            justify-content: center;
+            background: var(--accent);
             color: #fff;
             font-size: 9px;
             font-weight: 700;
-            line-height: 1;
+            line-height: 17px;
+            text-align: center;
         }
 
-        .mod.on .mod-check { display: flex; }
-
-        .mod-icon { font-size: 20px; margin-bottom: 5px; }
+        .mod-icon {
+            font-size: 18px;
+            margin-bottom: 6px;
+        }
 
         .mod-name {
-            font-size: 12.5px;
+            font-size: 13px;
             font-weight: 600;
-            color: #111827;
-            margin-bottom: 2px;
+            color: var(--text);
+            margin-bottom: 3px;
         }
 
         .mod-desc {
-            font-size: 11px;
-            color: #9ca3af;
-            line-height: 1.45;
+            font-size: 11.5px;
+            color: var(--muted);
+            line-height: 1.5;
         }
 
         .mod-badge {
             display: inline-block;
             font-size: 9px;
-            font-weight: 700;
+            font-weight: 400;
+            font-family: var(--mono);
             padding: 2px 6px;
-            border-radius: 20px;
-            margin-top: 5px;
-            background: #dcfce7;
-            color: #166534;
-            letter-spacing: .04em;
+            margin-top: 6px;
+            background: rgba(255, 87, 34, .08);
+            color: var(--accent);
+            border: 1px solid rgba(255, 87, 34, .2);
+            letter-spacing: .06em;
+            text-transform: uppercase;
         }
 
         /* ── Selected area ──────────────────── */
-        .sel-area {
-            padding: 4px 14px 14px;
+        .sel-empty {
+            font-size: 12px;
+            color: #c9cdd4;
+            font-style: italic;
+        }
+
+        .sel-label {
+            font-size: 10.5px;
+            font-family: var(--mono);
+            text-transform: uppercase;
+            letter-spacing: .12em;
+            color: var(--muted);
+            margin-bottom: 10px;
+        }
+
+        .sel-tags {
             display: flex;
             flex-wrap: wrap;
             gap: 6px;
-            min-height: 42px;
-            align-items: flex-start;
+            align-items: center;
+            min-height: 28px;
         }
 
-        .sel-empty {
-            font-size: 12px;
-            color: #d1d5db;
-            font-style: italic;
-            padding-top: 4px;
+        /* ── Reveal animation ───────────────── */
+        .reveal {
+            opacity: 0;
+            transform: translateY(12px);
+            transition: opacity .6s ease, transform .6s ease;
+        }
+
+        .reveal.in {
+            opacity: 1;
+            transform: none;
         }
 
         /* ── Action bar ─────────────────────── */
         .bar {
             position: fixed;
             bottom: 0;
-            left: 0;
-            right: 0;
-            background: rgba(255,255,255,.92);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-top: 1px solid #e5e7eb;
-            padding: 13px 36px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 1200px;
+            background: rgba(255, 255, 255, .97);
+            border-top: 1px solid var(--border);
+            border-left: 1px solid var(--border);
+            border-right: 1px solid var(--border);
+            padding: 12px 32px;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            gap: 8px;
             z-index: 100;
         }
 
         .bar-left {
             position: absolute;
-            left: 36px;
+            left: 32px;
             display: flex;
             gap: 8px;
             align-items: center;
         }
 
-        .ver-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
+        .hint-key {
             font-size: 12px;
-            color: #9ca3af;
-            background: #f9fafb;
-            border: 1px solid #e5e7eb;
-            border-radius: 20px;
-            padding: 3px 10px;
+            color: var(--muted);
         }
-
-        .dot { width: 6px; height: 6px; background: #22c55e; border-radius: 50%; flex-shrink: 0; }
-
-        .hint-key { font-size: 12px; color: #9ca3af; }
 
         kbd {
             background: #f3f4f6;
-            border: 1px solid #d1d5db;
-            border-radius: 3px;
+            border: 1px solid var(--border);
             padding: 1px 5px;
             font-size: 10px;
-            font-family: monospace;
+            font-family: var(--mono);
         }
 
-        /* ── Explorer (inside dialog) ───────── */
+        /* ── Explorer dialog ────────────────── */
         .explorer {
             display: flex;
             height: 500px;
@@ -305,7 +495,7 @@
 
         .ftree {
             width: 210px;
-            border-right: 1px solid #e5e7eb;
+            border-right: 1px solid var(--border);
             overflow-y: auto;
             flex-shrink: 0;
             background: #fafafa;
@@ -314,10 +504,11 @@
         .fdir {
             padding: 10px 14px 4px;
             font-size: 10px;
-            font-weight: 700;
+            font-weight: 400;
+            font-family: var(--mono);
             text-transform: uppercase;
-            letter-spacing: .06em;
-            color: #9ca3af;
+            letter-spacing: .1em;
+            color: var(--muted);
         }
 
         .fitem {
@@ -327,17 +518,28 @@
             display: flex;
             align-items: center;
             gap: 5px;
-            color: #6b7280;
+            color: var(--muted);
             transition: background .1s;
-            font-family: 'SF Mono', 'Fira Code', monospace;
+            font-family: var(--mono);
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
 
-        .fitem:hover { background: #f3f4f6; color: #374151; }
-        .fitem.on { background: #ede9fe; color: var(--primary); font-weight: 500; }
-        .fitem.indent { padding-left: 26px; }
+        .fitem:hover {
+            background: #f3f4f6;
+            color: var(--text);
+        }
+
+        .fitem.on {
+            background: rgba(255, 87, 34, .07);
+            color: var(--accent);
+            font-weight: 500;
+        }
+
+        .fitem.indent {
+            padding-left: 26px;
+        }
 
         .fcontent {
             flex: 1;
@@ -348,7 +550,7 @@
 
         .fcontent-head {
             padding: 9px 14px;
-            border-bottom: 1px solid #e5e7eb;
+            border-bottom: 1px solid var(--border);
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -358,8 +560,8 @@
 
         .fcontent-head span {
             font-size: 12px;
-            color: #9ca3af;
-            font-family: monospace;
+            color: var(--muted);
+            font-family: var(--mono);
         }
 
         .fcontent pre {
@@ -367,7 +569,7 @@
             overflow: auto;
             padding: 14px;
             font-size: 12.5px;
-            font-family: 'SF Mono', 'Fira Code', 'Menlo', monospace;
+            font-family: var(--mono);
             line-height: 1.65;
             background: #fff !important;
             margin: 0;
@@ -384,103 +586,208 @@
         /* ── Misc ───────────────────────────── */
         code {
             font-size: 11px;
-            background: #f1f5f9;
+            background: rgba(0, 0, 0, .04);
             padding: 1px 5px;
-            border-radius: 3px;
-            font-family: 'SF Mono', monospace;
+            font-family: var(--mono);
         }
-
-        .divider { height: 1px; background: #f3f4f6; margin: 16px 0; }
 
         /* ── Element Plus overrides ─────────── */
-        .el-dialog__body { padding: 0 !important; }
+        .el-dialog__body {
+            padding: 0 !important;
+        }
+
         .el-form--label-top .el-form-item__label {
-            font-size: 11px !important;
-            font-weight: 600 !important;
-            color: #9ca3af !important;
+            font-size: 10.5px !important;
+            font-weight: 400 !important;
+            font-family: 'JetBrains Mono', 'SFMono-Regular', Consolas, monospace !important;
+            color: var(--muted) !important;
             text-transform: uppercase;
-            letter-spacing: .07em;
-            padding-bottom: 6px;
+            letter-spacing: .12em;
+            padding-bottom: 7px;
             line-height: 1 !important;
         }
-        .el-form-item { margin-bottom: 14px !important; }
-        .el-form-item:last-of-type { margin-bottom: 0 !important; }
-        .el-input__inner { font-family: 'SF Mono', 'Fira Code', monospace !important; font-size: 13px !important; }
-        .el-radio-button__inner { font-size: 13px !important; }
+
+        .el-form-item {
+            margin-bottom: 14px !important;
+        }
+
+        .el-form-item:last-of-type {
+            margin-bottom: 0 !important;
+        }
+
+        .el-input__inner {
+            font-family: 'JetBrains Mono', 'SFMono-Regular', Consolas, monospace !important;
+            font-size: 13px !important;
+        }
+
+        .el-radio-button__inner {
+            font-size: 13px !important;
+        }
+
+        .el-radio-button__inner,
+        .el-radio-button:first-child .el-radio-button__inner,
+        .el-radio-button:last-child .el-radio-button__inner {
+            border-radius: 0 !important;
+        }
+
+        .el-input__wrapper {
+            border-radius: 0 !important;
+        }
+
+        .el-select .el-input__wrapper {
+            border-radius: 0 !important;
+        }
+
+        /* ── Responsive ─────────────────────── */
+        @media (max-width: 1000px) {
+            .fr {
+                border-left: none;
+                border-right: none;
+            }
+        }
+
+        @media (max-width: 700px) {
+            .g2, .g3, .g4 {
+                grid-template-columns: 1fr;
+            }
+
+            .c {
+                border-right: none;
+                padding: 24px;
+            }
+
+            .mods-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .mods-grid .mod:nth-child(2n) {
+                border-right: none;
+            }
+
+            .mods-grid .mod:nth-child(4n) {
+                border-right: 1px solid var(--border);
+            }
+        }
     </style>
 </head>
 <body>
 <div id="app">
 
-    <header>
-        <a class="logo" href="/">
-            <img src="logo.png" alt="Erupt"/>
-            <span>
-                <span class="logo-title">erupt<em>.xyz</em></span>
-                <span class="logo-sub">Project Generator</span>
-            </span>
-        </a>
-        <nav>
-            <a href="https://www.erupt.xyz" target="_blank">Website</a>
-            <a href="https://www.yuque.com/erupts/erupt" target="_blank">Docs</a>
-            <a href="https://github.com/erupts/erupt" target="_blank">GitHub ★</a>
-        </nav>
-    </header>
+    <div class="wrap">
+        <div class="fr">
+            <!-- Header row -->
+            <div class="r fr-header">
+                <a class="logo" href="/">
+                    <img src="logo.png" alt="Erupt"/>
+                    <span>
+                        <span class="logo-title">erupt<em>.xyz</em></span>
+                        <span class="logo-sub">Project Generator</span>
+                    </span>
+                </a>
+                <nav>
+                    <a href="https://www.erupt.xyz" target="_blank">Website</a>
+                    <a href="https://docs.erupt.xyz" target="_blank">Docs</a>
+                    <a href="https://github.com/erupts/erupt" target="_blank">GitHub ★</a>
+                </nav>
+            </div>
 
-    <div class="page">
-        <p class="subtitle">Generate a pre-configured Erupt + Spring Boot project. Pick your options and hit Generate.</p>
-
-        <div class="layout">
-
-            <!-- Left column -->
-            <div>
-                <div class="panel">
-                    <div class="panel-head">🏗 Project</div>
-                    <div class="panel-body">
-                        <div class="field-group">
-                            <div class="field-label">Build Tool</div>
-                            <el-radio-group v-model="form.build">
-                                <el-radio-button value="maven">Maven</el-radio-button>
-                                <el-radio-button value="gradle">Gradle (Kotlin)</el-radio-button>
-                            </el-radio-group>
+            <!-- §1 Hero row -->
+            <div class="r">
+                <div class="g2">
+                    <div class="c">
+                        <div class="hero-eyebrow">Project Generator</div>
+                        <div class="hero-title">Start <em>Erupt</em></div>
+                        <p class="hero-sub">Generate a pre-configured Erupt + Spring Boot project. Pick your stack,
+                            choose modules, and download a ready-to-run ZIP.</p>
+                        <div class="hero-badges">
+                            <div class="ver-badge"><span class="dot"></span> Erupt {{ ERUPT_VER }}</div>
+                            <div class="ver-badge"><span class="dot"></span> Spring Boot {{ BOOT_VER }}</div>
                         </div>
-                        <div class="field-group">
-                            <div class="field-label">Java</div>
-                            <el-radio-group v-model="form.java">
-                                <el-radio-button value="17">17</el-radio-button>
-                                <el-radio-button value="21">21</el-radio-button>
-                            </el-radio-group>
-                        </div>
-                        <div class="field-group" style="margin-bottom:0">
-                            <div class="field-label">Database</div>
-                            <el-select v-model="form.db" style="width:100%">
-                                <el-option v-for="(v,k) in DB" :key="k" :value="k" :label="k.toUpperCase()"/>
-                            </el-select>
+                    </div>
+                    <div class="c" style="display:flex;flex-direction:column;justify-content:center;">
+                        <ul class="hero-bullets">
+                            <li>Zero boilerplate — annotate a Java class and get a full CRUD admin UI</li>
+                            <li>Spring Boot 3 · JPA · multi-database support out of the box</li>
+                            <li>Extensible module ecosystem: AI, Terminal, Jobs, WebSocket and more</li>
+                            <li>Production-ready: Docker, .gitignore and README included</li>
+                        </ul>
+                        <div>
+                            <button class="wbtn wbtn-o" @click="generate">⬇ Generate Project</button>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <div class="panel">
-                    <div class="panel-head">📋 Metadata</div>
-                    <div class="panel-body">
+            <!-- §2 Configuration section label -->
+            <div class="r g-bg bound">
+                <div class="sec-label">Configuration</div>
+            </div>
+
+            <!-- §3 Build / Java / DB -->
+            <div class="r reveal">
+                <div class="g3">
+                    <div class="c">
+                        <div class="field-label">Build Tool</div>
+                        <el-radio-group v-model="form.build">
+                            <el-radio-button value="maven">Maven</el-radio-button>
+                            <el-radio-button value="gradle">Gradle (Kotlin)</el-radio-button>
+                        </el-radio-group>
+                    </div>
+                    <div class="c">
+                        <div class="field-label">Java</div>
+                        <el-radio-group v-model="form.java">
+                            <el-radio-button value="17">17</el-radio-button>
+                            <el-radio-button value="21">21</el-radio-button>
+                        </el-radio-group>
+                    </div>
+                    <div class="c">
+                        <div class="field-label">Database</div>
+                        <el-select v-model="form.db" style="width:100%">
+                            <el-option v-for="(v,k) in DB" :key="k" :value="k" :label="k.toUpperCase()"/>
+                        </el-select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- §4 Metadata section label -->
+            <div class="r g-bg bound">
+                <div class="sec-label">Metadata</div>
+            </div>
+
+            <!-- §5 Metadata form fields -->
+            <div class="r reveal">
+                <div class="g3">
+                    <div class="c">
                         <el-form label-position="top" :model="form">
                             <el-form-item label="Group">
-                                <el-input v-model="form.group" @input="syncPkg" spellcheck="false" autocomplete="off" placeholder="com.example"/>
+                                <el-input v-model="form.group" @input="syncPkg" spellcheck="false" autocomplete="off"
+                                          placeholder="com.example"/>
                             </el-form-item>
-                            <el-form-item label="Artifact">
-                                <el-input v-model="form.artifact" @input="onArtifact" spellcheck="false" autocomplete="off" placeholder="demo"/>
-                            </el-form-item>
-                            <el-form-item label="Name">
-                                <el-input v-model="form.name" @input="nameEdited=true" spellcheck="false" autocomplete="off" placeholder="Demo"/>
-                            </el-form-item>
-                            <el-form-item label="Package name">
-                                <el-input v-model="form.pkg" @input="pkgEdited=true" spellcheck="false" autocomplete="off" placeholder="com.example.demo"/>
-                            </el-form-item>
-                            <el-form-item label="Version">
-                                <el-input v-model="form.version" spellcheck="false" autocomplete="off" placeholder="0.0.1-SNAPSHOT"/>
+                            <el-form-item label="Artifact" style="margin-bottom:0!important">
+                                <el-input v-model="form.artifact" @input="onArtifact" spellcheck="false"
+                                          autocomplete="off" placeholder="demo"/>
                             </el-form-item>
                         </el-form>
-                        <div class="divider"></div>
+                    </div>
+                    <div class="c">
+                        <el-form label-position="top" :model="form">
+                            <el-form-item label="Name">
+                                <el-input v-model="form.name" @input="nameEdited=true" spellcheck="false"
+                                          autocomplete="off" placeholder="Demo"/>
+                            </el-form-item>
+                            <el-form-item label="Package name" style="margin-bottom:0!important">
+                                <el-input v-model="form.pkg" @input="pkgEdited=true" spellcheck="false"
+                                          autocomplete="off" placeholder="com.example.demo"/>
+                            </el-form-item>
+                        </el-form>
+                    </div>
+                    <div class="c">
+                        <el-form label-position="top" :model="form">
+                            <el-form-item label="Version">
+                                <el-input v-model="form.version" spellcheck="false" autocomplete="off"
+                                          placeholder="0.0.1-SNAPSHOT"/>
+                            </el-form-item>
+                        </el-form>
                         <el-checkbox v-model="form.sample">
                             Include sample <code>@Erupt</code> entity
                         </el-checkbox>
@@ -488,59 +795,63 @@
                 </div>
             </div>
 
-            <!-- Right column: Modules -->
-            <div class="panel" style="margin-bottom:0">
-                <div class="panel-head">
-                    🧩 Modules
-                    <span style="font-weight:400;color:#9ca3af;margin-left:4px;font-size:12px">— click to toggle</span>
-                </div>
-                <div class="mods-grid">
-                    <div class="mod" :class="{on: selectedMods.includes(m.id)}"
-                         v-for="m in MODULES" :key="m.id" @click="toggleMod(m.id)">
-                        <div class="mod-check">✓</div>
-                        <div class="mod-icon">{{ m.icon }}</div>
-                        <div class="mod-name">{{ m.name }}</div>
-                        <div class="mod-desc">{{ m.desc }}</div>
-                        <span class="mod-badge" v-if="m.tag">{{ m.tag }}</span>
+            <!-- §6 Modules section label -->
+            <div class="r g-bg bound">
+                <div class="sec-label">Modules <span>— click to toggle</span></div>
+            </div>
+
+            <!-- §7 Module grid -->
+            <div class="r reveal">
+                <div class="c" style="padding:0;border-right:none">
+                    <div class="mods-grid">
+                        <div class="mod" :class="{on: selectedMods.includes(m.id)}"
+                             v-for="m in MODULES" :key="m.id" @click="toggleMod(m.id)">
+                            <div class="mod-icon">{{ m.icon }}</div>
+                            <div class="mod-name">{{ m.name }}</div>
+                            <div class="mod-desc">{{ m.desc }}</div>
+                            <span class="mod-badge" v-if="m.tag">{{ m.tag }}</span>
+                        </div>
                     </div>
-                </div>
-                <div style="padding:8px 14px 4px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:#9ca3af;border-top:1px solid #f3f4f6">
-                    Selected
-                </div>
-                <div class="sel-area">
-                    <span class="sel-empty" v-if="selectedMods.length===0">No extra modules — core only</span>
-                    <el-tag
-                        v-for="id in selectedMods" :key="id"
-                        closable
-                        type="primary"
-                        @close="toggleMod(id)"
-                    >
-                        {{ MODULES.find(m => m.id === id)?.icon }} {{ MODULES.find(m => m.id === id)?.name || id }}
-                    </el-tag>
                 </div>
             </div>
 
-        </div>
-    </div>
+            <!-- §8 Selected modules -->
+            <div class="r" style="border-top:none">
+                <div class="c" style="border-right:none">
+                    <div class="sel-label">Selected</div>
+                    <div class="sel-tags">
+                        <span class="sel-empty" v-if="selectedMods.length===0">No extra modules — core only</span>
+                        <el-tag
+                                v-for="id in selectedMods" :key="id"
+                                closable
+                                type="primary"
+                                @close="toggleMod(id)"
+                        >
+                            {{ MODULES.find(m => m.id === id)?.icon }} {{ MODULES.find(m => m.id === id)?.name || id }}
+                        </el-tag>
+                    </div>
+                </div>
+            </div>
+
+        </div><!-- /fr -->
+    </div><!-- /wrap -->
 
     <!-- Action bar -->
     <div class="bar">
         <div class="bar-left">
-            <div class="ver-badge"><span class="dot"></span> Erupt {{ ERUPT_VER }}</div>
-            <div class="ver-badge"><span class="dot"></span> Spring Boot {{ BOOT_VER }}</div>
+            <span class="hint-key">Press <kbd>⌘</kbd> <kbd>↵</kbd> to generate</span>
         </div>
-        <span class="hint-key">Press <kbd>⌘</kbd> <kbd>↵</kbd> to generate</span>
-        <el-button @click="openExplore">🔍 Explore</el-button>
-        <el-button type="primary" @click="generate">⬇ Generate</el-button>
+        <button class="wbtn" @click="openExplore">🔍 Explore</button>
+        <button class="wbtn wbtn-o" @click="generate">⬇ Generate</button>
     </div>
 
     <!-- Explorer dialog -->
     <el-dialog
-        v-model="modal.open"
-        :title="`${form.artifact} — project preview`"
-        width="860px"
-        top="8vh"
-        destroy-on-close
+            v-model="modal.open"
+            :title="`${form.artifact} — project preview`"
+            width="860px"
+            top="8vh"
+            destroy-on-close
     >
         <template #footer>
             <el-button @click="generate">⬇ Download</el-button>
@@ -933,7 +1244,7 @@ Open [http://localhost:8080](http://localhost:8080) — login: \`erupt / erupt\`
 
 ## Docs
 
-[https://www.yuque.com/erupts/erupt](https://www.yuque.com/erupts/erupt)
+[https://docs.erupt.xyz](https://docs.erupt.xyz)
 `;
             }
 
@@ -1046,6 +1357,17 @@ Open [http://localhost:8080](http://localhost:8080) — login: \`erupt / erupt\`
             };
         }
     }).use(ElementPlus).mount('#app');
+</script>
+<script>
+    const obs = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+            if (e.isIntersecting) {
+                e.target.classList.add('in');
+                obs.unobserve(e.target);
+            }
+        });
+    }, {threshold: 0.05});
+    document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
 </script>
 </body>
 </html>

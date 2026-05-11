@@ -17,19 +17,19 @@
         }
 
         :root {
-            --accent: #FF5722;
+            --accent: #16A34A;
             --border: #E5E7EB;
             --text: #0A0A0F;
             --muted: #6B7280;
-            --mono: 'JetBrains Mono', 'SFMono-Regular', Consolas, monospace;
+            --mono: 'Courier New', Courier, monospace;
             /* Element Plus */
-            --el-color-primary: #FF5722;
-            --el-color-primary-light-3: #ff8a65;
-            --el-color-primary-light-5: #ffab91;
-            --el-color-primary-light-7: #ffccbc;
-            --el-color-primary-light-8: #fbe9e7;
-            --el-color-primary-light-9: #fff3f0;
-            --el-color-primary-dark-2: #e64a19;
+            --el-color-primary: #16A34A;
+            --el-color-primary-light-3: #4ADE80;
+            --el-color-primary-light-5: #86EFAC;
+            --el-color-primary-light-7: #BBF7D0;
+            --el-color-primary-light-8: #DCFCE7;
+            --el-color-primary-light-9: #F0FDF4;
+            --el-color-primary-dark-2: #15803D;
         }
 
         *, *::before, *::after {
@@ -37,7 +37,7 @@
         }
 
         body {
-            font-family: Inter, -apple-system, 'PingFang SC', system-ui, sans-serif;
+            font-family: 'Courier New', Courier, monospace;
             background: #fff;
             color: var(--text);
             font-size: 14px;
@@ -52,7 +52,6 @@
             padding: 0 32px;
             position: sticky;
             top: 0;
-            z-index: 100;
             background: #fff;
         }
 
@@ -134,25 +133,21 @@
             border-bottom: none;
         }
 
-        /* ── Section boundary marker — + shape ── */
+        /* ── Section boundary marker — registration dot ── */
         .bound::before,
         .bound::after {
             content: '';
             position: absolute;
-            top: -5px;
-            width: 9px;
-            height: 9px;
-            background: linear-gradient(var(--accent), var(--accent)) center / 1.5px 100% no-repeat,
-            linear-gradient(var(--accent), var(--accent)) center / 100% 1.5px no-repeat;
+            top: -4px;
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            border: 1.5px solid var(--accent);
+            background: #fff;
         }
 
-        .bound::before {
-            left: -5px;
-        }
-
-        .bound::after {
-            right: -5px;
-        }
+        .bound::before { left: -4px; }
+        .bound::after  { right: -4px; }
 
         /* ── Grid layouts ───────────────────── */
         .g2 {
@@ -599,7 +594,7 @@
         .el-form--label-top .el-form-item__label {
             font-size: 10.5px !important;
             font-weight: 400 !important;
-            font-family: 'JetBrains Mono', 'SFMono-Regular', Consolas, monospace !important;
+            font-family: 'Courier New', Courier, monospace !important;
             color: var(--muted) !important;
             text-transform: uppercase;
             letter-spacing: .12em;
@@ -616,7 +611,7 @@
         }
 
         .el-input__inner {
-            font-family: 'JetBrains Mono', 'SFMono-Regular', Consolas, monospace !important;
+            font-family: 'Courier New', Courier, monospace !important;
             font-size: 13px !important;
         }
 
@@ -947,6 +942,7 @@
         {id: 'erupt-websocket', name: 'WebSocket', icon: '⚡', desc: 'Real-time interaction via WebSocket', descZh: '基于 WebSocket 的实时交互'},
         {id: 'erupt-generator', name: 'Generator', icon: '⚙️', desc: 'Assisted code generation IDE', descZh: '辅助代码生成 IDE'},
         {id: 'erupt-tpl', name: 'TPL', icon: '🎨', desc: 'Custom page template framework', descZh: '自定义页面模板框架'},
+        {id: 'erupt-mongodb', name: 'MongoDB', icon: '🍃', desc: 'MongoDB data source support', descZh: 'MongoDB 数据源支持'},
     ];
 
     const DB = {

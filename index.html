@@ -138,16 +138,26 @@
         .bound::after {
             content: '';
             position: absolute;
-            top: -4px;
-            width: 7px;
-            height: 7px;
-            border-radius: 50%;
-            border: 1.5px solid var(--accent);
-            background: #fff;
+            top: -5px;
+            width: 0;
+            height: 0;
         }
 
-        .bound::before { left: -4px; }
-        .bound::after  { right: -4px; }
+        .bound::before {
+            left: 0;
+            border-top: 5px solid transparent;
+            border-left: 5px solid var(--accent);
+            border-bottom: 5px solid transparent;
+            border-right: 5px solid transparent;
+        }
+
+        .bound::after {
+            right: 0;
+            border-top: 5px solid transparent;
+            border-right: 5px solid var(--accent);
+            border-bottom: 5px solid transparent;
+            border-left: 5px solid transparent;
+        }
 
         /* ── Grid layouts ───────────────────── */
         .g2 {

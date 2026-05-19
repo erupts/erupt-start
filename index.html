@@ -927,7 +927,9 @@
                         <div class="pro-banner-title">{{ t('proTitle') }}</div>
                         <div class="pro-banner-desc">{{ t('proDesc') }}</div>
                     </div>
-                    <a class="wbtn wbtn-o" href="https://www.erupt.xyz/#!/pro" target="_blank">
+                    <a class="wbtn wbtn-o"
+                       href="https://www.erupt.xyz/?utm_source=start&utm_medium=banner&utm_campaign=pro#!/pro"
+                       target="_blank">
                         {{ t('proBtn') }}
                     </a>
                 </div>
@@ -983,7 +985,7 @@
 <script>
     const {createApp, reactive, ref, computed, onMounted} = Vue;
 
-    const ERUPT_VER = '1.14.2';
+    const ERUPT_VER = '1.14.3';
     const BOOT_VER = '3.5.13';
 
     const LANG = {
@@ -1058,10 +1060,10 @@
         {id: 'erupt-mongodb', name: 'MongoDB', icon: '🍃', desc: 'MongoDB data source support', descZh: 'MongoDB 数据源支持'},
 
         // ── Commercial modules · cannot be added via generator, click to view pricing ──
-        {id: 'erupt-chart', name: 'Chart', icon: '📊', desc: 'Reports & data visualization', descZh: '报表图表 / 数据可视化', tag: 'PRO', pro: true, proUrl: 'https://www.erupt.xyz/#!/pro'},
-        {id: 'erupt-flow', name: 'Flow', icon: '🔀', desc: 'Workflow / approval engine', descZh: '流程引擎 / 审批工作流', tag: 'PRO', pro: true, proUrl: 'https://www.erupt.xyz/#!/pro'},
-        {id: 'erupt-tenant', name: 'SaaS', icon: '🏢', desc: 'Multi-tenant infrastructure', descZh: '多租户基建', tag: 'PRO', pro: true, proUrl: 'https://www.erupt.xyz/#!/pro'},
-        {id: 'erupt-cube', name: 'Cube', icon: '🧊', desc: 'BI platform with semantic layer', descZh: 'BI 平台 / 语义层', tag: 'PRO', pro: true, proUrl: 'https://www.erupt.xyz/#!/pro'},
+        {id: 'erupt-chart', name: 'Chart', icon: '📊', desc: 'Reports & data visualization', descZh: '报表图表 / 数据可视化', tag: 'PRO', pro: true, proUrl: 'https://www.erupt.xyz/?utm_source=start&utm_medium=card_chart&utm_campaign=pro#!/pro'},
+        {id: 'erupt-flow', name: 'Flow', icon: '🔀', desc: 'Workflow / approval engine', descZh: '流程引擎 / 审批工作流', tag: 'PRO', pro: true, proUrl: 'https://www.erupt.xyz/?utm_source=start&utm_medium=card_flow&utm_campaign=pro#!/pro'},
+        {id: 'erupt-tenant', name: 'SaaS', icon: '🏢', desc: 'Multi-tenant infrastructure', descZh: '多租户基建', tag: 'PRO', pro: true, proUrl: 'https://www.erupt.xyz/?utm_source=start&utm_medium=card_tenant&utm_campaign=pro#!/pro'},
+        {id: 'erupt-cube', name: 'Cube', icon: '🧊', desc: 'BI platform with semantic layer', descZh: 'BI 平台 / 语义层', tag: 'PRO', pro: true, proUrl: 'https://www.erupt.xyz/?utm_source=start&utm_medium=card_cube&utm_campaign=pro#!/pro'},
     ];
 
     const DB = {

@@ -847,10 +847,18 @@
 
             <!-- §3b Port / Account / Password / Captcha / Color -->
             <div class="r reveal">
-                <div class="g3">
+                <div class="g5">
                     <div class="c">
                         <div class="field-label">{{ t('fieldPort') }}</div>
                         <el-input v-model="form.port" style="width:100%" spellcheck="false" autocomplete="off" placeholder="8080"/>
+                    </div>
+                    <div class="c">
+                        <div class="field-label">{{ t('fieldAccount') }}</div>
+                        <el-input v-model="form.adminAccount" style="width:100%" spellcheck="false" autocomplete="off" placeholder="erupt"/>
+                    </div>
+                    <div class="c">
+                        <div class="field-label">{{ t('fieldPassword') }}</div>
+                        <el-input v-model="form.adminPassword" style="width:100%" spellcheck="false" autocomplete="off" placeholder="erupt"/>
                     </div>
                     <div class="c">
                         <div class="field-label">{{ t('fieldCaptcha') }}</div>
@@ -1036,7 +1044,7 @@
             secConfig: 'Configuration', secMeta: 'Metadata',
             secModules: 'Modules', secModulesHint: '— click to toggle',
             fieldBuild: 'Build Tool', fieldJava: 'Java', fieldDb: 'Database', fieldLocale: 'Default Language',
-            fieldPort: 'Port', fieldCaptcha: 'Captcha', fieldColor: 'Primary Color',
+            fieldPort: 'Port', fieldAccount: 'Admin Account', fieldPassword: 'Admin Password', fieldCaptcha: 'Captcha', fieldColor: 'Primary Color',
             captchaOpts: [{v:0,l:'Always'},{v:1,l:'After 1 fail'},{v:2,l:'After 2 fails'},{v:5,l:'After 5 fails'}],
             fGroup: 'Group', fArtifact: 'Artifact', fName: 'Name',
             fPkg: 'Package name', fVersion: 'Version',
@@ -1065,7 +1073,7 @@
             secConfig: '配置', secMeta: '项目信息',
             secModules: '模块', secModulesHint: '— 点击切换',
             fieldBuild: '构建工具', fieldJava: 'Java 版本', fieldDb: '数据库', fieldLocale: '默认语言',
-            fieldPort: '端口', fieldCaptcha: '验证码', fieldColor: '主题色',
+            fieldPort: '端口', fieldAccount: '管理员账号', fieldPassword: '管理员密码', fieldCaptcha: '验证码', fieldColor: '主题色',
             captchaOpts: [{v:0,l:'总是显示'},{v:1,l:'失败 1 次'},{v:2,l:'失败 2 次'},{v:5,l:'失败 5 次'}],
             fGroup: 'Group', fArtifact: 'Artifact', fName: '项目名称',
             fPkg: '包名', fVersion: '版本号',
@@ -1087,13 +1095,13 @@
         {id: 'erupt-ai', name: 'AI', icon: '🤖', desc: 'Integrate 50+ LLMs: GPT, Claude, DeepSeek…', descZh: '集成 50+ 大模型：GPT、Claude、DeepSeek…', tag: 'NEW'},
         {id: 'erupt-ai-claw', name: 'AI Claw', icon: '🦞', desc: 'Control your server via natural language', descZh: '用自然语言控制你的服务器', tag: 'NEW', requires: 'erupt-ai'},
         {id: 'erupt-terminal', name: 'Terminal', icon: '💻', desc: 'Web SSH / shell terminal in the admin UI', descZh: '管理界面内置 Web SSH / Shell 终端'},
-        {id: 'erupt-notice', name: 'Notice', icon: '🔔', desc: 'In-app notifications with sms support', descZh: '站内通知，支持短信推送'},
+        {id: 'erupt-notice', name: 'Notice', icon: '🔔', desc: 'In-app notifications with sms support', descZh: '站内通知，支持短信等渠道推送'},
         {id: 'erupt-magic-api', name: 'Magic API', icon: '🪄', desc: 'Online API development IDE', descZh: '在线 API 开发 IDE'},
         {id: 'erupt-cloud-server', name: 'Cloud', icon: '☁️', desc: 'Distributed cloud-native cluster support', descZh: '分布式云原生集群支持'},
         {id: 'erupt-job', name: 'Job', icon: '⏱', desc: 'Scheduled task management (Quartz-backed)', descZh: '定时任务管理（基于 Quartz）'},
         {id: 'erupt-monitor', name: 'Monitor', icon: '📡', desc: 'Dashboard: CPU, memory, disk, JVM metrics', descZh: '仪表盘：CPU、内存、磁盘、JVM 监控'},
         {id: 'erupt-websocket', name: 'WebSocket', icon: '⚡', desc: 'Real-time interaction via WebSocket', descZh: '基于 WebSocket 的实时交互'},
-        {id: 'erupt-generator', name: 'Generator', icon: '⚙️', desc: 'Assisted code generation IDE', descZh: '辅助代码生成 IDE'},
+        {id: 'erupt-generator', name: 'Generator', icon: '⚙️', desc: 'Assisted code generation IDE', descZh: '辅助代码生成'},
         {id: 'erupt-tpl', name: 'TPL', icon: '🎨', desc: 'Custom page template framework', descZh: '自定义页面模板框架'},
         {id: 'erupt-mongodb', name: 'MongoDB', icon: '🍃', desc: 'MongoDB data source support', descZh: 'MongoDB 数据源支持'},
 
@@ -1167,7 +1175,7 @@
         setup() {
             const form = reactive({
                 build: 'maven', java: '17', db: 'h2', defaultLocale: navigator.language.startsWith('zh') ? 'zh-CN' : 'en-US',
-                port: '8080', captcha: 2, primaryColor: '#1677FF',
+                port: '8080', adminAccount: 'erupt', adminPassword: 'erupt', captcha: 2, primaryColor: '#1677FF',
                 group: 'com.example', artifact: 'demo', name: 'Demo',
                 pkg: 'com.example.demo', version: '0.0.1-SNAPSHOT',
                 sample: true,
@@ -1341,7 +1349,7 @@ tasks.withType<Test> {
                 const localeConf = form.defaultLocale ? `\n  default-locales: ${form.defaultLocale}` : '';
                 const magicConf = selectedMods.value.includes('erupt-magic-api')
                     ? `\n\nmagic-api:\n  web: /magic/web\n  resource.location: ./magic-script` : '';
-                return `${DB[form.db].yml(form.artifact)}\n\nserver:\n  port: ${form.port || 8080}\n\nerupt-app:\n  verify-code-count: ${form.captcha}\n\nerupt:${localeConf}\n  upms:\n    default-account: erupt\n    default-password: erupt${magicConf}`;
+                return `${DB[form.db].yml(form.artifact)}\n\nserver:\n  port: ${form.port || 8080}\n\nerupt-app:\n  verify-code-count: ${form.captcha}\n\nerupt:${localeConf}\n  upms:\n    default-account: ${form.adminAccount || 'erupt'}\n    default-password: ${form.adminPassword || 'erupt'}${magicConf}`;
             }
 
             function renderAppJs() {

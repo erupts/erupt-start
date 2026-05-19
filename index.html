@@ -175,6 +175,11 @@
             grid-template-columns: repeat(4, 1fr);
         }
 
+        .g5 {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+        }
+
         /* ── Cell ───────────────────────────── */
         .c {
             padding: 32px;
@@ -732,7 +737,7 @@
         }
 
         @media (max-width: 700px) {
-            .g2, .g3, .g4 {
+            .g2, .g3, .g4, .g5 {
                 grid-template-columns: 1fr;
             }
 
@@ -810,7 +815,7 @@
 
             <!-- §3 Build / Java / DB -->
             <div class="r reveal">
-                <div class="g3">
+                <div class="g4">
                     <div class="c">
                         <div class="field-label">{{ t('fieldBuild') }}</div>
                         <el-radio-group v-model="form.build">
@@ -830,6 +835,35 @@
                         <el-select v-model="form.db" style="width:100%">
                             <el-option v-for="(v,k) in DB" :key="k" :value="k" :label="k.toUpperCase()"/>
                         </el-select>
+                    </div>
+                    <div class="c">
+                        <div class="field-label">{{ t('fieldLocale') }}</div>
+                        <el-select v-model="form.defaultLocale" style="width:100%">
+                            <el-option v-for="l in LOCALES" :key="l.value" :value="l.value" :label="l.label"/>
+                        </el-select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- §3b Port / Account / Password / Captcha / Color -->
+            <div class="r reveal">
+                <div class="g3">
+                    <div class="c">
+                        <div class="field-label">{{ t('fieldPort') }}</div>
+                        <el-input v-model="form.port" style="width:100%" spellcheck="false" autocomplete="off" placeholder="8080"/>
+                    </div>
+                    <div class="c">
+                        <div class="field-label">{{ t('fieldCaptcha') }}</div>
+                        <el-select v-model="form.captcha" style="width:100%">
+                            <el-option v-for="o in t('captchaOpts')" :key="o.v" :value="o.v" :label="o.l"/>
+                        </el-select>
+                    </div>
+                    <div class="c">
+                        <div class="field-label">{{ t('fieldColor') }}</div>
+                        <div style="display:flex;align-items:center;gap:10px">
+                            <input type="color" v-model="form.primaryColor" style="width:40px;height:32px;border:none;padding:0;background:none;cursor:pointer"/>
+                            <span style="font-family:var(--mono);font-size:13px">{{ form.primaryColor }}</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -983,7 +1017,7 @@
 </div>
 
 <script>
-    const {createApp, reactive, ref, computed, onMounted} = Vue;
+    const {createApp, reactive, ref, computed, watch, onMounted} = Vue;
 
     const ERUPT_VER = '1.14.3';
     const BOOT_VER = '3.5.13';
@@ -1001,7 +1035,9 @@
             heroBtn: '⬇ Generate Project',
             secConfig: 'Configuration', secMeta: 'Metadata',
             secModules: 'Modules', secModulesHint: '— click to toggle',
-            fieldBuild: 'Build Tool', fieldJava: 'Java', fieldDb: 'Database',
+            fieldBuild: 'Build Tool', fieldJava: 'Java', fieldDb: 'Database', fieldLocale: 'Default Language',
+            fieldPort: 'Port', fieldCaptcha: 'Captcha', fieldColor: 'Primary Color',
+            captchaOpts: [{v:0,l:'Always'},{v:1,l:'After 1 fail'},{v:2,l:'After 2 fails'},{v:5,l:'After 5 fails'}],
             fGroup: 'Group', fArtifact: 'Artifact', fName: 'Name',
             fPkg: 'Package name', fVersion: 'Version',
             fSample: 'Include sample @Erupt entity',
@@ -1028,7 +1064,9 @@
             heroBtn: '⬇ 生成项目',
             secConfig: '配置', secMeta: '项目信息',
             secModules: '模块', secModulesHint: '— 点击切换',
-            fieldBuild: '构建工具', fieldJava: 'Java 版本', fieldDb: '数据库',
+            fieldBuild: '构建工具', fieldJava: 'Java 版本', fieldDb: '数据库', fieldLocale: '默认语言',
+            fieldPort: '端口', fieldCaptcha: '验证码', fieldColor: '主题色',
+            captchaOpts: [{v:0,l:'总是显示'},{v:1,l:'失败 1 次'},{v:2,l:'失败 2 次'},{v:5,l:'失败 5 次'}],
             fGroup: 'Group', fArtifact: 'Artifact', fName: '项目名称',
             fPkg: '包名', fVersion: '版本号',
             fSample: '包含示例 @Erupt 实体',
@@ -1109,10 +1147,27 @@
         },
     };
 
+    const LOCALES = [
+        {value: '',      label: 'Auto'},
+        {value: 'en-US', label: 'English (en-US)'},
+        {value: 'fr-FR', label: 'Français (fr-FR)'},
+        {value: 'zh-CN', label: '简体中文 (zh-CN)'},
+        {value: 'zh-TW', label: '繁體中文 (zh-TW)'},
+        {value: 'ja-JP', label: '日本語 (ja-JP)'},
+        {value: 'ko-KR', label: '한국어 (ko-KR)'},
+        {value: 'ru-RU', label: 'Русский (ru-RU)'},
+        {value: 'es-ES', label: 'Español (es-ES)'},
+        {value: 'de-DE', label: 'Deutsch (de-DE)'},
+        {value: 'pt-PT', label: 'Português (pt-PT)'},
+        {value: 'id-ID', label: 'Bahasa Indonesia (id-ID)'},
+        {value: 'ar-SA', label: 'العربية (ar-SA)'},
+    ];
+
     createApp({
         setup() {
             const form = reactive({
-                build: 'maven', java: '17', db: 'h2',
+                build: 'maven', java: '17', db: 'h2', defaultLocale: navigator.language.startsWith('zh') ? 'zh-CN' : 'en-US',
+                port: '8080', captcha: 2, primaryColor: '#1677FF',
                 group: 'com.example', artifact: 'demo', name: 'Demo',
                 pkg: 'com.example.demo', version: '0.0.1-SNAPSHOT',
                 sample: true,
@@ -1120,7 +1175,10 @@
 
             const locale = ref(navigator.language.startsWith('zh') ? 'zh' : 'en');
             function t(key) { return LANG[locale.value][key]; }
-            function toggleLang() { locale.value = locale.value === 'en' ? 'zh' : 'en'; }
+            function toggleLang() {
+                locale.value = locale.value === 'en' ? 'zh' : 'en';
+                form.defaultLocale = locale.value === 'zh' ? 'zh-CN' : 'en-US';
+            }
 
             const selectedMods = ref([]);
             const pkgEdited = ref(false);
@@ -1280,20 +1338,22 @@ tasks.withType<Test> {
             }
 
             function renderYml() {
-                return `${DB[form.db].yml(form.artifact)}\n\nserver:\n  port: 8080\n\nerupt:\n  upms:\n    default-account: erupt\n    default-password: erupt`;
+                const localeConf = form.defaultLocale ? `\n  default-locales: ${form.defaultLocale}` : '';
+                const magicConf = selectedMods.value.includes('erupt-magic-api')
+                    ? `\n\nmagic-api:\n  web: /magic/web\n  resource.location: ./magic-script` : '';
+                return `${DB[form.db].yml(form.artifact)}\n\nserver:\n  port: ${form.port || 8080}\n\nerupt-app:\n  verify-code-count: ${form.captcha}\n\nerupt:${localeConf}\n  upms:\n    default-account: erupt\n    default-password: erupt${magicConf}`;
             }
 
             function renderAppJs() {
                 return `window.eruptSiteConfig = {
-  // title
   title: "${form.name}",
-  // description
   desc: "description",
   copyright: false,
-  // logo path, place the file in the public directory
   logoPath: "erupt.svg",
-  // logo text
   logoText: "APP",
+  theme: {
+    primaryColor: "${form.primaryColor}"
+  },
 };`;
             }
 
@@ -1322,8 +1382,6 @@ public class ${cls} {
                 const isMongo = form.db === 'mongodb';
                 return `package ${form.pkg}.model;
 
-import lombok.Getter;
-import lombok.Setter;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
 import xyz.erupt.annotation.sub_erupt.Power;
@@ -1335,9 +1393,7 @@ ${isMongo ? '' : 'import jakarta.persistence.Entity;\nimport jakarta.persistence
 import java.util.Date;
 
 @Erupt(name = "Sample", power = @Power(export = true, importable = true))
-${isMongo ? '' : '@Table(name = "t_sample")\n@Entity\n'}@Getter
-@Setter
-public class SampleModel extends BaseModel {
+${isMongo ? '' : '@Table(name = "t_sample")\n@Entity\n'}public class SampleModel extends BaseModel {
 
     @EruptField(
             views = @View(title = "Name"),
@@ -1362,6 +1418,18 @@ public class SampleModel extends BaseModel {
             edit = @Edit(title = "Date", search = @Search(vague = true))
     )
     private Date date;
+
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
+
+    public Boolean getActive() { return active; }
+    public void setActive(Boolean active) { this.active = active; }
+
+    public Date getDate() { return date; }
+    public void setDate(Date date) { this.date = date; }
 
 }`;
             }
@@ -1517,7 +1585,7 @@ Open [http://localhost:8080](http://localhost:8080) — login: \`erupt / erupt\`
             });
 
             return {
-                ERUPT_VER, BOOT_VER, MODULES, DB,
+                ERUPT_VER, BOOT_VER, MODULES, DB, LOCALES,
                 form, selectedMods, pkgEdited, nameEdited,
                 modal, previewFiles, treeEntries,
                 locale, t, toggleLang,

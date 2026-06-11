@@ -415,19 +415,15 @@
             opacity: 1;
         }
 
-        .mod.pro::after {
-            content: '↗';
-            position: absolute;
-            top: 8px;
-            right: 9px;
-            width: 17px;
-            height: 17px;
-            border: 1px solid var(--accent);
-            color: var(--accent);
-            font-size: 11px;
-            font-weight: 600;
-            line-height: 15px;
-            text-align: center;
+        .mod.pro.on {
+            background: rgba(255, 87, 34, .06);
+            border-color: var(--accent);
+        }
+
+        .mod.pro.on .mod-name,
+        .mod.pro.on .mod-desc,
+        .mod.pro.on .mod-icon {
+            opacity: 1;
         }
 
         .mod.pro .mod-badge {
@@ -933,7 +929,7 @@
                     <div class="mods-grid">
                         <div class="mod" :class="{on: selectedMods.includes(m.id), pro: m.pro}"
                              v-for="m in MODULES" :key="m.id" @click="toggleMod(m.id)"
-                             :title="m.pro ? (locale === 'zh' ? '商业模块 — 点击查看定价' : 'Commercial module — click to view pricing') : ''">
+                             :title="m.pro ? (locale === 'zh' ? '商业模块 — 依赖将以注释形式添加' : 'Commercial module — dependency added as comment') : ''">
                             <div class="mod-icon">{{ m.icon }}</div>
                             <div class="mod-name">{{ m.name }}</div>
                             <div class="mod-desc">{{ locale === 'zh' ? m.descZh : m.desc }}</div>
@@ -952,10 +948,11 @@
                         <el-tag
                                 v-for="id in selectedMods" :key="id"
                                 closable
-                                type="primary"
+                                :type="MODULES.find(m => m.id === id)?.pro ? 'warning' : 'primary'"
                                 @close="toggleMod(id)"
                         >
                             {{ MODULES.find(m => m.id === id)?.icon }} {{ MODULES.find(m => m.id === id)?.name || id }}
+                            <template v-if="MODULES.find(m => m.id === id)?.pro"> · PRO</template>
                         </el-tag>
                     </div>
                 </div>
@@ -1107,9 +1104,9 @@
 
         // ── Commercial modules · cannot be added via generator, click to view pricing ──
         {id: 'erupt-chart', name: 'Chart', icon: '📊', desc: 'Reports & data visualization', descZh: '报表图表 / 数据可视化', tag: 'PRO', pro: true, proUrl: 'https://www.erupt.xyz/?utm_source=start&utm_medium=card_chart&utm_campaign=pro#!/pro'},
-        {id: 'erupt-flow', name: 'Flow', icon: '🔀', desc: 'Workflow / approval engine', descZh: '流程引擎 / 审批工作流', tag: 'PRO', pro: true, proUrl: 'https://www.erupt.xyz/?utm_source=start&utm_medium=card_flow&utm_campaign=pro#!/pro'},
+        {id: 'erupt-flow', name: 'Flow', icon: '🔀', desc: 'Workflow / approval engine', descZh: '流程引擎 / 审批工作流', tag: 'PRO', pro: true, proUrl: 'https://www.erupt.xyz/#!/flow'},
         {id: 'erupt-tenant', name: 'SaaS', icon: '🏢', desc: 'Multi-tenant infrastructure', descZh: '多租户基建', tag: 'PRO', pro: true, proUrl: 'https://www.erupt.xyz/?utm_source=start&utm_medium=card_tenant&utm_campaign=pro#!/pro'},
-        {id: 'erupt-cube', name: 'Cube', icon: '🧊', desc: 'BI platform with semantic layer', descZh: 'BI 平台 / 语义层', tag: 'PRO', pro: true, proUrl: 'https://www.erupt.xyz/?utm_source=start&utm_medium=card_cube&utm_campaign=pro#!/pro'},
+        {id: 'erupt-cube', name: 'Cube', icon: '🧊', desc: 'BI platform with semantic layer', descZh: 'BI 平台 / 语义层', tag: 'PRO', pro: true, proUrl: 'https://www.erupt.xyz/#!/cube'},
     ];
 
     const DB = {
@@ -1220,11 +1217,6 @@
             // ── module toggle ─────────────────────────────
             function toggleMod(id) {
                 const mod = MODULES.find(m => m.id === id);
-                // Commercial modules: not selectable, redirect to pricing page
-                if (mod?.pro) {
-                    window.open(mod.proUrl, '_blank');
-                    return;
-                }
                 const arr = selectedMods.value;
                 const idx = arr.indexOf(id);
                 if (idx > -1) {
@@ -1244,12 +1236,29 @@
 
             // ── template renderers ────────────────────────
             function renderPom() {
-                const modDeps = selectedMods.value.map(id =>
+                const freeMods = selectedMods.value.filter(id => !MODULES.find(m => m.id === id)?.pro);
+                const proMods  = selectedMods.value.filter(id =>  MODULES.find(m => m.id === id)?.pro);
+
+                const freeModDeps = freeMods.map(id =>
                     `        <dependency>
             <groupId>xyz.erupt</groupId>
             <artifactId>${id}</artifactId>
             <version>\${erupt.version}</version>
         </dependency>`).join('\n');
+
+                const proModDeps = proMods.map(id => {
+                    const mod = MODULES.find(m => m.id === id);
+                    return `        <!-- [PRO] ${mod.name}: ${mod.proUrl} -->
+        <!--
+        <dependency>
+            <groupId>xyz.erupt</groupId>
+            <artifactId>${id}</artifactId>
+            <version>\${erupt.version}</version>
+        </dependency>
+        -->`;
+                }).join('\n');
+
+                const modDeps = [freeModDeps, proModDeps].filter(Boolean).join('\n');
 
                 return `<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
@@ -1311,8 +1320,18 @@ ${DB[form.db].mvn}
             }
 
             function renderGradle() {
-                const modDeps = selectedMods.value.map(id =>
+                const freeMods = selectedMods.value.filter(id => !MODULES.find(m => m.id === id)?.pro);
+                const proMods  = selectedMods.value.filter(id =>  MODULES.find(m => m.id === id)?.pro);
+
+                const freeModDeps = freeMods.map(id =>
                     `    implementation("xyz.erupt:${id}:${ERUPT_VER}")`).join('\n');
+
+                const proModDeps = proMods.map(id => {
+                    const mod = MODULES.find(m => m.id === id);
+                    return `    // [PRO] ${mod.name}: ${mod.proUrl}\n    // implementation("xyz.erupt:${id}:${ERUPT_VER}")`;
+                }).join('\n');
+
+                const modDeps = [freeModDeps, proModDeps].filter(Boolean).join('\n');
                 return `plugins {
     id("org.springframework.boot") version "${BOOT_VER}"
     id("io.spring.dependency-management") version "1.1.7"

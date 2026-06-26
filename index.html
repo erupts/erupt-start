@@ -1017,14 +1017,13 @@
             </div>
         </div>
     </el-dialog>
-
 </div>
 
 <script>
     const {createApp, reactive, ref, computed, watch, onMounted} = Vue;
 
-    const ERUPT_VER = '1.14.3';
-    const BOOT_VER = '3.5.13';
+    const ERUPT_VER = '2.0.0';
+    const BOOT_VER = '3.5.15';
 
     const LANG = {
         en: {
@@ -1088,8 +1087,11 @@
     };
 
     const MODULES = [
-        {id: 'erupt-ai', name: 'AI', icon: '🤖', desc: 'Integrate 50+ LLMs: GPT, Claude, DeepSeek…', descZh: '集成 50+ 大模型：GPT、Claude、DeepSeek…', tag: 'NEW'},
-        {id: 'erupt-ai-claw', name: 'AI Claw', icon: '🦞', desc: 'Control your server via natural language', descZh: '用自然语言控制你的服务器', tag: 'NEW', requires: 'erupt-ai'},
+        {id: 'erupt-ai', name: 'AI', icon: '🤖', desc: 'Integrate 50+ LLMs: GPT, Claude, DeepSeek…', descZh: '集成 50+ 大模型：GPT、Claude、DeepSeek…'},
+        {id: 'erupt-ai-claw', name: 'AI Claw', icon: '🦞', desc: 'Control your server via natural language', descZh: '用自然语言控制你的服务器', requires: 'erupt-ai'},
+        {id: 'erupt-designer', name: 'Designer', icon: '✏️', desc: 'Visual form designer — drag-and-drop entity models at runtime, publish without restart', descZh: '可视化表单设计器 — 运行时拖拽设计实体模型，无需重启发布', tag: 'NEW'},
+        {id: 'erupt-print', name: 'Print', icon: '🖨️', desc: 'HTML template-based printing for any Erupt entity row', descZh: '基于 HTML 模板的打印，支持任意 Erupt 实体行数据', tag: 'NEW'},
+
         {id: 'erupt-terminal', name: 'Terminal', icon: '💻', desc: 'Web SSH / shell terminal in the admin UI', descZh: '管理界面内置 Web SSH / Shell 终端'},
         {id: 'erupt-notice', name: 'Notice', icon: '🔔', desc: 'In-app notifications with sms support', descZh: '站内通知，支持短信等渠道推送'},
         {id: 'erupt-magic-api', name: 'Magic API', icon: '🪄', desc: 'Online API development IDE', descZh: '在线 API 开发 IDE'},

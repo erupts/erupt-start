@@ -1022,8 +1022,8 @@
 <script>
     const {createApp, reactive, ref, computed, watch, onMounted} = Vue;
 
-    const ERUPT_VER = '2.0.1';
-    const BOOT_VER = '3.5.15';
+    const ERUPT_VER = '2.0.3';
+    const BOOT_VER = '3.5.16';
 
     const LANG = {
         en: {
@@ -1298,16 +1298,10 @@
     </properties>
 
     <dependencies>
-        <!-- Erupt core (UPMS, JPA, security) -->
+        <!-- Erupt starter (core + frontend UI) -->
         <dependency>
             <groupId>xyz.erupt</groupId>
-            <artifactId>erupt-admin</artifactId>
-            <version>\${erupt.version}</version>
-        </dependency>
-        <!-- Erupt frontend (Angular UI bundled in JAR) -->
-        <dependency>
-            <groupId>xyz.erupt</groupId>
-            <artifactId>erupt-web</artifactId>
+            <artifactId>erupt-spring-boot-starter</artifactId>
             <version>\${erupt.version}</version>
         </dependency>
 ${modDeps ? modDeps + '\n\n' : ''}        <!-- Database -->
@@ -1365,8 +1359,7 @@ repositories {
 }
 
 dependencies {
-    implementation("xyz.erupt:erupt-admin:${ERUPT_VER}")
-    implementation("xyz.erupt:erupt-web:${ERUPT_VER}")
+    implementation("xyz.erupt:erupt-spring-boot-starter:${ERUPT_VER}")
 ${modDeps ? modDeps + '\n' : ''}    ${DB[form.db].gradle}
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")

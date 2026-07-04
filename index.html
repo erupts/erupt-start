@@ -1437,7 +1437,7 @@ ${isMongo ? '' : '@Table(name = "t_sample")\n@Entity\n'}public class SampleModel
 
     @EruptField(
             views = @View(title = "Name"),
-            edit = @Edit(title = "Name", notNull = true, search = @Search(vague = true))
+            edit = @Edit(title = "Name", notNull = true, search = @Search)
     )
     private String name;
 
@@ -1455,7 +1455,7 @@ ${isMongo ? '' : '@Table(name = "t_sample")\n@Entity\n'}public class SampleModel
 
     @EruptField(
             views = @View(title = "Date", sortable = true),
-            edit = @Edit(title = "Date", search = @Search(vague = true))
+            edit = @Edit(title = "Date", search = @Search)
     )
     private Date date;
 

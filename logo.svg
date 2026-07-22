@@ -14,5 +14,5 @@
   </g>
 
   <!-- Exact center silhouette, recolored to the requested cyan. -->
-  <polygon fill="#09f" points="644,407 879,582 784,863 502,862 411,584"/>
+  <polygon fill="#FF6B35" points="644,407 879,582 784,863 502,862 411,584"/>
 </svg>

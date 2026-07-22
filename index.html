@@ -217,16 +217,16 @@
             grid-template-columns: 1.05fr .95fr;
             gap: 40px;
             align-items: center;
-            padding: 14px 0 8px;
+            padding: 0;
         }
 
         .hero-title {
-            font-size: clamp(44px, 6vw, 78px);
+            font-size: clamp(38px, 5vw, 62px);
             font-weight: 900;
             line-height: .98;
             letter-spacing: -.03em;
             text-transform: uppercase;
-            margin: 20px 0 18px;
+            margin: 16px 0 14px;
         }
 
         .hero-title .hl {
@@ -240,45 +240,17 @@
         }
 
         .lead {
-            font-size: 16px;
+            font-size: 15px;
             color: var(--muted);
             max-width: 460px;
             margin: 0 0 22px;
-        }
-
-        .bullets {
-            list-style: none;
-            padding: 0;
-            margin: 0 0 26px;
-            display: flex;
-            flex-direction: column;
-            gap: 11px;
-        }
-
-        .bullets li {
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-            font-size: 14px;
-            font-weight: 500;
-            line-height: 1.5;
-        }
-
-        .bullets li::before {
-            content: '';
-            flex-shrink: 0;
-            width: 10px;
-            height: 10px;
-            margin-top: 5px;
-            background: var(--cyan);
-            border: 2px solid var(--ink);
         }
 
         .hero-actions {
             display: flex;
             flex-wrap: wrap;
             gap: 14px;
-            margin-bottom: 24px;
+            margin-bottom: 22px;
         }
 
         .chips { display: flex; flex-wrap: wrap; gap: 12px; }
@@ -922,12 +894,6 @@
                 <span class="kicker">{{ t('heroEyebrow') }}</span>
                 <h1 class="hero-title">Start <em class="hl">Erupt</em></h1>
                 <p class="lead">{{ t('heroSub') }}</p>
-                <ul class="bullets">
-                    <li>{{ t('bullet1') }}</li>
-                    <li>{{ t('bullet2') }}</li>
-                    <li>{{ t('bullet3') }}</li>
-                    <li>{{ t('bullet4') }}</li>
-                </ul>
                 <div class="hero-actions">
                     <button class="btn btn-primary" @click="generate">{{ t('heroBtn') }}</button>
                     <button class="btn" @click="openExplore">{{ t('btnExplore') }}</button>
@@ -948,14 +914,11 @@
 <pre class="win-body"><span class="anno">@Erupt</span>(name = <span class="str">"Sample"</span>)
 <span class="anno">@Entity</span>
 <span class="kw">public class</span> SampleModel {
-
     <span class="anno">@EruptField</span>(
-        views = <span class="anno">@View</span>(title = <span class="str">"Name"</span>),
-        edit  = <span class="anno">@Edit</span>(title = <span class="str">"Name"</span>, notNull = <span class="kw">true</span>)
+        edit = <span class="anno">@Edit</span>(title = <span class="str">"Name"</span>, notNull = <span class="kw">true</span>)
     )
     <span class="kw">private</span> String name;
-
-    <span class="cm">// ↑ full CRUD admin UI — zero frontend code</span>
+    <span class="cm">// → full CRUD admin UI, zero frontend code</span>
 }</pre>
                 </div>
             </div>

@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8"/>
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>start.erupt.xyz — Bootstrap your Erupt project</title>
     <link rel="stylesheet" href="https://unpkg.com/element-plus@2.9.1/dist/index.css"/>
@@ -13,27 +14,32 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     <style>
         /* ══════════════════════════════════════════════
-           BRUTALIST-MINIMAL · start.erupt.xyz
-           black 2-3px borders · hard offset shadows ·
-           zero radius · paper bg · single blue accent
+           ERUPT RAFT · start.erupt.xyz
+           neo-brutalism × 手作纸感
+           warm ink · cream paper · hard offset shadows ·
+           zero radius · cyan accent · pink primary CTA ·
+           sticker rotations · window chrome
            ══════════════════════════════════════════════ */
-        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
 
         :root {
-            --ink: #000000;
-            --paper: #F5F2EA;
+            --ink: #14120B;
+            --bg: #FFF9EE;
+            --paper: #FFFFFF;
             --card: #FFFFFF;
-            --accent: #4FC8EC;        /* fill accent — always black text on top */
-            --accent-ink: #0C7097;    /* accent as text on white */
-            --muted: #52525B;
+            --muted: #5C5647;
+            --faint: #D9D2C2;
+            --cyan: #4FC8EC;
+            --accent: #4FC8EC;
+            --pink: #F585B4;
+            --green: #93D655;
+            --purple: #BCA0F2;
+            --code-bg: #1A170F;
+            --code-fg: #F0E8D6;
             --bw: 2px;
             --shadow: 4px 4px 0 var(--ink);
-            --shadow-lg: 8px 8px 0 var(--ink);
-            --sans: 'Space Grotesk', system-ui, -apple-system, sans-serif;
-            --mono: 'JetBrains Mono', 'Courier New', monospace;
-            /* legacy vars kept for compatibility */
-            --text: #000000;
-            --border: #000000;
+            --shadow-lg: 6px 6px 0 var(--ink);
+            --sans: -apple-system, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+            --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
             /* Element Plus */
             --el-color-primary: #1093C6;
             --el-color-primary-light-3: #4FC8EC;
@@ -47,792 +53,582 @@
             --el-border-radius-round: 0;
         }
 
-        *, *::before, *::after {
-            box-sizing: border-box;
-        }
+        *, *::before, *::after { box-sizing: border-box; }
 
-        ::selection {
-            background: var(--ink);
-            color: #fff;
-        }
+        ::selection { background: var(--ink); color: var(--bg); }
 
         body {
             margin: 0;
             font-family: var(--sans);
-            background: var(--paper);
+            background: var(--bg);
             color: var(--ink);
             font-size: 14px;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
             min-height: 100vh;
         }
 
-        /* ── Header row (inside .fr) ─────────── */
-        .fr-header {
-            display: flex;
-            align-items: center;
-            height: 64px;
-            padding: 0 28px;
-            position: sticky;
-            top: 0;
-            background: var(--card);
-            z-index: 40;
+        /* faint corkboard dot texture */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            background-image: radial-gradient(var(--faint) 1px, transparent 1px);
+            background-size: 26px 26px;
+            opacity: .45;
+            pointer-events: none;
         }
 
-        .logo {
+        /* ══ Nav ═══════════════════════════════ */
+        .nav {
+            max-width: 1180px;
+            margin: 0 auto;
+            padding: 22px 24px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 11px;
             text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .logo img {
-            width: 30px;
-            height: 30px;
-        }
-
-        .logo-title {
-            font-size: 17px;
-            font-weight: 700;
             color: var(--ink);
-            letter-spacing: -.03em;
-            line-height: 1.1;
         }
 
-        .logo-title em {
-            font-style: normal;
-            background: var(--accent);
-            padding: 0 3px;
-        }
+        .brand img { width: 34px; height: 34px; }
 
-        .logo-sub {
+        .brand-name {
             display: block;
+            font-size: 18px;
+            font-weight: 900;
+            letter-spacing: -.02em;
+        }
+
+        .brand-name b {
+            font-weight: 900;
+            background: var(--cyan);
+            box-shadow: 2px 2px 0 var(--ink);
+            padding: 0 4px;
+            margin-left: 1px;
+        }
+
+        .brand-sub {
+            display: block;
+            font-family: var(--mono);
             font-size: 9px;
             font-weight: 700;
-            color: var(--muted);
             letter-spacing: .16em;
             text-transform: uppercase;
-            margin-top: 3px;
-            font-family: var(--mono);
+            color: var(--muted);
+            margin-top: 4px;
         }
 
-        .fr-header nav {
+        .nav-links {
             margin-left: auto;
             display: flex;
-            gap: 6px;
             align-items: center;
+            gap: 22px;
         }
 
-        .fr-header nav a {
+        .nav-links a {
             color: var(--ink);
             text-decoration: none;
-            font-size: 12px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: .04em;
-            padding: 6px 10px;
-            border: var(--bw) solid transparent;
-        }
-
-        .fr-header nav a:hover {
-            background: var(--accent);
-            border-color: var(--ink);
-        }
-
-        /* ── Wrap + Frame ───────────────────── */
-        .wrap {
-            padding: 36px 20px 130px;
-        }
-
-        .fr {
-            max-width: 1200px;
-            margin: 0 auto;
-            border: 3px solid var(--ink);
-            background: var(--card);
-            box-shadow: var(--shadow-lg);
-            position: relative;
-        }
-
-        /* ── Row ────────────────────────────── */
-        .r {
-            border-bottom: var(--bw) solid var(--ink);
-            position: relative;
-        }
-
-        .r:last-child {
-            border-bottom: none;
-        }
-
-        /* ── Section boundary marker — solid corner block ── */
-        .bound::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 10px;
-            height: 10px;
-            background: var(--accent);
-            border-left: var(--bw) solid var(--ink);
-            border-bottom: var(--bw) solid var(--ink);
-            z-index: 1;
-        }
-
-        /* ── Grid layouts ───────────────────── */
-        .g2 {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-        }
-
-        .g3 {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-        }
-
-        .g4 {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-        }
-
-        .g5 {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-        }
-
-        /* ── Cell ───────────────────────────── */
-        .c {
-            padding: 32px;
-            border-right: var(--bw) solid var(--ink);
-        }
-
-        .c:last-child {
-            border-right: none;
-        }
-
-        /* ── Section label bar — black flood ── */
-        .g-bg {
-            background: var(--ink);
-        }
-
-        .sec-label {
-            padding: 10px 32px;
-            font-size: 11px;
-            font-weight: 700;
-            font-family: var(--mono);
-            text-transform: uppercase;
-            letter-spacing: .2em;
-            color: #fff;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .sec-label::before {
-            content: '';
-            width: 8px;
-            height: 8px;
-            background: var(--accent);
-            flex-shrink: 0;
-        }
-
-        .sec-label span {
-            color: #a1a1aa;
-            letter-spacing: .04em;
-            font-weight: 400;
-            font-family: inherit;
-        }
-
-        /* ── Brutalist buttons ──────────────── */
-        .wbtn {
-            border: var(--bw) solid var(--ink);
-            background: var(--card);
-            color: var(--ink);
-            padding: 12px 22px;
             font-size: 13px;
             font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: .05em;
+            padding-bottom: 3px;
+            border-bottom: 2.5px solid transparent;
+        }
+
+        .nav-links a:hover {
+            border-bottom-color: var(--cyan);
+        }
+
+        .lang-btn {
+            font-family: var(--mono);
+            font-size: 12px;
+            font-weight: 700;
+            border: var(--bw) solid var(--ink);
+            background: var(--paper);
+            color: var(--ink);
+            padding: 5px 9px;
             cursor: pointer;
-            font-family: var(--sans);
-            line-height: 1.2;
-            border-radius: 0;
+            box-shadow: 2px 2px 0 var(--ink);
+            transition: transform .12s, box-shadow .12s;
+        }
+
+        .lang-btn:hover { transform: translate(-1px, -1px); box-shadow: 3px 3px 0 var(--ink); }
+        .lang-btn:active { transform: translate(1px, 1px); box-shadow: 1px 1px 0 var(--ink); }
+
+        /* ══ Page ══════════════════════════════ */
+        .page {
+            max-width: 1180px;
+            margin: 0 auto;
+            padding: 10px 24px 150px;
+            display: flex;
+            flex-direction: column;
+            gap: 34px;
+        }
+
+        /* ══ Kicker chip ═══════════════════════ */
+        .kicker {
+            display: inline-block;
+            font-family: var(--mono);
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            color: var(--ink);
+            background: var(--cyan);
+            border: var(--bw) solid var(--ink);
+            box-shadow: 3px 3px 0 var(--ink);
+            padding: 5px 11px;
+            transform: rotate(-1.4deg);
+        }
+
+        /* ══ Buttons ═══════════════════════════ */
+        .btn {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            box-shadow: var(--shadow);
-            transition: transform .08s linear, box-shadow .08s linear;
-        }
-
-        .wbtn:hover {
-            transform: translate(-2px, -2px);
-            box-shadow: 6px 6px 0 var(--ink);
-        }
-
-        .wbtn:active {
-            transform: translate(4px, 4px);
-            box-shadow: none;
-        }
-
-        /* Accent fill primary */
-        .wbtn-o {
-            background: var(--accent);
+            font-family: var(--sans);
+            font-size: 14px;
+            font-weight: 800;
             color: var(--ink);
-        }
-
-        .wbtn-o:hover {
-            background: var(--accent);
-            color: var(--ink);
-        }
-
-        /* ── Hero ───────────────────────────── */
-        .hero-eyebrow {
-            display: inline-block;
-            font-family: var(--mono);
-            font-size: 10px;
-            font-weight: 700;
-            letter-spacing: .18em;
-            text-transform: uppercase;
-            color: var(--ink);
-            background: var(--accent);
+            background: var(--paper);
             border: var(--bw) solid var(--ink);
-            padding: 5px 10px;
-            margin-bottom: 22px;
+            box-shadow: var(--shadow);
+            padding: 11px 22px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: transform .15s ease, box-shadow .15s ease;
+        }
+
+        .btn:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--ink); }
+        .btn:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--ink); }
+
+        .btn-primary { background: var(--pink); }
+
+        /* ══ Hero ══════════════════════════════ */
+        .hero {
+            display: grid;
+            grid-template-columns: 1.05fr .95fr;
+            gap: 40px;
+            align-items: center;
+            padding: 14px 0 8px;
         }
 
         .hero-title {
-            font-size: clamp(40px, 5.5vw, 72px);
-            font-weight: 700;
+            font-size: clamp(44px, 6vw, 78px);
+            font-weight: 900;
+            line-height: .98;
             letter-spacing: -.03em;
             text-transform: uppercase;
-            color: var(--ink);
-            line-height: .95;
-            margin-bottom: 20px;
+            margin: 20px 0 18px;
         }
 
-        .hero-title em {
+        .hero-title .hl {
             font-style: normal;
             display: inline-block;
-            background: var(--accent);
-            padding: 0 .1em;
+            background: var(--cyan);
+            color: var(--ink);
+            padding: 0 14px 4px;
+            transform: rotate(-1.6deg);
             box-shadow: 5px 5px 0 var(--ink);
         }
 
-        .hero-sub {
-            font-size: 15px;
+        .lead {
+            font-size: 16px;
             color: var(--muted);
-            margin-bottom: 26px;
-            line-height: 1.6;
-            max-width: 420px;
-            font-weight: 500;
+            max-width: 460px;
+            margin: 0 0 22px;
         }
 
-        .hero-badges {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-        }
-
-        .ver-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 11px;
-            font-weight: 500;
-            color: var(--ink);
-            border: var(--bw) solid var(--ink);
-            background: var(--card);
-            padding: 6px 12px;
-            font-family: var(--mono);
-            box-shadow: 3px 3px 0 var(--ink);
-        }
-
-        .dot {
-            width: 8px;
-            height: 8px;
-            background: var(--accent);
-            border: 2px solid var(--ink);
-            border-radius: 0;
-            flex-shrink: 0;
-        }
-
-        .hero-bullets {
+        .bullets {
             list-style: none;
             padding: 0;
-            margin: 0 0 28px;
+            margin: 0 0 26px;
+            display: flex;
+            flex-direction: column;
+            gap: 11px;
         }
 
-        .hero-bullets li {
-            font-size: 13.5px;
-            font-weight: 500;
-            color: var(--ink);
-            padding: 7px 0;
+        .bullets li {
             display: flex;
             align-items: flex-start;
             gap: 12px;
-            line-height: 1.55;
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 1.5;
         }
 
-        .hero-bullets li::before {
+        .bullets li::before {
             content: '';
+            flex-shrink: 0;
+            width: 10px;
+            height: 10px;
+            margin-top: 5px;
+            background: var(--cyan);
+            border: 2px solid var(--ink);
+        }
+
+        .hero-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            margin-bottom: 24px;
+        }
+
+        .chips { display: flex; flex-wrap: wrap; gap: 12px; }
+
+        .chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: var(--mono);
+            font-size: 11.5px;
+            font-weight: 700;
+            border: var(--bw) solid var(--ink);
+            background: var(--paper);
+            box-shadow: 3px 3px 0 var(--ink);
+            padding: 6px 12px;
+        }
+
+        .chip .dot {
             width: 9px;
             height: 9px;
-            background: var(--accent);
+            background: var(--green);
             border: 2px solid var(--ink);
             flex-shrink: 0;
-            margin-top: 5px;
         }
 
-        /* ── Field helpers ──────────────────── */
+        /* ══ Window chrome (hero preview) ══════ */
+        .win {
+            border: var(--bw) solid var(--ink);
+            background: var(--code-bg);
+            box-shadow: 7px 7px 0 var(--ink);
+            transform: rotate(1.2deg);
+        }
+
+        .win-bar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 14px;
+            background: var(--paper);
+            border-bottom: var(--bw) solid var(--ink);
+        }
+
+        .win-bar .tl {
+            width: 11px;
+            height: 11px;
+            border-radius: 50%;
+            border: 2px solid var(--ink);
+        }
+
+        .tl-pink { background: var(--pink); }
+        .tl-cyan { background: var(--cyan); }
+        .tl-green { background: var(--green); }
+
+        .win-file {
+            margin-left: auto;
+            font-family: var(--mono);
+            font-size: 11.5px;
+            font-weight: 700;
+            color: var(--muted);
+        }
+
+        .win-body {
+            margin: 0;
+            padding: 20px 22px;
+            font-family: var(--mono);
+            font-size: 13px;
+            line-height: 1.75;
+            color: var(--code-fg);
+            overflow-x: auto;
+        }
+
+        .win-body .anno { color: var(--pink); font-weight: 700; }
+        .win-body .kw   { color: var(--cyan); font-weight: 700; }
+        .win-body .str  { color: var(--green); font-weight: 700; }
+        .win-body .cm   { color: #7d7565; }
+
+        /* ══ Card ══════════════════════════════ */
+        .card {
+            background: var(--card);
+            border: var(--bw) solid var(--ink);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .card-head {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 24px;
+            border-bottom: var(--bw) solid var(--ink);
+        }
+
+        .sq {
+            width: 12px;
+            height: 12px;
+            background: var(--cyan);
+            border: 1.5px solid var(--ink);
+            flex-shrink: 0;
+        }
+
+        .card-title {
+            font-family: var(--mono);
+            font-size: 12.5px;
+            font-weight: 800;
+            letter-spacing: .16em;
+            text-transform: uppercase;
+        }
+
+        .card-hint {
+            font-family: var(--mono);
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--muted);
+            letter-spacing: .04em;
+        }
+
+        .card-body { padding: 26px 24px; }
+
+        /* ══ Grid + fields ═════════════════════ */
+        .grid { display: grid; gap: 22px; }
+        .grid-2 { grid-template-columns: repeat(2, 1fr); }
+        .grid-3 { grid-template-columns: repeat(3, 1fr); }
+        .grid-4 { grid-template-columns: repeat(4, 1fr); }
+        .grid-5 { grid-template-columns: repeat(5, 1fr); }
+        .grid + .grid { margin-top: 22px; }
+
         .field-label {
+            font-family: var(--mono);
             font-size: 10px;
             font-weight: 700;
-            font-family: var(--mono);
-            color: var(--ink);
-            text-transform: uppercase;
             letter-spacing: .14em;
-            margin-bottom: 12px;
+            text-transform: uppercase;
+            color: var(--ink);
+            margin-bottom: 10px;
         }
 
-        /* ── Module grid ────────────────────── */
-        .mods-grid {
+        .color-field {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .color-field input[type=color] {
+            width: 46px;
+            height: 36px;
+            border: var(--bw) solid var(--ink);
+            padding: 0;
+            background: none;
+            cursor: pointer;
+        }
+
+        .color-val { font-family: var(--mono); font-size: 13px; }
+
+        /* ══ Modules ═══════════════════════════ */
+        .mods {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
         }
 
         .mod {
-            border-right: var(--bw) solid var(--ink);
-            border-bottom: var(--bw) solid var(--ink);
-            padding: 20px 22px;
+            position: relative;
+            border: var(--bw) solid var(--ink);
+            background: var(--paper);
+            box-shadow: 3px 3px 0 var(--ink);
+            padding: 16px 16px 18px;
             cursor: pointer;
             user-select: none;
-            position: relative;
-            background: var(--card);
+            transition: transform .15s ease, box-shadow .15s ease, background .1s;
         }
 
-        .mods-grid .mod:nth-child(4n) {
-            border-right: none;
-        }
+        .mod:hover { transform: translate(-2px, -2px); box-shadow: 5px 5px 0 var(--ink); background: #EDFAFD; }
+        .mod:active { transform: translate(1px, 1px); box-shadow: 1px 1px 0 var(--ink); }
 
-        .mod:hover {
-            background: #CAEFFA;
-        }
-
-        .mod.on {
-            background: var(--accent);
-        }
+        .mod.on { background: var(--cyan); }
+        .mod.on:hover { background: var(--cyan); }
 
         .mod.on::after {
             content: '✓';
             position: absolute;
-            top: 0;
-            right: 0;
-            width: 20px;
-            height: 20px;
+            top: -2px;
+            right: -2px;
+            width: 22px;
+            height: 22px;
             background: var(--ink);
-            color: #fff;
-            font-size: 11px;
+            color: var(--bg);
+            font-size: 12px;
             font-weight: 700;
-            line-height: 20px;
+            line-height: 22px;
             text-align: center;
         }
 
-        /* Commercial module — diagonal hatch, click → pricing */
         .mod.pro {
-            background: repeating-linear-gradient(
-                    45deg,
-                    transparent,
-                    transparent 6px,
-                    rgba(0, 0, 0, .05) 6px,
-                    rgba(0, 0, 0, .05) 12px
-            );
+            background: repeating-linear-gradient(45deg,
+                var(--paper), var(--paper) 7px,
+                rgba(20, 18, 11, .06) 7px, rgba(20, 18, 11, .06) 14px);
         }
+        .mod.pro:hover { background: #EDFAFD; }
+        .mod.pro.on { background: var(--cyan); }
 
-        .mod.pro:hover {
-            background: #CAEFFA;
-        }
-
-        .mod.pro.on {
-            background: var(--accent);
-        }
-
-        .mod.pro .mod-badge {
-            background: var(--ink);
-            color: #fff;
-        }
-
-        /* Commercial modules banner — accent flood */
-        .pro-banner {
-            background: var(--accent);
-        }
-
-        .pro-banner-eyebrow {
-            font-family: var(--mono);
-            font-size: 10px;
-            font-weight: 700;
-            letter-spacing: .18em;
-            color: var(--ink);
-            margin-bottom: 8px;
-        }
-
-        .pro-banner-title {
-            font-size: 16px;
-            font-weight: 700;
-            color: var(--ink);
-            margin-bottom: 4px;
-        }
-
-        .pro-banner-desc {
-            font-size: 12px;
-            font-weight: 500;
-            color: rgba(0, 0, 0, .72);
-            line-height: 1.5;
-        }
-
-        .mod-icon {
-            font-size: 18px;
-            margin-bottom: 8px;
-            filter: grayscale(1);
-        }
-
-        .mod.on .mod-icon,
-        .mod:hover .mod-icon {
-            filter: none;
-        }
+        .mod-icon { font-size: 20px; line-height: 1; margin-bottom: 10px; }
 
         .mod-name {
             font-size: 13px;
-            font-weight: 700;
+            font-weight: 800;
+            letter-spacing: .01em;
             text-transform: uppercase;
-            letter-spacing: .02em;
-            color: var(--ink);
-            margin-bottom: 4px;
+            margin-bottom: 5px;
         }
 
-        .mod-desc {
-            font-size: 11.5px;
-            color: var(--muted);
-            line-height: 1.5;
-        }
-
-        .mod.on .mod-desc {
-            color: rgba(0, 0, 0, .72);
-        }
+        .mod-desc { font-size: 12px; color: var(--muted); line-height: 1.5; }
+        .mod.on .mod-desc { color: rgba(20, 18, 11, .72); }
 
         .mod-badge {
             display: inline-block;
+            font-family: var(--mono);
             font-size: 9px;
             font-weight: 700;
-            font-family: var(--mono);
-            padding: 2px 6px;
-            margin-top: 8px;
-            background: var(--card);
-            color: var(--ink);
-            border: 2px solid var(--ink);
             letter-spacing: .08em;
             text-transform: uppercase;
+            border: 2px solid var(--ink);
+            background: var(--paper);
+            padding: 2px 6px;
+            margin-top: 10px;
         }
 
-        /* ── Selected area ──────────────────── */
-        .sel-empty {
-            font-size: 12px;
-            color: var(--muted);
-            font-family: var(--mono);
+        .mod.pro .mod-badge { background: var(--ink); color: var(--bg); }
+
+        /* ══ Selected row ══════════════════════ */
+        .selected {
+            border-top: var(--bw) solid var(--ink);
+            padding: 20px 24px;
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            flex-wrap: wrap;
         }
 
         .sel-label {
+            font-family: var(--mono);
             font-size: 10px;
             font-weight: 700;
-            font-family: var(--mono);
-            text-transform: uppercase;
             letter-spacing: .14em;
-            color: var(--ink);
-            margin-bottom: 12px;
+            text-transform: uppercase;
+            padding-top: 6px;
+            flex-shrink: 0;
         }
 
         .sel-tags {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
+            gap: 9px;
             align-items: center;
-            min-height: 28px;
+            min-height: 30px;
         }
 
-        /* ── Reveal animation ───────────────── */
-        .reveal {
-            opacity: 0;
-            transform: translateY(10px);
-            transition: opacity .35s ease-out, transform .35s ease-out;
+        .sel-empty { font-family: var(--mono); font-size: 12px; color: var(--muted); }
+
+        /* ══ Pro banner ════════════════════════ */
+        .pro {
+            background: var(--cyan);
+            border: var(--bw) solid var(--ink);
+            box-shadow: var(--shadow-lg);
+            padding: 26px 28px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 22px;
         }
 
-        .reveal.in {
-            opacity: 1;
-            transform: none;
+        .pro-text { flex: 1; min-width: 280px; }
+
+        .pro-eyebrow {
+            font-family: var(--mono);
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: .18em;
+            text-transform: uppercase;
+            margin-bottom: 8px;
         }
 
-        @media (prefers-reduced-motion: reduce) {
-            .reveal {
-                transition: none;
-                opacity: 1;
-                transform: none;
-            }
+        .pro-title { font-size: 19px; font-weight: 900; letter-spacing: -.01em; margin-bottom: 6px; }
+        .pro-desc { font-size: 13px; font-weight: 500; color: rgba(20, 18, 11, .74); line-height: 1.55; max-width: 640px; }
 
-            .wbtn {
-                transition: none;
-            }
-        }
-
-        /* ── Action bar ─────────────────────── */
+        /* ══ Action bar ════════════════════════ */
         .bar {
             position: fixed;
-            bottom: 0;
             left: 50%;
+            bottom: 0;
             transform: translateX(-50%);
             width: 100%;
-            max-width: 1200px;
-            background: var(--card);
-            border: 3px solid var(--ink);
+            max-width: 1180px;
+            background: var(--paper);
+            border: var(--bw) solid var(--ink);
             border-bottom: none;
-            padding: 14px 32px;
+            box-shadow: 0 -6px 0 -2px var(--ink);
+            padding: 15px 24px;
             display: flex;
             align-items: center;
-            justify-content: center;
-            gap: 12px;
+            justify-content: flex-end;
+            gap: 14px;
             z-index: 100;
         }
 
-        .bar-left {
-            position: absolute;
-            left: 32px;
-            display: flex;
-            gap: 8px;
-            align-items: center;
-        }
-
-        .hint-key {
-            font-size: 12px;
+        .bar-hint {
+            margin-right: auto;
+            font-size: 12.5px;
             font-weight: 500;
             color: var(--muted);
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
         kbd {
-            background: var(--card);
-            border: 2px solid var(--ink);
-            box-shadow: 2px 2px 0 var(--ink);
-            padding: 1px 6px;
+            font-family: var(--mono);
             font-size: 10px;
             font-weight: 700;
-            font-family: var(--mono);
-            border-radius: 0;
-        }
-
-        /* ── Explorer dialog ────────────────── */
-        .explorer {
-            display: flex;
-            height: 500px;
-        }
-
-        .ftree {
-            width: 220px;
-            border-right: var(--bw) solid var(--ink);
-            overflow-y: auto;
-            flex-shrink: 0;
-            background: var(--paper);
-        }
-
-        .fdir {
-            padding: 14px 14px 5px;
-            font-size: 10px;
-            font-weight: 700;
-            font-family: var(--mono);
-            text-transform: uppercase;
-            letter-spacing: .1em;
-            color: var(--muted);
-        }
-
-        .fitem {
-            padding: 6px 14px;
-            font-size: 12px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: var(--ink);
-            font-family: var(--mono);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .fitem::before {
-            content: '';
-            width: 7px;
-            height: 7px;
             border: 2px solid var(--ink);
-            background: var(--card);
-            flex-shrink: 0;
-        }
-
-        .fitem.on::before {
-            background: var(--ink);
-        }
-
-        .fitem:hover {
-            background: #CAEFFA;
-            color: var(--ink);
-        }
-
-        .fitem.on {
-            background: var(--accent);
-            color: var(--ink);
-            font-weight: 700;
-        }
-
-        .fitem.indent {
-            padding-left: 28px;
-        }
-
-        .fcontent {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
-
-        .fcontent-head {
-            padding: 9px 14px;
-            border-bottom: var(--bw) solid var(--ink);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: var(--paper);
-            flex-shrink: 0;
-        }
-
-        .fcontent-head span {
-            font-size: 12px;
-            font-weight: 500;
-            color: var(--ink);
-            font-family: var(--mono);
-        }
-
-        .fcontent-head .el-button {
             box-shadow: 2px 2px 0 var(--ink);
-        }
-
-        .fcontent pre {
-            flex: 1;
-            overflow: auto;
-            padding: 14px;
-            font-size: 12.5px;
-            font-family: var(--mono);
-            line-height: 1.65;
-            background: #fff !important;
-            margin: 0;
-            white-space: pre;
-        }
-
-        .fcontent pre code.hljs {
-            padding: 0;
-            background: transparent;
-            font-size: inherit;
-            font-family: inherit;
-        }
-
-        /* ── Misc ───────────────────────────── */
-        code {
-            font-size: 11px;
             background: var(--paper);
-            border: 1px solid var(--ink);
-            padding: 1px 5px;
-            font-family: var(--mono);
+            padding: 2px 6px;
         }
 
-        /* ── Element Plus overrides ─────────── */
-        .el-dialog {
-            border-radius: 0 !important;
-            border: 3px solid var(--ink);
-            box-shadow: var(--shadow-lg) !important;
-            padding: 0 !important;
+        /* ══ Reveal ════════════════════════════ */
+        .reveal {
+            opacity: 0;
+            transform: translateY(16px);
+            transition: opacity .6s cubic-bezier(.2, .7, .3, 1), transform .6s cubic-bezier(.2, .7, .3, 1);
         }
 
-        /* dialog header — black flood bar, echoes section labels */
-        .el-dialog__header {
-            background: var(--ink);
-            padding: 0 46px 0 18px !important;
-            margin: 0 !important;
-            height: 46px;
-            display: flex;
-            align-items: center;
+        .reveal.in { opacity: 1; transform: none; }
+
+        @media (prefers-reduced-motion: reduce) {
+            .reveal { transition: none; opacity: 1; transform: none; }
+            .btn, .mod, .lang-btn { transition: none; }
         }
 
-        .el-dialog__title {
-            font-family: var(--mono);
-            font-size: 12px !important;
-            font-weight: 700 !important;
-            text-transform: uppercase;
-            letter-spacing: .12em;
-            color: #fff !important;
-        }
-
-        .el-dialog__headerbtn {
-            top: 0 !important;
-            right: 0 !important;
-            width: 46px !important;
-            height: 46px !important;
-            border-radius: 0;
-        }
-
-        .el-dialog__headerbtn .el-dialog__close {
-            color: #fff !important;
-            font-size: 18px;
-        }
-
-        .el-dialog__headerbtn:hover {
-            background: var(--accent);
-        }
-
-        .el-dialog__headerbtn:hover .el-dialog__close {
-            color: var(--ink) !important;
-        }
-
-        .el-dialog__body {
-            padding: 0 !important;
-        }
-
-        .el-dialog__footer {
-            border-top: var(--bw) solid var(--ink);
-            padding: 14px 18px !important;
-            margin: 0 !important;
-        }
-
-        .el-form--label-top .el-form-item__label {
-            font-size: 10px !important;
-            font-weight: 700 !important;
-            font-family: var(--mono) !important;
-            color: var(--ink) !important;
-            text-transform: uppercase;
-            letter-spacing: .14em;
-            padding-bottom: 8px;
-            line-height: 1 !important;
-        }
-
-        .el-form-item {
-            margin-bottom: 16px !important;
-        }
-
-        .el-form-item:last-of-type {
-            margin-bottom: 0 !important;
-        }
-
-        /* inputs & selects — solid black border, accent hard shadow on focus */
+        /* ══ Element Plus — squared, ink borders, cyan focus ══ */
         .el-input__wrapper,
         .el-select__wrapper {
             border-radius: 0 !important;
-            background: var(--card) !important;
+            background: var(--paper) !important;
             box-shadow: inset 0 0 0 2px var(--ink) !important;
+            padding: 4px 11px !important;
             transition: none !important;
         }
 
         .el-input__wrapper.is-focus,
         .el-select__wrapper.is-focused {
-            box-shadow: inset 0 0 0 2px var(--ink), 3px 3px 0 var(--accent) !important;
+            box-shadow: inset 0 0 0 2px var(--ink), 3px 3px 0 var(--cyan) !important;
         }
 
         .el-input__inner {
@@ -841,6 +637,8 @@
             color: var(--ink) !important;
         }
 
+        .el-input__inner::placeholder { color: #a99f88 !important; }
+
         .el-select__placeholder,
         .el-select__selected-item {
             font-family: var(--mono);
@@ -848,403 +646,479 @@
             color: var(--ink);
         }
 
-        /* radio buttons — square, black borders, accent when checked */
         .el-radio-button__inner {
             border: 2px solid var(--ink) !important;
             border-radius: 0 !important;
-            background: var(--card) !important;
+            background: var(--paper) !important;
             color: var(--ink) !important;
             font-family: var(--sans) !important;
             font-size: 12px !important;
-            font-weight: 700 !important;
+            font-weight: 800 !important;
             box-shadow: none !important;
             transition: none !important;
+            padding: 9px 16px !important;
         }
 
-        .el-radio-button:not(:first-child) .el-radio-button__inner {
-            border-left: none !important;
-        }
+        .el-radio-button:not(:first-child) .el-radio-button__inner { border-left: none !important; }
 
         .el-radio-button__original-radio:checked + .el-radio-button__inner {
-            background: var(--accent) !important;
+            background: var(--cyan) !important;
             color: var(--ink) !important;
             border-color: var(--ink) !important;
         }
 
-        /* checkbox — square, black border */
+        .el-checkbox { height: auto; }
+
         .el-checkbox__inner {
             border-radius: 0 !important;
             border: 2px solid var(--ink) !important;
-            width: 17px;
-            height: 17px;
-            background: var(--card) !important;
+            width: 18px;
+            height: 18px;
+            background: var(--paper) !important;
             transition: none !important;
         }
 
-        .el-checkbox__input.is-checked .el-checkbox__inner {
-            background: var(--accent) !important;
-        }
+        .el-checkbox__input.is-checked .el-checkbox__inner { background: var(--cyan) !important; }
 
         .el-checkbox__inner::after {
             border-color: var(--ink) !important;
             border-width: 2px !important;
-            left: 4px !important;
+            left: 5px !important;
             top: 1px !important;
             transition: none !important;
         }
 
         .el-checkbox__label {
             font-size: 13px !important;
-            font-weight: 500;
+            font-weight: 600;
             color: var(--ink) !important;
         }
 
-        /* tags — square, bordered */
         .el-tag {
             border-radius: 0 !important;
             border: 2px solid var(--ink) !important;
-            background: var(--card) !important;
+            background: var(--paper) !important;
             color: var(--ink) !important;
-            font-weight: 700;
+            box-shadow: 2px 2px 0 var(--ink);
+            font-weight: 800;
             font-size: 12px;
             height: auto;
-            padding: 4px 8px;
+            padding: 5px 9px;
         }
 
-        .el-tag--warning {
-            background: var(--accent) !important;
-        }
+        .el-tag--primary { background: var(--cyan) !important; }
+        .el-tag--warning { background: var(--purple) !important; }
 
-        .el-tag .el-tag__close {
-            color: var(--ink) !important;
-            border-radius: 0 !important;
-        }
+        .el-tag .el-tag__close { color: var(--ink) !important; border-radius: 0 !important; }
+        .el-tag .el-tag__close:hover { background: var(--ink) !important; color: var(--bg) !important; }
 
-        .el-tag .el-tag__close:hover {
-            background: var(--ink) !important;
-            color: #fff !important;
-        }
-
-        /* dialog buttons */
         .el-button {
             border-radius: 0 !important;
             border: 2px solid var(--ink) !important;
-            background: var(--card) !important;
+            background: var(--paper) !important;
             color: var(--ink) !important;
             font-family: var(--sans) !important;
-            font-weight: 700 !important;
-            text-transform: uppercase;
+            font-weight: 800 !important;
             font-size: 12px !important;
             box-shadow: 3px 3px 0 var(--ink);
-            transition: transform .08s linear, box-shadow .08s linear !important;
+            transition: transform .15s, box-shadow .15s !important;
         }
 
-        .el-button:hover {
-            transform: translate(-1px, -1px);
-            box-shadow: 4px 4px 0 var(--ink);
-        }
+        .el-button:hover { transform: translate(-1px, -1px); box-shadow: 4px 4px 0 var(--ink); }
+        .el-button:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--ink); }
 
-        .el-button:active {
-            transform: translate(3px, 3px);
-            box-shadow: none;
-        }
+        .el-button--primary { background: var(--pink) !important; }
 
-        .el-button--primary {
-            background: var(--accent) !important;
-        }
-
-        /* select dropdown */
         .el-select__popper.el-popper {
             border-radius: 0 !important;
             border: 2px solid var(--ink) !important;
             box-shadow: var(--shadow) !important;
         }
 
-        .el-select-dropdown__item {
-            font-family: var(--mono);
-            font-size: 13px;
-            color: var(--ink);
-        }
+        .el-select-dropdown__item { font-family: var(--mono); font-size: 13px; color: var(--ink); }
+        .el-select-dropdown__item.is-hovering { background: #EDFAFD !important; }
+        .el-select-dropdown__item.is-selected { background: var(--cyan) !important; color: var(--ink) !important; font-weight: 700 !important; }
 
-        .el-select-dropdown__item.is-hovering {
-            background: #CAEFFA !important;
-        }
+        .el-form-item { margin-bottom: 20px !important; }
+        .el-form-item:last-of-type { margin-bottom: 0 !important; }
 
-        .el-select-dropdown__item.is-selected {
-            background: var(--accent) !important;
-            color: var(--ink) !important;
+        .el-form--label-top .el-form-item__label {
+            font-family: var(--mono) !important;
+            font-size: 10px !important;
             font-weight: 700 !important;
+            letter-spacing: .14em;
+            text-transform: uppercase;
+            color: var(--ink) !important;
+            padding-bottom: 8px;
+            line-height: 1 !important;
         }
 
-        /* ── Responsive ─────────────────────── */
-        @media (max-width: 1000px) {
-            .fr {
-                border-left: none;
-                border-right: none;
-                box-shadow: none;
-            }
+        /* ══ Dialog ════════════════════════════ */
+        .el-dialog {
+            border-radius: 0 !important;
+            border: var(--bw) solid var(--ink);
+            box-shadow: var(--shadow-lg) !important;
+            padding: 0 !important;
         }
 
-        @media (max-width: 700px) {
-            .g2, .g3, .g4, .g5 {
-                grid-template-columns: 1fr;
-            }
+        .el-dialog__header {
+            background: var(--ink);
+            padding: 0 46px 0 18px !important;
+            margin: 0 !important;
+            height: 48px;
+            display: flex;
+            align-items: center;
+        }
 
-            .c {
-                border-right: none;
-                padding: 24px;
-            }
+        .el-dialog__title {
+            font-family: var(--mono);
+            font-size: 12px !important;
+            font-weight: 700 !important;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            color: var(--bg) !important;
+        }
 
-            .mods-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
+        .el-dialog__headerbtn {
+            top: 0 !important;
+            right: 0 !important;
+            width: 48px !important;
+            height: 48px !important;
+        }
 
-            .mods-grid .mod:nth-child(2n) {
-                border-right: none;
-            }
+        .el-dialog__headerbtn .el-dialog__close { color: var(--bg) !important; font-size: 18px; }
+        .el-dialog__headerbtn:hover { background: var(--cyan); }
+        .el-dialog__headerbtn:hover .el-dialog__close { color: var(--ink) !important; }
 
-            .bar-left {
-                display: none;
-            }
+        .el-dialog__body { padding: 0 !important; }
+        .el-dialog__footer { border-top: var(--bw) solid var(--ink); padding: 14px 18px !important; margin: 0 !important; }
 
-            .bar {
-                border-left: none;
-                border-right: none;
-                padding: 12px 20px;
-            }
+        .explorer { display: flex; height: 500px; }
+
+        .ftree {
+            width: 230px;
+            border-right: var(--bw) solid var(--ink);
+            overflow-y: auto;
+            flex-shrink: 0;
+            background: var(--bg);
+        }
+
+        .fdir {
+            padding: 14px 14px 5px;
+            font-family: var(--mono);
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+
+        .fitem {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 7px 14px;
+            font-family: var(--mono);
+            font-size: 12px;
+            color: var(--ink);
+            cursor: pointer;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .fitem::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            border: 2px solid var(--ink);
+            background: var(--paper);
+            flex-shrink: 0;
+        }
+
+        .fitem.on::before { background: var(--ink); }
+        .fitem:hover { background: #EDFAFD; }
+        .fitem.on { background: var(--cyan); font-weight: 700; }
+        .fitem.indent { padding-left: 28px; }
+
+        .fcontent { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+        .fcontent-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 9px 14px;
+            border-bottom: var(--bw) solid var(--ink);
+            background: var(--bg);
+            flex-shrink: 0;
+        }
+
+        .fcontent-head span { font-family: var(--mono); font-size: 12px; }
+
+        .fcontent pre {
+            flex: 1;
+            overflow: auto;
+            padding: 16px;
+            margin: 0;
+            font-family: var(--mono);
+            font-size: 12.5px;
+            line-height: 1.65;
+            background: #fff !important;
+            white-space: pre;
+        }
+
+        .fcontent pre code.hljs { padding: 0; background: transparent; font-size: inherit; font-family: inherit; }
+
+        code {
+            font-family: var(--mono);
+            font-size: 12px;
+            background: var(--bg);
+            border: 1px solid var(--ink);
+            padding: 1px 5px;
+        }
+
+        /* ══ Responsive ════════════════════════ */
+        @media (max-width: 900px) {
+            .hero { grid-template-columns: 1fr; gap: 28px; }
+            .win { transform: none; }
+            .grid-4, .grid-5, .grid-3 { grid-template-columns: repeat(2, 1fr); }
+            .mods { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 560px) {
+            .nav { flex-wrap: wrap; gap: 12px; }
+            .nav-links { gap: 14px; }
+            .grid-4, .grid-5, .grid-3, .grid-2, .mods { grid-template-columns: 1fr; }
+            .bar-hint { display: none; }
+            .bar { justify-content: center; }
         }
     </style>
 </head>
 <body>
 <div id="app">
 
-    <div class="wrap">
-        <div class="fr">
-            <!-- Header row -->
-            <div class="r fr-header">
-                <a class="logo" href="/">
-                    <img src="logo.png" alt="Erupt"/>
-                    <span>
-                        <span class="logo-title">erupt<em>.xyz</em></span>
-                        <span class="logo-sub">{{ t('logoSub') }}</span>
-                    </span>
-                </a>
-                <nav>
-                    <a href="https://www.erupt.xyz" target="_blank">{{ t('navWebsite') }}</a>
-                    <a href="https://docs.erupt.xyz" target="_blank">{{ t('navDocs') }}</a>
-                    <a href="https://github.com/erupts/erupt" target="_blank">GitHub ★</a>
-                    <a href="#" @click.prevent="toggleLang" style="font-family:var(--mono);font-size:11px;letter-spacing:.06em">{{ t('langToggle') }}</a>
-                </nav>
-            </div>
+    <!-- ══ Nav ══ -->
+    <header class="nav">
+        <a class="brand" href="/">
+            <img src="logo.png" alt="Erupt"/>
+            <span>
+                <span class="brand-name">erupt<b>.xyz</b></span>
+                <span class="brand-sub">{{ t('logoSub') }}</span>
+            </span>
+        </a>
+        <nav class="nav-links">
+            <a href="https://www.erupt.xyz" target="_blank">{{ t('navWebsite') }}</a>
+            <a href="https://docs.erupt.xyz" target="_blank">{{ t('navDocs') }}</a>
+            <a href="https://github.com/erupts/erupt" target="_blank">GitHub ★</a>
+            <button class="lang-btn" @click="toggleLang">{{ t('langToggle') }}</button>
+        </nav>
+    </header>
 
-            <!-- §1 Hero row -->
-            <div class="r bound">
-                <div class="g2">
-                    <div class="c">
-                        <div class="hero-eyebrow">{{ t('heroEyebrow') }}</div>
-                        <div class="hero-title">Start <em>Erupt</em></div>
-                        <p class="hero-sub">{{ t('heroSub') }}</p>
-                        <div class="hero-badges">
-                            <div class="ver-badge"><span class="dot"></span> Erupt {{ ERUPT_VER }}</div>
-                            <div class="ver-badge"><span class="dot"></span> Spring Boot {{ BOOT_VER }}</div>
-                        </div>
-                    </div>
-                    <div class="c" style="display:flex;flex-direction:column;justify-content:center;">
-                        <ul class="hero-bullets">
-                            <li>{{ t('bullet1') }}</li>
-                            <li>{{ t('bullet2') }}</li>
-                            <li>{{ t('bullet3') }}</li>
-                            <li>{{ t('bullet4') }}</li>
-                        </ul>
-                        <div>
-                            <button class="wbtn wbtn-o" @click="generate">{{ t('heroBtn') }}</button>
-                        </div>
-                    </div>
+    <main class="page">
+
+        <!-- ══ Hero ══ -->
+        <section class="hero reveal">
+            <div class="hero-left">
+                <span class="kicker">{{ t('heroEyebrow') }}</span>
+                <h1 class="hero-title">Start <em class="hl">Erupt</em></h1>
+                <p class="lead">{{ t('heroSub') }}</p>
+                <ul class="bullets">
+                    <li>{{ t('bullet1') }}</li>
+                    <li>{{ t('bullet2') }}</li>
+                    <li>{{ t('bullet3') }}</li>
+                    <li>{{ t('bullet4') }}</li>
+                </ul>
+                <div class="hero-actions">
+                    <button class="btn btn-primary" @click="generate">{{ t('heroBtn') }}</button>
+                    <button class="btn" @click="openExplore">{{ t('btnExplore') }}</button>
+                </div>
+                <div class="chips">
+                    <span class="chip"><i class="dot"></i>Erupt {{ ERUPT_VER }}</span>
+                    <span class="chip"><i class="dot"></i>Spring Boot {{ BOOT_VER }}</span>
                 </div>
             </div>
+            <div class="hero-right">
+                <div class="win">
+                    <div class="win-bar">
+                        <span class="tl tl-pink"></span>
+                        <span class="tl tl-cyan"></span>
+                        <span class="tl tl-green"></span>
+                        <span class="win-file">SampleModel.java</span>
+                    </div>
+<pre class="win-body"><span class="anno">@Erupt</span>(name = <span class="str">"Sample"</span>)
+<span class="anno">@Entity</span>
+<span class="kw">public class</span> SampleModel {
 
-            <!-- §2 Configuration section label -->
-            <div class="r g-bg bound">
-                <div class="sec-label">{{ t('secConfig') }}</div>
+    <span class="anno">@EruptField</span>(
+        views = <span class="anno">@View</span>(title = <span class="str">"Name"</span>),
+        edit  = <span class="anno">@Edit</span>(title = <span class="str">"Name"</span>, notNull = <span class="kw">true</span>)
+    )
+    <span class="kw">private</span> String name;
+
+    <span class="cm">// ↑ full CRUD admin UI — zero frontend code</span>
+}</pre>
+                </div>
             </div>
+        </section>
 
-            <!-- §3 Build / Java / DB -->
-            <div class="r reveal">
-                <div class="g4">
-                    <div class="c">
+        <!-- ══ Configuration ══ -->
+        <section class="card reveal">
+            <div class="card-head">
+                <i class="sq"></i>
+                <span class="card-title">{{ t('secConfig') }}</span>
+            </div>
+            <div class="card-body">
+                <div class="grid grid-4">
+                    <div>
                         <div class="field-label">{{ t('fieldBuild') }}</div>
                         <el-radio-group v-model="form.build">
                             <el-radio-button value="maven">Maven</el-radio-button>
-                            <el-radio-button value="gradle">Gradle (Kotlin)</el-radio-button>
+                            <el-radio-button value="gradle">Gradle</el-radio-button>
                         </el-radio-group>
                     </div>
-                    <div class="c">
+                    <div>
                         <div class="field-label">{{ t('fieldJava') }}</div>
                         <el-select v-model="form.java" style="width:100%">
                             <el-option v-for="v in JAVA_VERSIONS" :key="v.value" :value="v.value" :label="v.label"/>
                         </el-select>
                     </div>
-                    <div class="c">
+                    <div>
                         <div class="field-label">{{ t('fieldDb') }}</div>
                         <el-select v-model="form.db" style="width:100%">
                             <el-option v-for="(v,k) in DB" :key="k" :value="k" :label="k.toUpperCase()"/>
                         </el-select>
                     </div>
-                    <div class="c">
+                    <div>
                         <div class="field-label">{{ t('fieldLocale') }}</div>
                         <el-select v-model="form.defaultLocale" style="width:100%">
                             <el-option v-for="l in LOCALES" :key="l.value" :value="l.value" :label="l.label"/>
                         </el-select>
                     </div>
                 </div>
-            </div>
-
-            <!-- §3b Port / Account / Password / Captcha / Color -->
-            <div class="r reveal">
-                <div class="g5">
-                    <div class="c">
+                <div class="grid grid-5">
+                    <div>
                         <div class="field-label">{{ t('fieldPort') }}</div>
                         <el-input v-model="form.port" style="width:100%" spellcheck="false" autocomplete="off" placeholder="8080"/>
                     </div>
-                    <div class="c">
+                    <div>
                         <div class="field-label">{{ t('fieldAccount') }}</div>
                         <el-input v-model="form.adminAccount" style="width:100%" spellcheck="false" autocomplete="off" placeholder="erupt"/>
                     </div>
-                    <div class="c">
+                    <div>
                         <div class="field-label">{{ t('fieldPassword') }}</div>
                         <el-input v-model="form.adminPassword" style="width:100%" spellcheck="false" autocomplete="off" placeholder="erupt"/>
                     </div>
-                    <div class="c">
+                    <div>
                         <div class="field-label">{{ t('fieldCaptcha') }}</div>
                         <el-select v-model="form.captcha" style="width:100%">
                             <el-option v-for="o in t('captchaOpts')" :key="o.v" :value="o.v" :label="o.l"/>
                         </el-select>
                     </div>
-                    <div class="c">
+                    <div>
                         <div class="field-label">{{ t('fieldColor') }}</div>
-                        <div style="display:flex;align-items:center;gap:10px">
-                            <input type="color" v-model="form.primaryColor" style="width:44px;height:34px;border:2px solid #000;border-radius:0;padding:0;background:none;cursor:pointer"/>
-                            <span style="font-family:var(--mono);font-size:13px">{{ form.primaryColor }}</span>
+                        <div class="color-field">
+                            <input type="color" v-model="form.primaryColor"/>
+                            <span class="color-val">{{ form.primaryColor }}</span>
                         </div>
                     </div>
                 </div>
             </div>
+        </section>
 
-            <!-- §4 Metadata section label -->
-            <div class="r g-bg bound">
-                <div class="sec-label">{{ t('secMeta') }}</div>
+        <!-- ══ Metadata ══ -->
+        <section class="card reveal">
+            <div class="card-head">
+                <i class="sq"></i>
+                <span class="card-title">{{ t('secMeta') }}</span>
             </div>
+            <div class="card-body">
+                <div class="grid grid-3">
+                    <el-form label-position="top" :model="form">
+                        <el-form-item :label="t('fGroup')">
+                            <el-input v-model="form.group" @input="syncPkg" spellcheck="false" autocomplete="off" placeholder="com.example"/>
+                        </el-form-item>
+                        <el-form-item :label="t('fArtifact')" style="margin-bottom:0!important">
+                            <el-input v-model="form.artifact" @input="onArtifact" spellcheck="false" autocomplete="off" placeholder="demo"/>
+                        </el-form-item>
+                    </el-form>
+                    <el-form label-position="top" :model="form">
+                        <el-form-item :label="t('fName')">
+                            <el-input v-model="form.name" @input="nameEdited=true" spellcheck="false" autocomplete="off" placeholder="Demo"/>
+                        </el-form-item>
+                        <el-form-item :label="t('fPkg')" style="margin-bottom:0!important">
+                            <el-input v-model="form.pkg" @input="pkgEdited=true" spellcheck="false" autocomplete="off" placeholder="com.example.demo"/>
+                        </el-form-item>
+                    </el-form>
+                    <el-form label-position="top" :model="form">
+                        <el-form-item :label="t('fVersion')">
+                            <el-input v-model="form.version" spellcheck="false" autocomplete="off" placeholder="0.0.1-SNAPSHOT"/>
+                        </el-form-item>
+                        <el-checkbox v-model="form.sample">{{ t('fSample') }}</el-checkbox>
+                    </el-form>
+                </div>
+            </div>
+        </section>
 
-            <!-- §5 Metadata form fields -->
-            <div class="r reveal">
-                <div class="g3">
-                    <div class="c">
-                        <el-form label-position="top" :model="form">
-                            <el-form-item :label="t('fGroup')">
-                                <el-input v-model="form.group" @input="syncPkg" spellcheck="false" autocomplete="off"
-                                          placeholder="com.example"/>
-                            </el-form-item>
-                            <el-form-item :label="t('fArtifact')" style="margin-bottom:0!important">
-                                <el-input v-model="form.artifact" @input="onArtifact" spellcheck="false"
-                                          autocomplete="off" placeholder="demo"/>
-                            </el-form-item>
-                        </el-form>
-                    </div>
-                    <div class="c">
-                        <el-form label-position="top" :model="form">
-                            <el-form-item :label="t('fName')">
-                                <el-input v-model="form.name" @input="nameEdited=true" spellcheck="false"
-                                          autocomplete="off" placeholder="Demo"/>
-                            </el-form-item>
-                            <el-form-item :label="t('fPkg')" style="margin-bottom:0!important">
-                                <el-input v-model="form.pkg" @input="pkgEdited=true" spellcheck="false"
-                                          autocomplete="off" placeholder="com.example.demo"/>
-                            </el-form-item>
-                        </el-form>
-                    </div>
-                    <div class="c">
-                        <el-form label-position="top" :model="form">
-                            <el-form-item :label="t('fVersion')">
-                                <el-input v-model="form.version" spellcheck="false" autocomplete="off"
-                                          placeholder="0.0.1-SNAPSHOT"/>
-                            </el-form-item>
-                        </el-form>
-                        <el-checkbox v-model="form.sample">
-                            {{ t('fSample') }}
-                        </el-checkbox>
+        <!-- ══ Modules ══ -->
+        <section class="card reveal">
+            <div class="card-head">
+                <i class="sq"></i>
+                <span class="card-title">{{ t('secModules') }}</span>
+                <span class="card-hint">{{ t('secModulesHint') }}</span>
+            </div>
+            <div class="card-body">
+                <div class="mods">
+                    <div class="mod" :class="{on: selectedMods.includes(m.id), pro: m.pro}"
+                         v-for="m in MODULES" :key="m.id" @click="toggleMod(m.id)"
+                         :title="m.pro ? (locale === 'zh' ? '商业模块 — 依赖将以注释形式添加' : 'Commercial module — dependency added as comment') : ''">
+                        <div class="mod-icon">{{ m.icon }}</div>
+                        <div class="mod-name">{{ m.name }}</div>
+                        <div class="mod-desc">{{ locale === 'zh' ? m.descZh : m.desc }}</div>
+                        <span class="mod-badge" v-if="m.tag">{{ m.tag }}</span>
                     </div>
                 </div>
             </div>
-
-            <!-- §6 Modules section label -->
-            <div class="r g-bg bound">
-                <div class="sec-label">{{ t('secModules') }} <span>{{ t('secModulesHint') }}</span></div>
-            </div>
-
-            <!-- §7 Module grid -->
-            <div class="r reveal">
-                <div class="c" style="padding:0;border-right:none">
-                    <div class="mods-grid">
-                        <div class="mod" :class="{on: selectedMods.includes(m.id), pro: m.pro}"
-                             v-for="m in MODULES" :key="m.id" @click="toggleMod(m.id)"
-                             :title="m.pro ? (locale === 'zh' ? '商业模块 — 依赖将以注释形式添加' : 'Commercial module — dependency added as comment') : ''">
-                            <div class="mod-icon">{{ m.icon }}</div>
-                            <div class="mod-name">{{ m.name }}</div>
-                            <div class="mod-desc">{{ locale === 'zh' ? m.descZh : m.desc }}</div>
-                            <span class="mod-badge" v-if="m.tag">{{ m.tag }}</span>
-                        </div>
-                    </div>
+            <div class="selected">
+                <div class="sel-label">{{ t('selLabel') }}</div>
+                <div class="sel-tags">
+                    <span class="sel-empty" v-if="selectedMods.length===0">{{ t('selEmpty') }}</span>
+                    <el-tag
+                            v-for="id in selectedMods" :key="id"
+                            closable
+                            :type="MODULES.find(m => m.id === id)?.pro ? 'warning' : 'primary'"
+                            @close="toggleMod(id)"
+                    >
+                        {{ MODULES.find(m => m.id === id)?.icon }} {{ MODULES.find(m => m.id === id)?.name || id }}
+                        <template v-if="MODULES.find(m => m.id === id)?.pro"> · PRO</template>
+                    </el-tag>
                 </div>
             </div>
+        </section>
 
-            <!-- §8 Selected modules -->
-            <div class="r" style="border-top:none">
-                <div class="c" style="border-right:none">
-                    <div class="sel-label">{{ t('selLabel') }}</div>
-                    <div class="sel-tags">
-                        <span class="sel-empty" v-if="selectedMods.length===0">{{ t('selEmpty') }}</span>
-                        <el-tag
-                                v-for="id in selectedMods" :key="id"
-                                closable
-                                :type="MODULES.find(m => m.id === id)?.pro ? 'warning' : 'primary'"
-                                @close="toggleMod(id)"
-                        >
-                            {{ MODULES.find(m => m.id === id)?.icon }} {{ MODULES.find(m => m.id === id)?.name || id }}
-                            <template v-if="MODULES.find(m => m.id === id)?.pro"> · PRO</template>
-                        </el-tag>
-                    </div>
-                </div>
+        <!-- ══ Commercial banner ══ -->
+        <section class="pro reveal">
+            <div class="pro-text">
+                <div class="pro-eyebrow">{{ t('proEyebrow') }}</div>
+                <div class="pro-title">{{ t('proTitle') }}</div>
+                <div class="pro-desc">{{ t('proDesc') }}</div>
             </div>
+            <a class="btn btn-primary"
+               href="https://www.erupt.xyz/?utm_source=start&utm_medium=banner&utm_campaign=pro#!/pro"
+               target="_blank">
+                {{ t('proBtn') }}
+            </a>
+        </section>
 
-            <!-- §9 Commercial modules banner -->
-            <div class="r pro-banner">
-                <div class="c" style="border-right:none;display:flex;flex-wrap:wrap;align-items:center;gap:18px;padding:20px 32px">
-                    <div style="flex:1;min-width:280px">
-                        <div class="pro-banner-eyebrow">{{ t('proEyebrow') }}</div>
-                        <div class="pro-banner-title">{{ t('proTitle') }}</div>
-                        <div class="pro-banner-desc">{{ t('proDesc') }}</div>
-                    </div>
-                    <a class="wbtn wbtn-o"
-                       href="https://www.erupt.xyz/?utm_source=start&utm_medium=banner&utm_campaign=pro#!/pro"
-                       target="_blank">
-                        {{ t('proBtn') }}
-                    </a>
-                </div>
-            </div>
+    </main>
 
-        </div><!-- /fr -->
-    </div><!-- /wrap -->
-
-    <!-- Action bar -->
+    <!-- ══ Action bar ══ -->
     <div class="bar">
-        <div class="bar-left">
-            <span class="hint-key">{{ t('barHint') }} <kbd>⌘</kbd> <kbd>↵</kbd> {{ t('barHintTo') }}</span>
-        </div>
-        <button class="wbtn" @click="openExplore">{{ t('btnExplore') }}</button>
-        <button class="wbtn wbtn-o" @click="generate">{{ t('btnGenerate') }}</button>
+        <span class="bar-hint">{{ t('barHint') }} <kbd>⌘</kbd> <kbd>↵</kbd> {{ t('barHintTo') }}</span>
+        <button class="btn" @click="openExplore">{{ t('btnExplore') }}</button>
+        <button class="btn btn-primary" @click="generate">{{ t('btnGenerate') }}</button>
     </div>
 
-    <!-- Explorer dialog -->
+    <!-- ══ Explorer dialog ══ -->
     <el-dialog
             v-model="modal.open"
             :title="`${form.artifact} — ${t('dlgPreview')}`"

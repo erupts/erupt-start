@@ -1016,7 +1016,9 @@
                         <el-form-item :label="t('fVersion')">
                             <el-input v-model="form.version" spellcheck="false" autocomplete="off" placeholder="0.0.1-SNAPSHOT"/>
                         </el-form-item>
-                        <el-checkbox v-model="form.sample" style="margin-top:20px">{{ t('fSample') }}</el-checkbox>
+                        <el-form-item :label="t('fSampleLabel')" style="margin-bottom:0!important">
+                            <el-checkbox v-model="form.sample">{{ t('fSample') }}</el-checkbox>
+                        </el-form-item>
                     </el-form>
                 </div>
             </div>
@@ -1139,7 +1141,7 @@
             captchaOpts: [{v:0,l:'Always'},{v:1,l:'After 1 fail'},{v:2,l:'After 2 fails'},{v:5,l:'After 5 fails'}],
             fGroup: 'Group', fArtifact: 'Artifact', fName: 'Name',
             fPkg: 'Package name', fVersion: 'Version',
-            fSample: 'Include sample @Erupt entity',
+            fSampleLabel: 'Sample', fSample: 'Include @Erupt entity',
             selLabel: 'Selected', selEmpty: 'No extra modules — core only',
             barHint: 'Press', barHintTo: 'to generate',
             btnExplore: 'Explore', btnGenerate: '↓ Generate',
@@ -1168,7 +1170,7 @@
             captchaOpts: [{v:0,l:'总是显示'},{v:1,l:'失败 1 次'},{v:2,l:'失败 2 次'},{v:5,l:'失败 5 次'}],
             fGroup: 'Group', fArtifact: 'Artifact', fName: '项目名称',
             fPkg: '包名', fVersion: '版本号',
-            fSample: '包含示例 @Erupt 实体',
+            fSampleLabel: '示例数据', fSample: '包含 @Erupt 实体',
             selLabel: '已选模块', selEmpty: '未选额外模块，仅包含核心',
             barHint: '按', barHintTo: '生成',
             btnExplore: '预览', btnGenerate: '↓ 生成',

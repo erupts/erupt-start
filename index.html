@@ -327,6 +327,28 @@
         .win-body .str  { color: var(--green); font-weight: 700; }
         .win-body .cm   { color: #7d7565; }
 
+        /* ── project tree (hero preview) ── */
+        .win-body .tr-dir   { color: var(--cyan);  font-weight: 700; }
+        .win-body .tr-java  { color: var(--pink);  font-weight: 700; }
+        .win-body .tr-cfg   { color: var(--green); font-weight: 700; }
+        .win-body .tr-file  { color: #b8ae97; }
+        .win-body .tr-line  { color: #6a6350; }
+        .win-body .tr-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 2px 8px;
+            margin-bottom: 10px;
+            background: var(--green);
+            color: var(--ink);
+            font-weight: 800;
+            font-size: 11px;
+            letter-spacing: .04em;
+            border: 1.5px solid var(--ink);
+            box-shadow: 2px 2px 0 var(--ink);
+        }
+        .win-body .tr-badge svg { width: 12px; height: 12px; }
+
         /* ══ Card ══════════════════════════════ */
         .card {
             background: var(--card);
@@ -909,17 +931,20 @@
                         <span class="tl tl-pink"></span>
                         <span class="tl tl-cyan"></span>
                         <span class="tl tl-green"></span>
-                        <span class="win-file">SampleModel.java</span>
+                        <span class="win-file">{{ form.artifact || 'demo' }}/</span>
                     </div>
-<pre class="win-body"><span class="anno">@Erupt</span>(name = <span class="str">"Sample"</span>)
-<span class="anno">@Entity</span>
-<span class="kw">public class</span> SampleModel {
-    <span class="anno">@EruptField</span>(
-        edit = <span class="anno">@Edit</span>(title = <span class="str">"Name"</span>, notNull = <span class="kw">true</span>)
-    )
-    <span class="kw">private</span> String name;
-    <span class="cm">// → full CRUD admin UI, zero frontend code</span>
-}</pre>
+<pre class="win-body"><span class="tr-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 4c-8 0-14 4-14 12 0 3 2 4 4 4 8 0 10-8 10-16z"/><path d="M6 20c2-6 6-10 12-12"/></svg>Spring Boot {{ BOOT_VER }} · Erupt {{ ERUPT_VER }}</span>
+
+<span class="tr-dir">▾ {{ form.artifact || 'demo' }}</span>
+<span class="tr-line">├──</span> <span class="tr-dir">src/main/java</span>
+<span class="tr-line">│   └──</span> <span class="tr-dir">{{ (form.pkg || 'com.example.demo').replaceAll('.','/') }}</span>
+<span class="tr-line">│       ├──</span> <span class="tr-java">☕ {{ (form.name || 'Demo') }}Application.java</span>
+<span class="tr-line">│       └──</span> <span class="tr-java">☕ SampleModel.java</span>
+<span class="tr-line">├──</span> <span class="tr-dir">src/main/resources</span>
+<span class="tr-line">│   ├──</span> <span class="tr-cfg">⚙ application.yml</span>
+<span class="tr-line">│   └──</span> <span class="tr-dir">static/</span>
+<span class="tr-line">├──</span> <span class="tr-cfg">◆ {{ form.build === 'gradle' ? 'build.gradle' : 'pom.xml' }}</span>
+<span class="tr-line">└──</span> <span class="tr-file">📄 HELP.md</span></pre>
                 </div>
             </div>
         </section>

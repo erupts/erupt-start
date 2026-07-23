@@ -81,10 +81,18 @@
         }
 
         /* ══ Nav ═══════════════════════════════ */
+        .topbar {
+            position: sticky;
+            top: 0;
+            z-index: 200;
+            background: var(--paper);
+            border-bottom: var(--bw) solid var(--ink);
+        }
+
         .nav {
             max-width: 1180px;
             margin: 0 auto;
-            padding: 22px 24px;
+            padding: 9px 24px;
             display: flex;
             align-items: center;
             gap: 20px;
@@ -93,12 +101,19 @@
         .brand {
             display: flex;
             align-items: center;
-            gap: 11px;
+            gap: 12px;
             text-decoration: none;
             color: var(--ink);
+            transition: transform .12s ease;
         }
 
-        .brand img { width: 34px; height: 34px; }
+        .brand:hover { transform: translateY(-1px); }
+
+        .brand img {
+            width: 34px;
+            height: 34px;
+            border: var(--bw) solid var(--ink);
+        }
 
         .brand-name {
             display: block;
@@ -146,6 +161,32 @@
             border-bottom-color: var(--cyan);
         }
 
+        /* GitHub sticker chip */
+        .nav-links .gh {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            font-family: var(--mono);
+            font-size: 12px;
+            font-weight: 700;
+            padding: 6px 11px;
+            border: var(--bw) solid var(--ink);
+            border-bottom: var(--bw) solid var(--ink);
+            background: var(--cyan);
+            box-shadow: 2px 2px 0 var(--ink);
+            transition: transform .12s ease, box-shadow .12s ease;
+        }
+
+        .nav-links .gh:hover {
+            border-bottom-color: var(--ink);
+            transform: translate(-1px, -1px);
+            box-shadow: 3px 3px 0 var(--ink);
+        }
+
+        .nav-links .gh:active { transform: translate(1px, 1px); box-shadow: 1px 1px 0 var(--ink); }
+
+        .nav-links .gh svg { width: 14px; height: 14px; display: block; }
+
         .lang-btn {
             font-family: var(--mono);
             font-size: 12px;
@@ -166,7 +207,7 @@
         .page {
             max-width: 1180px;
             margin: 0 auto;
-            padding: 10px 24px 150px;
+            padding: 40px 24px 150px;
             display: flex;
             flex-direction: column;
             gap: 34px;
@@ -892,20 +933,25 @@
 <div id="app">
 
     <!-- ══ Nav ══ -->
-    <header class="nav">
-        <a class="brand" href="/">
-            <img src="logo.svg" alt="Erupt"/>
-            <span>
-                <span class="brand-name">erupt<b>.xyz</b></span>
-                <span class="brand-sub">{{ t('logoSub') }}</span>
-            </span>
-        </a>
-        <nav class="nav-links">
-            <a href="https://www.erupt.xyz" target="_blank">{{ t('navWebsite') }}</a>
-            <a href="https://docs.erupt.xyz" target="_blank">{{ t('navDocs') }}</a>
-            <a href="https://github.com/erupts/erupt" target="_blank">GitHub ★</a>
-            <button class="lang-btn" @click="toggleLang">{{ t('langToggle') }}</button>
-        </nav>
+    <header class="topbar">
+        <div class="nav">
+            <a class="brand" href="/">
+                <img src="logo.svg" alt="Erupt"/>
+                <span>
+                    <span class="brand-name">erupt<b>.xyz</b></span>
+                    <span class="brand-sub">{{ t('logoSub') }}</span>
+                </span>
+            </a>
+            <nav class="nav-links">
+                <a href="https://www.erupt.xyz" target="_blank">{{ t('navWebsite') }}</a>
+                <a href="https://docs.erupt.xyz" target="_blank">{{ t('navDocs') }}</a>
+                <a class="gh" href="https://github.com/erupts/erupt" target="_blank">
+                    <svg viewBox="0 0 24 24" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.8" stroke-linejoin="round"><path d="M12 3l2.7 5.9 6.3.6-4.8 4.3 1.4 6.2L12 17.7 6.4 20.2l1.4-6.2-4.8-4.3 6.3-.6z"/></svg>
+                    GitHub
+                </a>
+                <button class="lang-btn" @click="toggleLang">{{ t('langToggle') }}</button>
+            </nav>
+        </div>
     </header>
 
     <main class="page">

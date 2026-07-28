@@ -23,7 +23,7 @@
 
         :root {
             --ink: #14120B;
-            --bg: #FFFFFF;
+            --bg: #F4F1EA;
             --paper: #FFFFFF;
             --card: #FFFFFF;
             --muted: #5C5647;
@@ -213,22 +213,6 @@
             gap: 34px;
         }
 
-        /* ══ Kicker chip ═══════════════════════ */
-        .kicker {
-            display: inline-block;
-            font-family: var(--mono);
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: .12em;
-            text-transform: uppercase;
-            color: var(--ink);
-            background: var(--cyan);
-            border: var(--bw) solid var(--ink);
-            box-shadow: 3px 3px 0 var(--ink);
-            padding: 5px 11px;
-            transform: rotate(-1.4deg);
-        }
-
         /* ══ Buttons ═══════════════════════════ */
         .btn {
             display: inline-flex;
@@ -250,7 +234,7 @@
         .btn:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--ink); }
         .btn:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--ink); }
 
-        .btn-primary { background: var(--yellow); }
+        .btn-primary { background: var(--pink); }
 
         /* ══ Hero ══════════════════════════════ */
         .hero {
@@ -261,23 +245,23 @@
             padding: 0;
         }
 
+        /* slogan title — same treatment as the erupt-docs home hero */
         .hero-title {
-            font-size: clamp(38px, 5vw, 62px);
+            font-size: clamp(36px, 4.2vw, 56px);
             font-weight: 900;
-            line-height: .98;
-            letter-spacing: -.03em;
-            text-transform: uppercase;
-            margin: 16px 0 14px;
+            line-height: 1.18;
+            letter-spacing: -.01em;
+            color: var(--ink);
+            margin: 0 0 18px;
         }
 
         .hero-title .hl {
-            font-style: normal;
             display: inline-block;
             background: var(--cyan);
             color: var(--ink);
-            padding: 0 14px 4px;
-            transform: rotate(-1.6deg);
-            box-shadow: 5px 5px 0 var(--ink);
+            padding: 0 12px 3px;
+            transform: rotate(-1deg);
+            box-shadow: 4px 4px 0 var(--ink);
         }
 
         .lead {
@@ -359,32 +343,59 @@
         .chips .chip:nth-child(odd)  { transform: rotate(-1deg); }
         .chips .chip:nth-child(even) { transform: rotate(1deg); }
 
-        /* ══ Window chrome (hero preview) ══════ */
-        .win {
-            position: relative;
-            border: var(--bw) solid var(--ink);
-            background: var(--code-bg);
-            box-shadow: 7px 7px 0 var(--ink);
-            transform: rotate(1.2deg);
-        }
+        /* ══ Hero board — stacked-windows collage (same grammar as docs home) ══ */
+        .board { position: relative; padding: 10px 8px; }
 
-        /* purple sticker slapped on the window corner */
-        .win-sticker {
+        /* emoji corner stickers */
+        .bd-sticker {
             position: absolute;
-            top: -14px;
-            right: -12px;
             z-index: 5;
-            font-family: var(--mono);
-            font-size: 10px;
-            font-weight: 800;
-            letter-spacing: .1em;
-            text-transform: uppercase;
-            color: var(--ink);
-            background: var(--purple);
+            display: grid;
+            place-items: center;
+            width: 44px;
+            height: 44px;
+            font-size: 22px;
             border: 2px solid var(--ink);
             box-shadow: 3px 3px 0 var(--ink);
-            padding: 4px 10px;
-            transform: rotate(4deg);
+        }
+
+        .bd-s1 { top: -14px; right: 8%; background: var(--green); transform: rotate(8deg); }
+        .bd-s2 { bottom: -8px; left: 2%; background: var(--purple); transform: rotate(-7deg); }
+
+        /* cyan chip pinned where the two windows meet */
+        .bd-arrow {
+            position: absolute;
+            left: 2%;
+            top: 54%;
+            z-index: 4;
+            font-family: var(--mono);
+            font-size: 11.5px;
+            font-weight: 800;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            color: var(--ink);
+            background: var(--cyan);
+            border: 2px solid var(--ink);
+            box-shadow: 3px 3px 0 var(--ink);
+            padding: 4px 11px;
+            transform: rotate(-4deg);
+        }
+
+        .win {
+            position: relative;
+            margin: 0;
+            background: var(--paper);
+            border: var(--bw) solid var(--ink);
+            box-shadow: 7px 7px 0 var(--ink);
+        }
+
+        .win-code { width: 84%; z-index: 2; transform: rotate(-1.4deg); }
+
+        .win-ui {
+            width: 76%;
+            margin: -30px 0 0 auto;
+            z-index: 3;
+            transform: rotate(1.2deg);
         }
 
         .win-bar {
@@ -417,10 +428,11 @@
 
         .win-body {
             margin: 0;
-            padding: 20px 22px;
+            padding: 16px 18px;
+            background: var(--code-bg);
             font-family: var(--mono);
-            font-size: 13px;
-            line-height: 1.75;
+            font-size: 12px;
+            line-height: 1.7;
             color: var(--code-fg);
             overflow-x: auto;
         }
@@ -436,21 +448,60 @@
         .win-body .tr-cfg   { color: var(--green); font-weight: 700; }
         .win-body .tr-file  { color: #b8ae97; }
         .win-body .tr-line  { color: #6a6350; }
-        .win-body .tr-badge {
-            display: inline-flex;
+        /* ── admin-ui wireframe (front window) ── */
+        .ui { padding: 10px 14px 14px; }
+
+        .ui-bar {
+            display: flex;
             align-items: center;
-            gap: 6px;
-            padding: 2px 8px;
+            gap: 8px;
             margin-bottom: 10px;
-            background: var(--green);
-            color: var(--ink);
-            font-weight: 800;
-            font-size: 11px;
-            letter-spacing: .04em;
-            border: 1.5px solid var(--ink);
-            box-shadow: 2px 2px 0 var(--ink);
         }
-        .win-body .tr-badge svg { width: 12px; height: 12px; }
+
+        .ui-title { font-size: 13px; font-weight: 800; margin-right: auto; }
+
+        .ui-btn {
+            font-family: var(--mono);
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--muted);
+            border: 2px solid var(--ink);
+            padding: 3px 10px;
+        }
+
+        .ui-btn-acc { color: var(--ink); background: var(--pink); }
+
+        .ui-row {
+            display: grid;
+            grid-template-columns: 22px 1.2fr .9fr 1fr;
+            align-items: center;
+            gap: 8px;
+            padding: 7px 2px;
+            border-top: 1px solid var(--faint);
+        }
+
+        .ui-head {
+            border-top: 2px solid var(--ink);
+            font-family: var(--mono);
+            font-size: 10.5px;
+            font-weight: 700;
+            letter-spacing: .05em;
+            color: var(--muted);
+        }
+
+        .ui-cb { width: 10px; height: 10px; border: 2px solid var(--faint); }
+
+        .ui-line { display: inline-block; height: 7px; background: var(--faint); }
+
+        .ui-pill {
+            display: inline-block;
+            width: 30px;
+            height: 13px;
+            background: var(--green);
+            border: 2px solid var(--ink);
+        }
+
+        .ui-pill.off { background: var(--faint); }
 
         /* ══ Card ══════════════════════════════ */
         .card {
@@ -901,7 +952,7 @@
         .el-button:hover { transform: translate(-1px, -1px); box-shadow: 4px 4px 0 var(--ink); }
         .el-button:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--ink); }
 
-        .el-button--primary { background: var(--yellow) !important; }
+        .el-button--primary { background: var(--pink) !important; }
 
         .el-select__popper.el-popper {
             border-radius: 0 !important;
@@ -1064,7 +1115,6 @@
             .nav-links { gap: 14px; }
             .grid-4, .grid-5, .grid-3, .grid-2, .mods { grid-template-columns: 1fr; }
             .mod.wide { grid-column: auto; }
-            .win-sticker { right: 6px; }
             .bar-hint { display: none; }
             .bar { justify-content: center; }
         }
@@ -1100,8 +1150,10 @@
         <!-- ══ Hero ══ -->
         <section class="hero reveal">
             <div class="hero-left">
-                <span class="kicker">{{ t('heroEyebrow') }}</span>
-                <h1 class="hero-title">Start <em class="hl">Erupt</em></h1>
+                <h1 class="hero-title">
+                    {{ t('titleL1') }}<br>
+                    <mark class="hl">{{ t('titleHl') }}</mark>
+                </h1>
                 <p class="lead">{{ t('heroSub') }}</p>
                 <ul class="hero-bullets">
                     <li><i></i>{{ t('bullet1') }}</li>
@@ -1118,26 +1170,53 @@
                 </div>
             </div>
             <div class="hero-right">
-                <div class="win">
-                    <span class="win-sticker">{{ t('winSticker') }}</span>
-                    <div class="win-bar">
-                        <span class="tl tl-pink"></span>
-                        <span class="tl tl-cyan"></span>
-                        <span class="tl tl-green"></span>
-                        <span class="win-file">{{ form.artifact || 'demo' }}/</span>
-                    </div>
-<pre class="win-body"><span class="tr-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 4c-8 0-14 4-14 12 0 3 2 4 4 4 8 0 10-8 10-16z"/><path d="M6 20c2-6 6-10 12-12"/></svg>Spring Boot {{ BOOT_VER }} · Erupt {{ ERUPT_VER }}</span>
+                <div class="board">
+                    <span class="bd-sticker bd-s1" aria-hidden="true">⚡</span>
+                    <span class="bd-sticker bd-s2" aria-hidden="true">🚀</span>
 
-<span class="tr-dir">▾ {{ form.artifact || 'demo' }}</span>
+                    <figure class="win win-code">
+                        <figcaption class="win-bar">
+                            <span class="tl tl-pink"></span>
+                            <span class="tl tl-cyan"></span>
+                            <span class="tl tl-green"></span>
+                            <span class="win-file">{{ form.artifact || 'demo' }}.zip</span>
+                        </figcaption>
+<pre class="win-body"><span class="tr-dir">▾ {{ form.artifact || 'demo' }}</span>
 <span class="tr-line">├──</span> <span class="tr-dir">src/main/java</span>
 <span class="tr-line">│   └──</span> <span class="tr-dir">{{ (form.pkg || 'com.example.demo').replaceAll('.','/') }}</span>
-<span class="tr-line">│       ├──</span> <span class="tr-java">☕ {{ (form.name || 'Demo') }}Application.java</span>
-<span class="tr-line">│       └──</span> <span class="tr-java">☕ SampleModel.java</span>
+<span class="tr-line">│       ├──</span> <span class="tr-java">{{ (form.name || 'Demo') }}Application.java</span>
+<span class="tr-line">│       └──</span> <span class="tr-java">SampleModel.java</span>
 <span class="tr-line">├──</span> <span class="tr-dir">src/main/resources</span>
-<span class="tr-line">│   ├──</span> <span class="tr-cfg">⚙ application.yml</span>
-<span class="tr-line">│   └──</span> <span class="tr-dir">static/</span>
-<span class="tr-line">├──</span> <span class="tr-cfg">◆ {{ form.build === 'gradle' ? 'build.gradle' : 'pom.xml' }}</span>
-<span class="tr-line">└──</span> <span class="tr-file">📄 HELP.md</span></pre>
+<span class="tr-line">│   └──</span> <span class="tr-cfg">application.yml</span>
+<span class="tr-line">├──</span> <span class="tr-cfg">{{ form.build === 'gradle' ? 'build.gradle' : 'pom.xml' }}</span>
+<span class="tr-line">└──</span> <span class="tr-file">Dockerfile</span></pre>
+                    </figure>
+
+                    <span class="bd-arrow">{{ t('arrowChip') }} ↓</span>
+
+                    <figure class="win win-ui">
+                        <figcaption class="win-bar">
+                            <span class="tl tl-green"></span>
+                            <span class="win-file">localhost:{{ form.port || 8080 }} · {{ t('winUi') }}</span>
+                        </figcaption>
+                        <div class="ui">
+                            <div class="ui-bar">
+                                <span class="ui-title">Sample</span>
+                                <span class="ui-btn ui-btn-acc">{{ t('uiAdd') }}</span>
+                                <span class="ui-btn">{{ t('uiSearch') }}</span>
+                            </div>
+                            <div class="ui-row ui-head">
+                                <i class="ui-cb"></i>
+                                <span v-for="c in t('uiCols')" :key="c">{{ c }}</span>
+                            </div>
+                            <div v-for="i in 3" :key="i" class="ui-row">
+                                <i class="ui-cb"></i>
+                                <span><i class="ui-line" :style="{ width: (72 - i * 12) + '%' }"></i></span>
+                                <span><i class="ui-pill" :class="{ off: i === 3 }"></i></span>
+                                <span><i class="ui-line" style="width:55%"></i></span>
+                            </div>
+                        </div>
+                    </figure>
                 </div>
             </div>
         </section>
@@ -1361,6 +1440,8 @@
             navWebsite: 'Website', navDocs: 'Docs', langToggle: '中文',
             logoSub: 'Project Generator',
             heroEyebrow: 'Project Generator',
+            titleL1: 'Bootstrap your',
+            titleHl: 'Erupt project.',
             heroSub: 'Generate a pre-configured Erupt + Spring Boot project. Pick your stack, choose modules, and download a ready-to-run ZIP.',
             bullet1: 'Zero boilerplate — annotate a Java class and get a full CRUD admin UI',
             bullet2: 'Spring Boot 3 · JPA · multi-database support out of the box',
@@ -1385,8 +1466,11 @@
             proTitle: 'Need BI, workflow, multi-tenant, or semantic-layer cubes?',
             proDesc: 'Source-code delivery · one-time purchase · no License/project/commercial restrictions. Added to your project separately after purchase.',
             proBtn: 'View pricing →',
-            winSticker: 'ready-to-run',
             secModulesPro: 'Commercial — added as commented dependency',
+            arrowChip: 'ready-to-run',
+            winUi: 'Admin UI',
+            uiAdd: '+ New', uiSearch: 'Search…',
+            uiCols: ['Name', 'Active', 'Date'],
             cloudNodeBtn: '↓ Node project',
             cloudNodeTip: 'Generate a worker-node project that registers to this server',
         },
@@ -1394,6 +1478,8 @@
             navWebsite: '官网', navDocs: '文档', langToggle: 'EN',
             logoSub: '项目生成器',
             heroEyebrow: '项目生成器',
+            titleL1: '三分钟，启动你的',
+            titleHl: 'Erupt 项目。',
             heroSub: '生成一个开箱即用的 Erupt + Spring Boot 项目。选择技术栈、勾选模块，下载即可运行。',
             bullet1: '零样板代码 — 注解一个 Java 类，即得完整 CRUD 管理界面',
             bullet2: 'Spring Boot 3 · JPA · 开箱即用的多数据库支持',
@@ -1418,8 +1504,11 @@
             proTitle: '需要 BI、工作流、多租户、Cube 语义层吗？',
             proDesc: '源码交付 · 一次买断 · 无 License / 项目数 / 商用限制 · 单独购买后接入项目。',
             proBtn: '查看定价 →',
-            winSticker: '开箱即用',
             secModulesPro: '商业模块 — 依赖以注释形式添加',
+            arrowChip: '下载即运行',
+            winUi: '管理界面',
+            uiAdd: '+ 新增', uiSearch: '搜索…',
+            uiCols: ['名称', '状态', '日期'],
             cloudNodeBtn: '↓ 生成 Node 节点',
             cloudNodeTip: '生成向本服务注册的 Node 节点项目',
         },

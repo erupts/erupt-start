@@ -283,7 +283,45 @@
             font-size: 15px;
             color: var(--muted);
             max-width: 460px;
-            margin: 0 0 22px;
+            margin: 0 0 18px;
+        }
+
+        /* ── hero value bullets ── */
+        .hero-bullets {
+            list-style: none;
+            margin: 0 0 26px;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 9px;
+        }
+
+        .hero-bullets li {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-size: 13.5px;
+            font-weight: 500;
+            color: var(--ink);
+        }
+
+        .hero-bullets li i {
+            width: 15px;
+            height: 15px;
+            flex-shrink: 0;
+            margin-top: 3px;
+            background: var(--green);
+            border: 2px solid var(--ink);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero-bullets li i::after {
+            content: '✓';
+            font-size: 9px;
+            font-weight: 900;
+            line-height: 1;
         }
 
         .hero-actions {
@@ -316,12 +354,36 @@
             flex-shrink: 0;
         }
 
+        /* sticker feel — alternate tilt */
+        .chips .chip:nth-child(odd)  { transform: rotate(-1deg); }
+        .chips .chip:nth-child(even) { transform: rotate(1deg); }
+
         /* ══ Window chrome (hero preview) ══════ */
         .win {
+            position: relative;
             border: var(--bw) solid var(--ink);
             background: var(--code-bg);
             box-shadow: 7px 7px 0 var(--ink);
             transform: rotate(1.2deg);
+        }
+
+        /* purple sticker slapped on the window corner */
+        .win-sticker {
+            position: absolute;
+            top: -14px;
+            right: -12px;
+            z-index: 5;
+            font-family: var(--mono);
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            color: var(--ink);
+            background: var(--purple);
+            border: 2px solid var(--ink);
+            box-shadow: 3px 3px 0 var(--ink);
+            padding: 4px 10px;
+            transform: rotate(4deg);
         }
 
         .win-bar {
@@ -404,13 +466,21 @@
             border-bottom: var(--bw) solid var(--ink);
         }
 
-        .sq {
-            width: 12px;
-            height: 12px;
-            background: var(--cyan);
-            border: 1.5px solid var(--ink);
+        /* numbered step sticker */
+        .step-no {
+            font-family: var(--mono);
+            font-size: 11px;
+            font-weight: 800;
+            border: 2px solid var(--ink);
+            box-shadow: 2px 2px 0 var(--ink);
+            padding: 2px 8px;
+            transform: rotate(-2deg);
             flex-shrink: 0;
         }
+
+        .step-no.n1 { background: var(--cyan); }
+        .step-no.n2 { background: var(--green); }
+        .step-no.n3 { background: var(--purple); }
 
         .card-title {
             font-family: var(--mono);
@@ -469,7 +539,7 @@
         .mods {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 16px;
+            gap: 14px;
         }
 
         .mod {
@@ -477,7 +547,7 @@
             border: var(--bw) solid var(--ink);
             background: var(--paper);
             box-shadow: 3px 3px 0 var(--ink);
-            padding: 16px 16px 18px;
+            padding: 14px 14px 16px;
             cursor: pointer;
             user-select: none;
             transition: transform .15s ease, box-shadow .15s ease, background .1s;
@@ -485,6 +555,8 @@
 
         .mod:hover { transform: translate(-2px, -2px); box-shadow: 5px 5px 0 var(--ink); background: #EDFAFD; }
         .mod:active { transform: translate(1px, 1px); box-shadow: 1px 1px 0 var(--ink); }
+
+        .mod.wide { grid-column: span 2; }
 
         .mod.on { background: var(--cyan); }
         .mod.on:hover { background: var(--cyan); }
@@ -504,15 +576,26 @@
             text-align: center;
         }
 
-        .mod.pro {
-            background: repeating-linear-gradient(45deg,
-                var(--paper), var(--paper) 7px,
-                rgba(20, 18, 11, .06) 7px, rgba(20, 18, 11, .06) 14px);
+        /* emoji in a candy sticker tile — column-cycled colors */
+        .mod-icon {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 17px;
+            line-height: 1;
+            background: var(--paper);
+            border: 2px solid var(--ink);
+            box-shadow: 2px 2px 0 var(--ink);
+            margin-bottom: 12px;
         }
-        .mod.pro:hover { background: #EDFAFD; }
-        .mod.pro.on { background: var(--cyan); }
 
-        .mod-icon { font-size: 20px; line-height: 1; margin-bottom: 10px; }
+        .mods .mod:nth-child(4n+1) .mod-icon { background: var(--cyan); }
+        .mods .mod:nth-child(4n+2) .mod-icon { background: var(--green); }
+        .mods .mod:nth-child(4n+3) .mod-icon { background: var(--purple); }
+        .mods .mod:nth-child(4n+4) .mod-icon { background: var(--pink); }
+        .mod.on .mod-icon { background: var(--paper) !important; }
 
         .mod-name {
             font-size: 13px;
@@ -525,8 +608,10 @@
         .mod-desc { font-size: 12px; color: var(--muted); line-height: 1.5; }
         .mod.on .mod-desc { color: rgba(20, 18, 11, .72); }
 
-        .mod-badge {
-            display: inline-block;
+        .mod-tag {
+            position: absolute;
+            top: 10px;
+            right: 10px;
             font-family: var(--mono);
             font-size: 9px;
             font-weight: 700;
@@ -534,11 +619,65 @@
             text-transform: uppercase;
             border: 2px solid var(--ink);
             background: var(--paper);
-            padding: 2px 6px;
-            margin-top: 10px;
+            padding: 1px 6px;
         }
 
-        .mod.pro .mod-badge { background: var(--ink); color: var(--bg); }
+        .mod-tag.mod-tag-pro { background: var(--ink); color: var(--bg); }
+        .mod.on .mod-tag { right: 28px; }
+
+        /* inline action button on a module card */
+        .mod-action {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 12px;
+            font-family: var(--mono);
+            font-size: 10.5px;
+            font-weight: 700;
+            letter-spacing: .04em;
+            color: var(--ink);
+            background: var(--paper);
+            border: 2px solid var(--ink);
+            box-shadow: 2px 2px 0 var(--ink);
+            padding: 4px 10px;
+            cursor: pointer;
+            transition: transform .15s ease, box-shadow .15s ease;
+        }
+
+        .mod-action:hover { transform: translate(-1px, -1px); box-shadow: 3px 3px 0 var(--ink); }
+        .mod-action:active { transform: translate(1px, 1px); box-shadow: 1px 1px 0 var(--ink); }
+
+        /* dashed divider between free and commercial modules */
+        .mods-divider {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 24px 0 16px;
+            font-family: var(--mono);
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+
+        .mods-divider::after {
+            content: '';
+            flex: 1;
+            border-top: 2px dashed var(--faint);
+        }
+
+        .pro-chip {
+            font-family: var(--mono);
+            font-size: 10px;
+            font-weight: 800;
+            color: var(--ink);
+            background: var(--purple);
+            border: 2px solid var(--ink);
+            box-shadow: 2px 2px 0 var(--ink);
+            padding: 1px 7px;
+            transform: rotate(-2deg);
+        }
 
         /* ══ Selected row ══════════════════════ */
         .selected {
@@ -923,6 +1062,8 @@
             .nav { flex-wrap: wrap; gap: 12px; }
             .nav-links { gap: 14px; }
             .grid-4, .grid-5, .grid-3, .grid-2, .mods { grid-template-columns: 1fr; }
+            .mod.wide { grid-column: auto; }
+            .win-sticker { right: 6px; }
             .bar-hint { display: none; }
             .bar { justify-content: center; }
         }
@@ -961,6 +1102,11 @@
                 <span class="kicker">{{ t('heroEyebrow') }}</span>
                 <h1 class="hero-title">Start <em class="hl">Erupt</em></h1>
                 <p class="lead">{{ t('heroSub') }}</p>
+                <ul class="hero-bullets">
+                    <li><i></i>{{ t('bullet1') }}</li>
+                    <li><i></i>{{ t('bullet2') }}</li>
+                    <li><i></i>{{ t('bullet4') }}</li>
+                </ul>
                 <div class="hero-actions">
                     <button class="btn btn-primary" @click="generate">{{ t('heroBtn') }}</button>
                     <button class="btn" @click="openExplore">{{ t('btnExplore') }}</button>
@@ -972,6 +1118,7 @@
             </div>
             <div class="hero-right">
                 <div class="win">
+                    <span class="win-sticker">{{ t('winSticker') }}</span>
                     <div class="win-bar">
                         <span class="tl tl-pink"></span>
                         <span class="tl tl-cyan"></span>
@@ -997,7 +1144,7 @@
         <!-- ══ Configuration ══ -->
         <section class="card reveal">
             <div class="card-head">
-                <i class="sq"></i>
+                <span class="step-no n1">01</span>
                 <span class="card-title">{{ t('secConfig') }}</span>
             </div>
             <div class="card-body">
@@ -1061,7 +1208,7 @@
         <!-- ══ Metadata ══ -->
         <section class="card reveal">
             <div class="card-head">
-                <i class="sq"></i>
+                <span class="step-no n2">02</span>
                 <span class="card-title">{{ t('secMeta') }}</span>
             </div>
             <div class="card-body">
@@ -1097,19 +1244,34 @@
         <!-- ══ Modules ══ -->
         <section class="card reveal">
             <div class="card-head">
-                <i class="sq"></i>
+                <span class="step-no n3">03</span>
                 <span class="card-title">{{ t('secModules') }}</span>
                 <span class="card-hint">{{ t('secModulesHint') }}</span>
             </div>
             <div class="card-body">
                 <div class="mods">
-                    <div class="mod" :class="{on: selectedMods.includes(m.id), pro: m.pro}"
-                         v-for="m in MODULES" :key="m.id" @click="toggleMod(m.id)"
-                         :title="m.pro ? (locale === 'zh' ? '商业模块 — 依赖将以注释形式添加' : 'Commercial module — dependency added as comment') : ''">
+                    <div class="mod" :class="{on: selectedMods.includes(m.id), wide: m.id === 'erupt-ai' || m.id === 'erupt-cloud-server'}"
+                         v-for="m in MODULES.filter(x => !x.pro)" :key="m.id" @click="toggleMod(m.id)">
+                        <span class="mod-tag" v-if="m.tag">{{ m.tag }}</span>
                         <div class="mod-icon">{{ m.icon }}</div>
                         <div class="mod-name">{{ m.name }}</div>
                         <div class="mod-desc">{{ locale === 'zh' ? m.descZh : m.desc }}</div>
-                        <span class="mod-badge" v-if="m.tag">{{ m.tag }}</span>
+                        <button class="mod-action" v-if="m.id === 'erupt-cloud-server'"
+                                :title="t('cloudNodeTip')"
+                                @click.stop="generateCloudNode">{{ t('cloudNodeBtn') }}</button>
+                    </div>
+                </div>
+                <div class="mods-divider">
+                    <span class="pro-chip">PRO</span>
+                    <span>{{ t('secModulesPro') }}</span>
+                </div>
+                <div class="mods">
+                    <div class="mod" :class="{on: selectedMods.includes(m.id)}"
+                         v-for="m in MODULES.filter(x => x.pro)" :key="m.id" @click="toggleMod(m.id)">
+                        <span class="mod-tag mod-tag-pro">PRO</span>
+                        <div class="mod-icon">{{ m.icon }}</div>
+                        <div class="mod-name">{{ m.name }}</div>
+                        <div class="mod-desc">{{ locale === 'zh' ? m.descZh : m.desc }}</div>
                     </div>
                 </div>
             </div>
@@ -1222,6 +1384,10 @@
             proTitle: 'Need BI, workflow, multi-tenant, or semantic-layer cubes?',
             proDesc: 'Source-code delivery · one-time purchase · no License/project/commercial restrictions. Added to your project separately after purchase.',
             proBtn: 'View pricing →',
+            winSticker: 'ready-to-run',
+            secModulesPro: 'Commercial — added as commented dependency',
+            cloudNodeBtn: '↓ Node project',
+            cloudNodeTip: 'Generate a worker-node project that registers to this server',
         },
         zh: {
             navWebsite: '官网', navDocs: '文档', langToggle: 'EN',
@@ -1251,6 +1417,10 @@
             proTitle: '需要 BI、工作流、多租户、Cube 语义层吗？',
             proDesc: '源码交付 · 一次买断 · 无 License / 项目数 / 商用限制 · 单独购买后接入项目。',
             proBtn: '查看定价 →',
+            winSticker: '开箱即用',
+            secModulesPro: '商业模块 — 依赖以注释形式添加',
+            cloudNodeBtn: '↓ 生成 Node 节点',
+            cloudNodeTip: '生成向本服务注册的 Node 节点项目',
         },
     };
 
@@ -1272,7 +1442,7 @@
         {id: 'erupt-mongodb', name: 'MongoDB', icon: '🍃', desc: 'MongoDB data source support', descZh: 'MongoDB 数据源支持'},
 
         // ── Commercial modules · cannot be added via generator, click to view pricing ──
-        {id: 'erupt-chart', name: 'Chart', icon: '📊', desc: 'Reports & data visualization', descZh: '报表图表 / 数据可视化', tag: 'PRO', pro: true, proUrl: 'https://www.erupt.xyz/?utm_source=start&utm_medium=card_chart&utm_campaign=pro#!/pro'},
+        {id: 'erupt-chart', name: 'Report', icon: '📊', desc: 'Reports & data visualization — open source on Aug 23', descZh: '报表图表 / 数据可视化 — 8 月 23 日开源', tag: 'PRO', pro: true, proUrl: 'https://www.erupt.xyz/?utm_source=start&utm_medium=card_chart&utm_campaign=pro#!/pro'},
         {id: 'erupt-flow', name: 'Flow', icon: '🔀', desc: 'Workflow / approval engine', descZh: '流程引擎 / 审批工作流', tag: 'PRO', pro: true, proUrl: 'https://www.erupt.xyz/#!/flow'},
         {id: 'erupt-tenant', name: 'SaaS', icon: '🏢', desc: 'Multi-tenant infrastructure', descZh: '多租户基建', tag: 'PRO', pro: true, proUrl: 'https://www.erupt.xyz/?utm_source=start&utm_medium=card_tenant&utm_campaign=pro#!/pro'},
         {id: 'erupt-cube', name: 'Cube', icon: '🧊', desc: 'BI platform with semantic layer', descZh: 'BI 平台 / 语义层', tag: 'PRO', pro: true, proUrl: 'https://www.erupt.xyz/#!/cube'},
@@ -1776,6 +1946,215 @@ Erupt is a low-code framework that turns annotated Java classes into full-featur
                 saveAs(blob, `${form.artifact}.zip`);
             }
 
+            // ── cloud node project ────────────────────────
+            // Worker node that registers to erupt-cloud-server (docs.erupt.xyz/modules/cloud-node).
+            // Minimal dependencies by design: no erupt-spring-boot-starter / erupt-admin / erupt-security.
+            function nodeArtifact() { return `${form.artifact || 'demo'}-node`; }
+            function nodeName() { return toClass(form.name || 'Demo') + 'Node'; }
+
+            function renderNodePom() {
+                return `<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>${BOOT_VER}</version>
+        <relativePath/>
+    </parent>
+
+    <groupId>${form.group}</groupId>
+    <artifactId>${nodeArtifact()}</artifactId>
+    <version>${form.version}</version>
+    <name>${nodeName()}</name>
+    <description>Erupt cloud node — registers to ${form.name} (erupt-cloud-server)</description>
+
+    <properties>
+        <java.version>${form.java}</java.version>
+        <erupt.version>${ERUPT_VER}</erupt.version>
+    </properties>
+
+    <dependencies>
+        <!-- Keep node dependencies minimal — do NOT add erupt-admin / erupt-security -->
+        <dependency>
+            <groupId>xyz.erupt</groupId>
+            <artifactId>erupt-cloud-node</artifactId>
+            <version>\${erupt.version}</version>
+        </dependency>
+        <!-- JPA capability for node-side entities -->
+        <dependency>
+            <groupId>xyz.erupt</groupId>
+            <artifactId>erupt-cloud-node-jpa</artifactId>
+            <version>\${erupt.version}</version>
+        </dependency>
+
+        <!-- Database -->
+${DB[form.db].mvn}
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>`;
+            }
+
+            function renderNodeGradle() {
+                return `plugins {
+    id("org.springframework.boot") version "${BOOT_VER}"
+    id("io.spring.dependency-management") version "1.1.7"
+    java
+}
+
+group = "${form.group}"
+version = "${form.version}"
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(${form.java})
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // Keep node dependencies minimal — do NOT add erupt-admin / erupt-security
+    implementation("xyz.erupt:erupt-cloud-node:${ERUPT_VER}")
+    implementation("xyz.erupt:erupt-cloud-node-jpa:${ERUPT_VER}")
+${DB[form.db].gradle}
+}`;
+            }
+
+            function renderNodeYml() {
+                const dbName = `${(form.artifact || 'demo').replaceAll('-', '_')}_node`;
+                const nodePort = (parseInt(form.port) || 8080) + 1;
+                return `${DB[form.db].yml(dbName)}
+
+server:
+  port: ${nodePort}
+
+erupt:
+  cloud-node:
+    # erupt-cloud-server addresses — the main project of this generator
+    server-addresses: ['http://localhost:${form.port || 8080}']
+    # access-token — create the node in the server console to get it
+    access-token: <ACCESS_TOKEN>
+    # must match the node name configured on the server
+    node-name: ${nodeName()}`;
+            }
+
+            function renderNodeApp() {
+                const cls = nodeName() + 'Application';
+                return `package ${form.pkg};
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
+import xyz.erupt.core.annotation.EruptScan;
+
+@SpringBootApplication
+@EruptScan
+@EntityScan
+public class ${cls} {
+
+    public static void main(String[] args) {
+        SpringApplication.run(${cls}.class, args);
+    }
+
+}`;
+            }
+
+            function renderNodeSample() {
+                return `package ${form.pkg}.model;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import xyz.erupt.annotation.Erupt;
+import xyz.erupt.annotation.EruptField;
+import xyz.erupt.annotation.sub_field.Edit;
+import xyz.erupt.annotation.sub_field.View;
+import xyz.erupt.jpa.model.BaseModel;
+
+@Erupt(name = "Node Demo")
+@Table(name = "node_demo")
+@Entity
+public class NodeDemo extends BaseModel {
+
+    @EruptField(
+            views = @View(title = "Text"),
+            edit = @Edit(title = "Text")
+    )
+    private String input;
+
+    @EruptField(
+            views = @View(title = "Number"),
+            edit = @Edit(title = "Number")
+    )
+    private Integer number = 100;
+
+    public String getInput() { return input; }
+    public void setInput(String input) { this.input = input; }
+
+    public Integer getNumber() { return number; }
+    public void setNumber(Integer number) { this.number = number; }
+
+}`;
+            }
+
+            function renderNodeReadme() {
+                const run = form.build === 'maven' ? '```bash\nmvn spring-boot:run\n```' : '```bash\n./gradlew bootRun\n```';
+                return `# ${nodeName()}
+
+> Erupt Cloud worker node — generated by [start.erupt.xyz](https://start.erupt.xyz)
+
+Registers to the \`erupt-cloud-server\` inside **${form.artifact}** and is managed from its admin console.
+
+## Steps
+
+1. Start the main project **${form.artifact}** (it must include the \`erupt-cloud-server\` module) at \`http://localhost:${form.port || 8080}\`.
+2. In the server console, add a node named \`${nodeName()}\` and copy its **access-token**.
+3. Paste the token into \`src/main/resources/application.yml\` → \`erupt.cloud-node.access-token\`.
+4. Run the node:
+
+${run}
+
+5. Back in the server console, bind a menu with type value \`${nodeName()}.NodeDemo\` to see the node entity.
+
+Docs: [docs.erupt.xyz/modules/cloud-node](https://docs.erupt.xyz/modules/cloud-node)
+`;
+            }
+
+            async function generateCloudNode() {
+                // a node needs a server — make sure the main project ships erupt-cloud-server
+                if (!selectedMods.value.includes('erupt-cloud-server')) toggleMod('erupt-cloud-server');
+                const pp = pkgToPath(form.pkg);
+                const cls = nodeName() + 'Application';
+                const files = {
+                    [form.build === 'maven' ? 'pom.xml' : 'build.gradle.kts']: form.build === 'maven' ? renderNodePom() : renderNodeGradle(),
+                    'src/main/resources/application.yml': renderNodeYml(),
+                    [`src/main/java/${pp}/${cls}.java`]: renderNodeApp(),
+                    '.gitignore': renderGitignore(),
+                    'README.md': renderNodeReadme(),
+                };
+                if (form.sample)
+                    files[`src/main/java/${pp}/model/NodeDemo.java`] = renderNodeSample();
+                const zip = new JSZip();
+                const folder = zip.folder(nodeArtifact());
+                Object.entries(files).forEach(([path, content]) => folder.file(path, content));
+                const blob = await zip.generateAsync({type: 'blob'});
+                saveAs(blob, `${nodeArtifact()}.zip`);
+            }
+
             onMounted(() => {
                 document.addEventListener('keydown', e => {
                     if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') generate();
@@ -1789,7 +2168,7 @@ Erupt is a low-code framework that turns annotated Java classes into full-featur
                 modal, previewFiles, treeEntries,
                 locale, t, toggleLang,
                 syncPkg, onArtifact, toggleMod,
-                openExplore, copyFile, generate, highlightedContent,
+                openExplore, copyFile, generate, generateCloudNode, highlightedContent,
             };
         }
     }).use(ElementPlus).mount('#app');

@@ -22,20 +22,28 @@
            ══════════════════════════════════════════════ */
 
         :root {
-            --ink: #14120B;
-            --bg: #F4F1EA;
+            /* neutrals — doris paper + ink */
+            --ink: #0F1A14;
+            --bg: #F5EFE4;
             --paper: #FFFFFF;
             --card: #FFFFFF;
             --muted: #5C5647;
             --faint: #D9D2C2;
+            /* accents */
             --cyan: #4FC8EC;
             --accent: #4FC8EC;
-            --pink: #F585B4;
-            --yellow: #FFD447;
-            --green: #93D655;
-            --purple: #BCA0F2;
-            --code-bg: #1A170F;
-            --code-fg: #F0E8D6;
+            --pink: #FF8FA3;   /* doris syntax red-pink */
+            --yellow: #FFD23F; /* doris signature yellow */
+            --green: #98D9A0;  /* doris syntax green */
+            --purple: #C7B5FF; /* doris syntax purple */
+            --code-bg: #0F1A14;
+            --code-fg: #D8DCD0;
+            /* doris brand green — merged header + hero band */
+            --night: #06805F;
+            --night-2: #054C39;
+            --night-line: rgba(245, 239, 228, .18);
+            --night-ink: #FAF6EE;
+            --night-muted: rgba(250, 246, 238, .72);
             --bw: 2px;
             --shadow: 4px 4px 0 var(--ink);
             --shadow-lg: 6px 6px 0 var(--ink);
@@ -81,22 +89,39 @@
             pointer-events: none;
         }
 
-        /* ══ Nav ═══════════════════════════════ */
+        /* ══ Nav + Hero band — unified dark-green surface (doris grammar) ═══ */
+        .band {
+            background: var(--night);
+            border-bottom: var(--bw) solid var(--ink);
+            position: relative;
+        }
+
+        /* faint dotted texture inside the band, replaces global body texture here */
+        .band::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: radial-gradient(rgba(255, 255, 255, .06) 1px, transparent 1px);
+            background-size: 22px 22px;
+            pointer-events: none;
+        }
+
         .topbar {
             position: sticky;
             top: 0;
             z-index: 200;
-            background: var(--paper);
-            border-bottom: var(--bw) solid var(--ink);
+            background: var(--night);
+            border-bottom: 1px solid var(--night-line);
         }
 
         .nav {
             max-width: 1180px;
             margin: 0 auto;
-            padding: 9px 24px;
+            padding: 12px 24px;
             display: flex;
             align-items: center;
             gap: 20px;
+            position: relative;
         }
 
         .brand {
@@ -104,7 +129,7 @@
             align-items: center;
             gap: 12px;
             text-decoration: none;
-            color: var(--ink);
+            color: var(--night-ink);
             transition: transform .12s ease;
         }
 
@@ -120,14 +145,17 @@
             font-size: 18px;
             font-weight: 900;
             letter-spacing: -.02em;
+            color: var(--night-ink);
         }
 
         .brand-name b {
             font-weight: 900;
-            background: var(--cyan);
+            background: var(--yellow);
+            color: var(--ink);
             box-shadow: 2px 2px 0 var(--ink);
             padding: 0 4px;
             margin-left: 1px;
+            border: 2px solid var(--ink);
         }
 
         .brand-sub {
@@ -137,7 +165,7 @@
             font-weight: 700;
             letter-spacing: .16em;
             text-transform: uppercase;
-            color: var(--muted);
+            color: var(--night-muted);
             margin-top: 4px;
         }
 
@@ -149,7 +177,7 @@
         }
 
         .nav-links a {
-            color: var(--ink);
+            color: var(--night-ink);
             text-decoration: none;
             font-size: 13px;
             font-weight: 700;
@@ -158,10 +186,10 @@
         }
 
         .nav-links a:hover {
-            border-bottom-color: var(--cyan);
+            border-bottom-color: var(--yellow);
         }
 
-        /* GitHub sticker chip */
+        /* GitHub chip */
         .nav-links .gh {
             display: inline-flex;
             align-items: center;
@@ -171,14 +199,13 @@
             font-weight: 700;
             padding: 6px 11px;
             border: var(--bw) solid var(--ink);
-            border-bottom: var(--bw) solid var(--ink);
-            background: var(--cyan);
+            background: var(--yellow);
+            color: var(--ink);
             box-shadow: 2px 2px 0 var(--ink);
             transition: transform .12s ease, box-shadow .12s ease;
         }
 
         .nav-links .gh:hover {
-            border-bottom-color: var(--ink);
             transform: translate(-1px, -1px);
             box-shadow: 3px 3px 0 var(--ink);
         }
@@ -192,25 +219,33 @@
             font-size: 12px;
             font-weight: 700;
             border: var(--bw) solid var(--ink);
-            background: var(--paper);
-            color: var(--ink);
+            background: var(--night);
+            color: var(--night-ink);
             padding: 5px 9px;
             cursor: pointer;
             box-shadow: 2px 2px 0 var(--ink);
             transition: transform .12s, box-shadow .12s;
         }
 
-        .lang-btn:hover { transform: translate(-1px, -1px); box-shadow: 3px 3px 0 var(--ink); }
+        .lang-btn:hover { transform: translate(-1px, -1px); box-shadow: 3px 3px 0 var(--ink); background: var(--night-2); }
         .lang-btn:active { transform: translate(1px, 1px); box-shadow: 1px 1px 0 var(--ink); }
 
         /* ══ Page ══════════════════════════════ */
         .page {
             max-width: 1180px;
             margin: 0 auto;
-            padding: 40px 24px 150px;
+            padding: 44px 24px 150px;
             display: flex;
             flex-direction: column;
             gap: 34px;
+        }
+
+        /* hero sits inside the dark band, with its own inner container */
+        .band-inner {
+            max-width: 1180px;
+            margin: 0 auto;
+            padding: 48px 24px 64px;
+            position: relative;
         }
 
         /* ══ Buttons ═══════════════════════════ */
@@ -236,87 +271,82 @@
 
         .btn-primary { background: var(--pink); }
 
-        /* ══ Hero ══════════════════════════════ */
+        /* ══ Hero — doris grammar: two-column, left copy · right code editor ══ */
         .hero {
             display: grid;
-            grid-template-columns: 1.05fr .95fr;
-            gap: 40px;
+            grid-template-columns: 1fr 1.15fr;
+            gap: 56px;
             align-items: center;
-            padding: 0;
+            position: relative;
         }
 
-        /* slogan title — same treatment as the erupt-docs home hero */
+        .hero-left { min-width: 0; }
+
+        /* eyebrow pill */
+        .hero-eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: var(--mono);
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: .18em;
+            text-transform: uppercase;
+            color: var(--ink);
+            background: var(--yellow);
+            border: 2px solid var(--ink);
+            box-shadow: 3px 3px 0 var(--ink);
+            padding: 5px 13px;
+            margin: 0 0 22px;
+        }
+
+        .hero-eyebrow .dot {
+            width: 8px;
+            height: 8px;
+            background: var(--pink);
+            border: 2px solid var(--ink);
+        }
+
+        /* big bold headline on dark green background */
         .hero-title {
-            font-size: clamp(36px, 4.2vw, 56px);
+            font-size: clamp(40px, 5.2vw, 68px);
             font-weight: 900;
-            line-height: 1.18;
-            letter-spacing: -.01em;
-            color: var(--ink);
-            margin: 0 0 18px;
+            line-height: 1.05;
+            letter-spacing: -.02em;
+            color: var(--night-ink);
+            margin: 0 0 22px;
+            text-transform: uppercase;
         }
 
+        /* doris title emphasis — just color the text, no boxes */
         .hero-title .hl {
-            display: inline-block;
-            background: var(--cyan);
-            color: var(--ink);
-            padding: 0 12px 3px;
-            transform: rotate(-1deg);
-            box-shadow: 4px 4px 0 var(--ink);
+            color: var(--yellow);
         }
+
+        .hero-title .hl-pink { color: var(--pink); }
+        .hero-title .hl-yellow { color: var(--yellow); }
+        .hero-title .hl-cyan { color: var(--cyan); }
 
         .lead {
-            font-size: 15px;
-            color: var(--muted);
-            max-width: 460px;
-            margin: 0 0 18px;
-        }
-
-        /* ── hero value bullets ── */
-        .hero-bullets {
-            list-style: none;
-            margin: 0 0 26px;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            gap: 9px;
-        }
-
-        .hero-bullets li {
-            display: flex;
-            align-items: flex-start;
-            gap: 10px;
-            font-size: 13.5px;
-            font-weight: 500;
-            color: var(--ink);
-        }
-
-        .hero-bullets li i {
-            width: 15px;
-            height: 15px;
-            flex-shrink: 0;
-            margin-top: 3px;
-            background: var(--green);
-            border: 2px solid var(--ink);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .hero-bullets li i::after {
-            content: '✓';
-            font-size: 9px;
-            font-weight: 900;
-            line-height: 1;
+            font-size: 16px;
+            color: var(--night-muted);
+            max-width: 520px;
+            margin: 0 0 28px;
+            line-height: 1.6;
         }
 
         .hero-actions {
             display: flex;
             flex-wrap: wrap;
-            gap: 14px;
-            margin-bottom: 22px;
+            gap: 12px;
+            margin: 0 0 22px;
         }
 
-        .chips { display: flex; flex-wrap: wrap; gap: 12px; }
+        .chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
 
         .chip {
             display: inline-flex;
@@ -326,7 +356,8 @@
             font-size: 11.5px;
             font-weight: 700;
             border: var(--bw) solid var(--ink);
-            background: var(--paper);
+            background: var(--night-2);
+            color: var(--night-ink);
             box-shadow: 3px 3px 0 var(--ink);
             padding: 6px 12px;
         }
@@ -334,70 +365,90 @@
         .chip .dot {
             width: 9px;
             height: 9px;
-            background: var(--green);
+            background: var(--yellow);
             border: 2px solid var(--ink);
             flex-shrink: 0;
         }
 
-        /* sticker feel — alternate tilt */
-        .chips .chip:nth-child(odd)  { transform: rotate(-1deg); }
-        .chips .chip:nth-child(even) { transform: rotate(1deg); }
-
-        /* ══ Hero board — stacked-windows collage (same grammar as docs home) ══ */
-        .board { position: relative; padding: 10px 8px; }
-
-        /* emoji corner stickers */
-        .bd-sticker {
-            position: absolute;
-            z-index: 5;
-            display: grid;
-            place-items: center;
-            width: 44px;
-            height: 44px;
-            font-size: 22px;
-            border: 2px solid var(--ink);
-            box-shadow: 3px 3px 0 var(--ink);
+        /* ── right column: single dark code editor card, doris-style ── */
+        .hero-code {
+            position: relative;
+            background: var(--code-bg);
+            border: var(--bw) solid var(--ink);
+            box-shadow: 8px 8px 0 var(--ink);
+            min-width: 0;
         }
 
-        .bd-s1 { top: -14px; right: 8%; background: var(--green); transform: rotate(8deg); }
-        .bd-s2 { bottom: -8px; left: 2%; background: var(--purple); transform: rotate(-7deg); }
+        .hc-bar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 14px;
+            background: #0F0D08;
+            border-bottom: var(--bw) solid var(--ink);
+        }
 
-        /* cyan chip pinned where the two windows meet */
-        .bd-arrow {
-            position: absolute;
-            left: 2%;
-            top: 54%;
-            z-index: 4;
+        .hc-bar .tl {
+            width: 11px;
+            height: 11px;
+            border-radius: 50%;
+            border: 2px solid var(--ink);
+        }
+
+        .hc-file {
+            margin-left: 6px;
+            font-family: var(--mono);
+            font-size: 12px;
+            font-weight: 700;
+            color: #b8ae97;
+        }
+
+        .hc-run {
+            margin-left: auto;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
             font-family: var(--mono);
             font-size: 11.5px;
             font-weight: 800;
-            letter-spacing: .08em;
+            letter-spacing: .06em;
             text-transform: uppercase;
             color: var(--ink);
-            background: var(--cyan);
+            background: var(--yellow);
             border: 2px solid var(--ink);
-            box-shadow: 3px 3px 0 var(--ink);
-            padding: 4px 11px;
-            transform: rotate(-4deg);
+            box-shadow: 2px 2px 0 var(--ink);
+            padding: 3px 10px;
+            cursor: pointer;
         }
 
-        .win {
-            position: relative;
+        .hc-body {
             margin: 0;
-            background: var(--paper);
-            border: var(--bw) solid var(--ink);
-            box-shadow: 7px 7px 0 var(--ink);
+            padding: 18px 20px 20px;
+            font-family: var(--mono);
+            font-size: 13px;
+            line-height: 1.75;
+            color: var(--code-fg);
+            overflow: hidden;
+            white-space: pre;
         }
 
-        .win-code { width: 84%; z-index: 2; transform: rotate(-1.4deg); }
-
-        .win-ui {
-            width: 76%;
-            margin: -30px 0 0 auto;
-            z-index: 3;
-            transform: rotate(1.2deg);
+        .hc-body .ln {
+            display: inline-block;
+            width: 20px;
+            margin-right: 14px;
+            color: #524a3a;
+            font-weight: 700;
+            user-select: none;
+            text-align: right;
         }
 
+        .hc-body .anno { color: var(--pink); font-weight: 700; }
+        .hc-body .kw   { color: var(--cyan); font-weight: 700; }
+        .hc-body .ty   { color: var(--yellow); font-weight: 700; }
+        .hc-body .str  { color: var(--green); font-weight: 700; }
+        .hc-body .cm   { color: #7d7565; font-style: italic; }
+
+        /* preserve legacy .win-bar reset for downstream .win elsewhere (none in hero) */
         .win-bar {
             display: flex;
             align-items: center;
@@ -448,14 +499,12 @@
         .win-body .tr-cfg   { color: var(--green); font-weight: 700; }
         .win-body .tr-file  { color: #b8ae97; }
         .win-body .tr-line  { color: #6a6350; }
-        /* ── admin-ui wireframe (front window) ── */
-        .ui { padding: 10px 14px 14px; }
-
+        /* ── admin-ui wireframe (no longer used in hero — kept in case referenced) ── */
         .ui-bar {
             display: flex;
             align-items: center;
             gap: 8px;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
         }
 
         .ui-title { font-size: 13px; font-weight: 800; margin-right: auto; }
@@ -476,7 +525,7 @@
             grid-template-columns: 22px 1.2fr .9fr 1fr;
             align-items: center;
             gap: 8px;
-            padding: 7px 2px;
+            padding: 8px 2px;
             border-top: 1px solid var(--faint);
         }
 
@@ -1104,8 +1153,7 @@
 
         /* ══ Responsive ════════════════════════ */
         @media (max-width: 900px) {
-            .hero { grid-template-columns: 1fr; gap: 28px; }
-            .win { transform: none; }
+            .hero { grid-template-columns: 1fr; gap: 36px; }
             .grid-4, .grid-5, .grid-3 { grid-template-columns: repeat(2, 1fr); }
             .mods { grid-template-columns: repeat(2, 1fr); }
         }
@@ -1123,43 +1171,36 @@
 <body>
 <div id="app">
 
-    <!-- ══ Nav ══ -->
-    <header class="topbar">
-        <div class="nav">
-            <a class="brand" href="/">
-                <img src="logo.svg" alt="Erupt"/>
-                <span>
-                    <span class="brand-name">erupt<b>.xyz</b></span>
-                    <span class="brand-sub">{{ t('logoSub') }}</span>
-                </span>
-            </a>
-            <nav class="nav-links">
-                <a href="https://www.erupt.xyz" target="_blank">{{ t('navWebsite') }}</a>
-                <a href="https://docs.erupt.xyz" target="_blank">{{ t('navDocs') }}</a>
-                <a class="gh" href="https://github.com/erupts/erupt" target="_blank">
-                    <svg viewBox="0 0 24 24" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.8" stroke-linejoin="round"><path d="M12 3l2.7 5.9 6.3.6-4.8 4.3 1.4 6.2L12 17.7 6.4 20.2l1.4-6.2-4.8-4.3 6.3-.6z"/></svg>
-                    GitHub
+    <!-- ══ Unified dark band: topbar + hero share one surface ══ -->
+    <div class="band">
+        <header class="topbar">
+            <div class="nav">
+                <a class="brand" href="/">
+                    <img src="logo.svg" alt="Erupt"/>
+                    <span>
+                        <span class="brand-name">erupt<b>.xyz</b></span>
+                        <span class="brand-sub">{{ t('logoSub') }}</span>
+                    </span>
                 </a>
-                <button class="lang-btn" @click="toggleLang">{{ t('langToggle') }}</button>
-            </nav>
-        </div>
-    </header>
+                <nav class="nav-links">
+                    <a href="https://www.erupt.xyz" target="_blank">{{ t('navWebsite') }}</a>
+                    <a href="https://docs.erupt.xyz" target="_blank">{{ t('navDocs') }}</a>
+                    <a class="gh" href="https://github.com/erupts/erupt" target="_blank">
+                        <svg viewBox="0 0 24 24" fill="var(--ink)" stroke="var(--ink)" stroke-width="1.8" stroke-linejoin="round"><path d="M12 3l2.7 5.9 6.3.6-4.8 4.3 1.4 6.2L12 17.7 6.4 20.2l1.4-6.2-4.8-4.3 6.3-.6z"/></svg>
+                        GitHub
+                    </a>
+                    <button class="lang-btn" @click="toggleLang">{{ t('langToggle') }}</button>
+                </nav>
+            </div>
+        </header>
 
-    <main class="page">
-
-        <!-- ══ Hero ══ -->
-        <section class="hero reveal">
+        <div class="band-inner">
+            <!-- ══ Hero — doris grammar: two-column, left copy · right code editor ══ -->
+            <section class="hero reveal">
             <div class="hero-left">
-                <h1 class="hero-title">
-                    {{ t('titleL1') }}<br>
-                    <mark class="hl">{{ t('titleHl') }}</mark>
-                </h1>
+                <span class="hero-eyebrow"><i class="dot"></i>{{ t('heroEyebrow') }}</span>
+                <h1 class="hero-title" v-html="t('heroTitle')"></h1>
                 <p class="lead">{{ t('heroSub') }}</p>
-                <ul class="hero-bullets">
-                    <li><i></i>{{ t('bullet1') }}</li>
-                    <li><i></i>{{ t('bullet2') }}</li>
-                    <li><i></i>{{ t('bullet4') }}</li>
-                </ul>
                 <div class="hero-actions">
                     <button class="btn btn-primary" @click="generate">{{ t('heroBtn') }}</button>
                     <button class="btn" @click="openExplore">{{ t('btnExplore') }}</button>
@@ -1169,57 +1210,38 @@
                     <span class="chip"><i class="dot"></i>Spring Boot {{ BOOT_VER }}</span>
                 </div>
             </div>
-            <div class="hero-right">
-                <div class="board">
-                    <span class="bd-sticker bd-s1" aria-hidden="true">⚡</span>
-                    <span class="bd-sticker bd-s2" aria-hidden="true">🚀</span>
 
-                    <figure class="win win-code">
-                        <figcaption class="win-bar">
-                            <span class="tl tl-pink"></span>
-                            <span class="tl tl-cyan"></span>
-                            <span class="tl tl-green"></span>
-                            <span class="win-file">{{ form.artifact || 'demo' }}.zip</span>
-                        </figcaption>
-<pre class="win-body"><span class="tr-dir">▾ {{ form.artifact || 'demo' }}</span>
-<span class="tr-line">├──</span> <span class="tr-dir">src/main/java</span>
-<span class="tr-line">│   └──</span> <span class="tr-dir">{{ (form.pkg || 'com.example.demo').replaceAll('.','/') }}</span>
-<span class="tr-line">│       ├──</span> <span class="tr-java">{{ (form.name || 'Demo') }}Application.java</span>
-<span class="tr-line">│       └──</span> <span class="tr-java">SampleModel.java</span>
-<span class="tr-line">├──</span> <span class="tr-dir">src/main/resources</span>
-<span class="tr-line">│   └──</span> <span class="tr-cfg">application.yml</span>
-<span class="tr-line">├──</span> <span class="tr-cfg">{{ form.build === 'gradle' ? 'build.gradle' : 'pom.xml' }}</span>
-<span class="tr-line">└──</span> <span class="tr-file">Dockerfile</span></pre>
-                    </figure>
+            <!-- ── right column: single dark code editor card ── -->
+            <figure class="hero-code">
+                <figcaption class="hc-bar">
+                    <span class="tl tl-pink"></span>
+                    <span class="tl tl-cyan"></span>
+                    <span class="tl tl-green"></span>
+                    <span class="hc-file">SampleModel.java</span>
+                    <button class="hc-run" @click="generate">▶ Run</button>
+                </figcaption>
+<pre class="hc-body"><span class="ln">01</span><span class="anno">@Erupt</span>(name = <span class="str">"Sample"</span>)
+<span class="ln">02</span><span class="anno">@Entity</span>
+<span class="ln">03</span><span class="kw">public class</span> <span class="ty">SampleModel</span> <span class="kw">extends</span> <span class="ty">BaseModel</span> {
+<span class="ln">04</span>
+<span class="ln">05</span>    <span class="anno">@EruptField</span>(
+<span class="ln">06</span>        views = <span class="anno">@View</span>(title = <span class="str">"Name"</span>),
+<span class="ln">07</span>        edit  = <span class="anno">@Edit</span>(title = <span class="str">"Name"</span>, search = <span class="anno">@Search</span>)
+<span class="ln">08</span>    )
+<span class="ln">09</span>    <span class="kw">private</span> <span class="ty">String</span> name;
+<span class="ln">10</span>
+<span class="ln">11</span>    <span class="anno">@EruptField</span>(views = <span class="anno">@View</span>(title = <span class="str">"Active"</span>))
+<span class="ln">12</span>    <span class="kw">private</span> <span class="ty">Boolean</span> active = <span class="kw">true</span>;
+<span class="ln">13</span>
+<span class="ln">14</span>    <span class="anno">@EruptField</span>(views = <span class="anno">@View</span>(title = <span class="str">"Date"</span>))
+<span class="ln">15</span>    <span class="kw">private</span> <span class="ty">Date</span> date;
+<span class="ln">16</span>}</pre>
+            </figure>
+            </section>
+        </div>
+    </div>
 
-                    <span class="bd-arrow">{{ t('arrowChip') }} ↓</span>
-
-                    <figure class="win win-ui">
-                        <figcaption class="win-bar">
-                            <span class="tl tl-green"></span>
-                            <span class="win-file">localhost:{{ form.port || 8080 }} · {{ t('winUi') }}</span>
-                        </figcaption>
-                        <div class="ui">
-                            <div class="ui-bar">
-                                <span class="ui-title">Sample</span>
-                                <span class="ui-btn ui-btn-acc">{{ t('uiAdd') }}</span>
-                                <span class="ui-btn">{{ t('uiSearch') }}</span>
-                            </div>
-                            <div class="ui-row ui-head">
-                                <i class="ui-cb"></i>
-                                <span v-for="c in t('uiCols')" :key="c">{{ c }}</span>
-                            </div>
-                            <div v-for="i in 3" :key="i" class="ui-row">
-                                <i class="ui-cb"></i>
-                                <span><i class="ui-line" :style="{ width: (72 - i * 12) + '%' }"></i></span>
-                                <span><i class="ui-pill" :class="{ off: i === 3 }"></i></span>
-                                <span><i class="ui-line" style="width:55%"></i></span>
-                            </div>
-                        </div>
-                    </figure>
-                </div>
-            </div>
-        </section>
+    <main class="page">
 
         <!-- ══ Configuration ══ -->
         <section class="card reveal">
@@ -1442,6 +1464,7 @@
             heroEyebrow: 'Project Generator',
             titleL1: 'Bootstrap your',
             titleHl: 'Erupt project.',
+            heroTitle: 'Bootstrap your <span class="hl">Erupt</span> project.',
             heroSub: 'Generate a pre-configured Erupt + Spring Boot project. Pick your stack, choose modules, and download a ready-to-run ZIP.',
             bullet1: 'Zero boilerplate — annotate a Java class and get a full CRUD admin UI',
             bullet2: 'Spring Boot 3 · JPA · multi-database support out of the box',
@@ -1467,7 +1490,7 @@
             proDesc: 'Source-code delivery · one-time purchase · no License/project/commercial restrictions. Added to your project separately after purchase.',
             proBtn: 'View pricing →',
             secModulesPro: 'Commercial — added as commented dependency',
-            arrowChip: 'ready-to-run',
+            arrowChip: 'renders',
             winUi: 'Admin UI',
             uiAdd: '+ New', uiSearch: 'Search…',
             uiCols: ['Name', 'Active', 'Date'],
@@ -1480,6 +1503,7 @@
             heroEyebrow: '项目生成器',
             titleL1: '三分钟，启动你的',
             titleHl: 'Erupt 项目。',
+            heroTitle: '三分钟，启动你的 <span class="hl">Erupt</span> 项目。',
             heroSub: '生成一个开箱即用的 Erupt + Spring Boot 项目。选择技术栈、勾选模块，下载即可运行。',
             bullet1: '零样板代码 — 注解一个 Java 类，即得完整 CRUD 管理界面',
             bullet2: 'Spring Boot 3 · JPA · 开箱即用的多数据库支持',
@@ -1505,7 +1529,7 @@
             proDesc: '源码交付 · 一次买断 · 无 License / 项目数 / 商用限制 · 单独购买后接入项目。',
             proBtn: '查看定价 →',
             secModulesPro: '商业模块 — 依赖以注释形式添加',
-            arrowChip: '下载即运行',
+            arrowChip: '即为',
             winUi: '管理界面',
             uiAdd: '+ 新增', uiSearch: '搜索…',
             uiCols: ['名称', '状态', '日期'],
@@ -1923,16 +1947,37 @@ ENTRYPOINT ["java", "-jar", "app.jar"]`;
             }
 
             function renderReadme() {
-                const run = form.build === 'maven' ? '```bash\nmvn spring-boot:run\n```' : '```bash\n./gradlew bootRun\n```';
+                const port = form.port || 8080;
+                const account = form.adminAccount || 'erupt';
+                const password = form.adminPassword || 'erupt';
+                const usage = form.build === 'maven'
+                    ? `The Maven Wrapper (\`mvnw\`) is included — no local Maven install required.
+
+\`\`\`bash
+# macOS / Linux
+./mvnw spring-boot:run
+
+# Windows
+mvnw.cmd spring-boot:run
+\`\`\``
+                    : `The Gradle Wrapper (\`gradlew\`) is included — no local Gradle install required.
+
+\`\`\`bash
+# macOS / Linux
+./gradlew bootRun
+
+# Windows
+gradlew.bat bootRun
+\`\`\``;
                 return `# ${form.name}
 
 > Generated by [start.erupt.xyz](https://start.erupt.xyz)
 
 ## Quick Start
 
-${run}
+${usage}
 
-Open [http://localhost:8080](http://localhost:8080) — login: \`${form.adminAccount || 'erupt'} / ${form.adminPassword || 'erupt'}\`
+Open [http://localhost:${port}](http://localhost:${port}) — login: \`${account} / ${password}\`
 
 ## Stack
 
@@ -2028,11 +2073,48 @@ Erupt is a low-code framework that turns annotated Java classes into full-featur
             }
 
             // ── generate ──────────────────────────────────
+            // fetch a static asset from ./assets/ as text or binary buffer
+            async function fetchAsset(name, binary = false) {
+                const res = await fetch(`assets/${name}`);
+                if (!res.ok) throw new Error(`asset ${name} missing`);
+                return binary ? await res.arrayBuffer() : await res.text();
+            }
+
+            // add maven wrapper — mvnw needs the unix executable bit
+            async function addMavenWrapper(folder) {
+                const [mvnw, mvnwCmd, wrapperProps] = await Promise.all([
+                    fetchAsset('mvnw'),
+                    fetchAsset('mvnw.cmd'),
+                    fetchAsset('mvn-wrapper/maven-wrapper.properties'),
+                ]);
+                folder.file('mvnw', mvnw, {unixPermissions: 0o755});
+                folder.file('mvnw.cmd', mvnwCmd);
+                folder.file('.mvn/wrapper/maven-wrapper.properties', wrapperProps);
+            }
+
+            // add gradle wrapper — gradlew needs the unix executable bit,
+            // gradle-wrapper.jar is binary. rootName drives settings.gradle.kts.
+            async function addGradleWrapper(folder, rootName) {
+                const [gradlew, gradlewBat, wrapperJar, wrapperProps] = await Promise.all([
+                    fetchAsset('gradlew'),
+                    fetchAsset('gradlew.bat'),
+                    fetchAsset('gradle-wrapper/gradle-wrapper.jar', true),
+                    fetchAsset('gradle-wrapper/gradle-wrapper.properties'),
+                ]);
+                folder.file('gradlew', gradlew, {unixPermissions: 0o755});
+                folder.file('gradlew.bat', gradlewBat);
+                folder.file('gradle/wrapper/gradle-wrapper.jar', wrapperJar);
+                folder.file('gradle/wrapper/gradle-wrapper.properties', wrapperProps);
+                folder.file('settings.gradle.kts', `rootProject.name = "${rootName}"\n`);
+            }
+
             async function generate() {
                 const zip = new JSZip();
                 const folder = zip.folder(form.artifact);
                 Object.entries(previewFiles.value).forEach(([path, content]) => folder.file(path, content));
-                const blob = await zip.generateAsync({type: 'blob'});
+                if (form.build === 'maven')  await addMavenWrapper(folder);
+                if (form.build === 'gradle') await addGradleWrapper(folder, form.artifact);
+                const blob = await zip.generateAsync({type: 'blob', platform: 'UNIX'});
                 saveAs(blob, `${form.artifact}.zip`);
             }
 
@@ -2241,7 +2323,9 @@ Docs: [docs.erupt.xyz/modules/cloud-node](https://docs.erupt.xyz/modules/cloud-n
                 const zip = new JSZip();
                 const folder = zip.folder(nodeArtifact());
                 Object.entries(files).forEach(([path, content]) => folder.file(path, content));
-                const blob = await zip.generateAsync({type: 'blob'});
+                if (form.build === 'maven')  await addMavenWrapper(folder);
+                if (form.build === 'gradle') await addGradleWrapper(folder, nodeArtifact());
+                const blob = await zip.generateAsync({type: 'blob', platform: 'UNIX'});
                 saveAs(blob, `${nodeArtifact()}.zip`);
             }
 

@@ -1454,7 +1454,7 @@
 <script>
     const {createApp, reactive, ref, computed, watch, onMounted} = Vue;
 
-    const ERUPT_VER = '2.0.4';
+    const ERUPT_VER = '2.1.0';
     const BOOT_VER = '3.5.16';
 
     const LANG = {
@@ -1541,6 +1541,7 @@
     const MODULES = [
         {id: 'erupt-ai', name: 'AI', icon: '🤖', desc: 'Integrate 50+ LLMs: GPT, Claude, DeepSeek…', descZh: '集成 50+ 大模型：GPT、Claude、DeepSeek…'},
         {id: 'erupt-ai-claw', name: 'AI Claw', icon: '🦞', desc: 'Control your server via natural language', descZh: '用自然语言控制你的服务器', requires: 'erupt-ai'},
+        {id: 'erupt-ai-canvas', name: 'AI Canvas', icon: '🎨', desc: 'Generate live pages from one sentence', descZh: '一句话生成页面，数据实时来自后端', requires: 'erupt-ai', tag: 'NEW'},
         {id: 'erupt-designer', name: 'Designer', icon: '✏️', desc: 'Visual form designer — drag-and-drop entity models at runtime, publish without restart', descZh: '可视化表单设计器 — 运行时拖拽设计实体模型，无需重启发布', tag: 'NEW'},
         {id: 'erupt-print', name: 'Print', icon: '🖨️', desc: 'HTML template-based printing for any Erupt entity row', descZh: '基于 HTML 模板的打印，支持任意 Erupt 实体行数据', tag: 'NEW'},
 
@@ -1553,10 +1554,11 @@
         {id: 'erupt-websocket', name: 'WebSocket', icon: '⚡', desc: 'Real-time interaction via WebSocket', descZh: '基于 WebSocket 的实时交互'},
         {id: 'erupt-generator', name: 'Generator', icon: '⚙️', desc: 'Assisted code generation IDE', descZh: '辅助代码生成'},
         {id: 'erupt-tpl', name: 'TPL', icon: '🎨', desc: 'Custom page template framework', descZh: '自定义页面模板框架'},
-        {id: 'erupt-mongodb', name: 'MongoDB', icon: '🍃', desc: 'MongoDB data source support', descZh: 'MongoDB 数据源支持'},
+        {id: 'erupt-data-mongodb', name: 'MongoDB', icon: '🍃', desc: 'MongoDB data source support', descZh: 'MongoDB 数据源支持'},
+
+        {id: 'erupt-report', name: 'Report', icon: '📊', desc: 'Reports & data visualization in pure SQL', descZh: '纯 SQL 定义报表图表 / 数据可视化', tag: 'NEW'},
 
         // ── Commercial modules · cannot be added via generator, click to view pricing ──
-        {id: 'erupt-chart', name: 'Report', icon: '📊', desc: 'Reports & data visualization — open source on Aug 23', descZh: '报表图表 / 数据可视化 — 8 月 23 日开源', tag: 'PRO', pro: true, proUrl: 'https://www.erupt.xyz/?utm_source=start&utm_medium=card_chart&utm_campaign=pro#!/pro'},
         {id: 'erupt-flow', name: 'Flow', icon: '🔀', desc: 'Workflow / approval engine', descZh: '流程引擎 / 审批工作流', tag: 'PRO', pro: true, proUrl: 'https://www.erupt.xyz/#!/flow'},
         {id: 'erupt-tenant', name: 'SaaS', icon: '🏢', desc: 'Multi-tenant infrastructure', descZh: '多租户基建', tag: 'PRO', pro: true, proUrl: 'https://www.erupt.xyz/?utm_source=start&utm_medium=card_tenant&utm_campaign=pro#!/pro'},
         {id: 'erupt-cube', name: 'Cube', icon: '🧊', desc: 'BI platform with semantic layer', descZh: 'BI 平台 / 语义层', tag: 'PRO', pro: true, proUrl: 'https://www.erupt.xyz/#!/cube'},

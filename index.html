@@ -657,8 +657,6 @@
         .mod:hover { transform: translate(-2px, -2px); box-shadow: 5px 5px 0 var(--ink); background: #EDFAFD; }
         .mod:active { transform: translate(1px, 1px); box-shadow: 1px 1px 0 var(--ink); }
 
-        .mod.wide { grid-column: span 2; }
-
         .mod.on { background: var(--cyan); }
         .mod.on:hover { background: var(--cyan); }
 
@@ -779,6 +777,21 @@
             padding: 1px 7px;
             transform: rotate(-2deg);
         }
+
+        .data-chip, .ai-chip, .plugin-chip {
+            font-family: var(--mono);
+            font-size: 10px;
+            font-weight: 800;
+            color: var(--ink);
+            background: var(--green);
+            border: 2px solid var(--ink);
+            box-shadow: 2px 2px 0 var(--ink);
+            padding: 1px 7px;
+            transform: rotate(-2deg);
+        }
+
+        .ai-chip { background: var(--cyan); }
+        .plugin-chip { background: var(--yellow); }
 
         /* ══ Selected row ══════════════════════ */
         .selected {
@@ -1162,7 +1175,6 @@
             .nav { flex-wrap: wrap; gap: 12px; }
             .nav-links { gap: 14px; }
             .grid-4, .grid-5, .grid-3, .grid-2, .mods { grid-template-columns: 1fr; }
-            .mod.wide { grid-column: auto; }
             .bar-hint { display: none; }
             .bar { justify-content: center; }
         }
@@ -1351,9 +1363,26 @@
                 <span class="card-hint">{{ t('secModulesHint') }}</span>
             </div>
             <div class="card-body">
+                <div class="mods-divider" style="margin-top:0">
+                    <span class="ai-chip">AI</span>
+                    <span>{{ t('secModulesAi') }}</span>
+                </div>
                 <div class="mods">
-                    <div class="mod" :class="{on: selectedMods.includes(m.id), wide: m.id === 'erupt-ai' || m.id === 'erupt-cloud-server'}"
-                         v-for="m in MODULES.filter(x => !x.pro)" :key="m.id" @click="toggleMod(m.id)">
+                    <div class="mod" :class="{on: selectedMods.includes(m.id)}"
+                         v-for="m in MODULES.filter(x => x.ai)" :key="m.id" @click="toggleMod(m.id)">
+                        <span class="mod-tag" v-if="m.tag">{{ m.tag }}</span>
+                        <div class="mod-icon">{{ m.icon }}</div>
+                        <div class="mod-name">{{ m.name }}</div>
+                        <div class="mod-desc">{{ locale === 'zh' ? m.descZh : m.desc }}</div>
+                    </div>
+                </div>
+                <div class="mods-divider">
+                    <span class="plugin-chip">PLUGIN</span>
+                    <span>{{ t('secModulesPlugin') }}</span>
+                </div>
+                <div class="mods">
+                    <div class="mod" :class="{on: selectedMods.includes(m.id)}"
+                         v-for="m in MODULES.filter(x => !x.pro && !x.data && !x.ai)" :key="m.id" @click="toggleMod(m.id)">
                         <span class="mod-tag" v-if="m.tag">{{ m.tag }}</span>
                         <div class="mod-icon">{{ m.icon }}</div>
                         <div class="mod-name">{{ m.name }}</div>
@@ -1361,6 +1390,19 @@
                         <button class="mod-action" v-if="m.id === 'erupt-cloud-server'"
                                 :title="t('cloudNodeTip')"
                                 @click.stop="generateCloudNode">{{ t('cloudNodeBtn') }}</button>
+                    </div>
+                </div>
+                <div class="mods-divider">
+                    <span class="data-chip">DATA</span>
+                    <span>{{ t('secModulesData') }}</span>
+                </div>
+                <div class="mods">
+                    <div class="mod" :class="{on: selectedMods.includes(m.id)}"
+                         v-for="m in MODULES.filter(x => x.data)" :key="m.id" @click="toggleMod(m.id)">
+                        <span class="mod-tag" v-if="m.tag">{{ m.tag }}</span>
+                        <div class="mod-icon">{{ m.icon }}</div>
+                        <div class="mod-name">{{ m.name }}</div>
+                        <div class="mod-desc">{{ locale === 'zh' ? m.descZh : m.desc }}</div>
                     </div>
                 </div>
                 <div class="mods-divider">
@@ -1490,6 +1532,9 @@
             proDesc: 'Source-code delivery · one-time purchase · no License/project/commercial restrictions. Added to your project separately after purchase.',
             proBtn: 'View pricing →',
             secModulesPro: 'Commercial — added as commented dependency',
+            secModulesAi: 'AI — agents, knowledge base, digital staff',
+            secModulesPlugin: 'Plugins — admin capability extensions',
+            secModulesData: 'Data sources — bind @Erupt models to any backend',
             arrowChip: 'renders',
             winUi: 'Admin UI',
             uiAdd: '+ New', uiSearch: 'Search…',
@@ -1529,6 +1574,9 @@
             proDesc: '源码交付 · 一次买断 · 无 License / 项目数 / 商用限制 · 单独购买后接入项目。',
             proBtn: '查看定价 →',
             secModulesPro: '商业模块 — 依赖以注释形式添加',
+            secModulesAi: 'AI 能力 — 智能体、知识库、数字员工',
+            secModulesPlugin: '插件 — 管理端能力扩展',
+            secModulesData: '数据源 — 将 @Erupt 模型绑定到任意后端',
             arrowChip: '即为',
             winUi: '管理界面',
             uiAdd: '+ 新增', uiSearch: '搜索…',
@@ -1539,11 +1587,13 @@
     };
 
     const MODULES = [
-        {id: 'erupt-ai', name: 'AI', icon: '🤖', desc: 'Integrate 50+ LLMs: GPT, Claude, DeepSeek…', descZh: '集成 50+ 大模型：GPT、Claude、DeepSeek…'},
-        {id: 'erupt-ai-claw', name: 'AI Claw', icon: '🦞', desc: 'Control your server via natural language', descZh: '用自然语言控制你的服务器', requires: 'erupt-ai'},
-        {id: 'erupt-ai-canvas', name: 'AI Canvas', icon: '🎨', desc: 'Generate live pages from one sentence', descZh: '一句话生成页面，数据实时来自后端', requires: 'erupt-ai', tag: 'NEW'},
-        {id: 'erupt-designer', name: 'Designer', icon: '✏️', desc: 'Visual form designer — drag-and-drop entity models at runtime, publish without restart', descZh: '可视化表单设计器 — 运行时拖拽设计实体模型，无需重启发布', tag: 'NEW'},
-        {id: 'erupt-print', name: 'Print', icon: '🖨️', desc: 'HTML template-based printing for any Erupt entity row', descZh: '基于 HTML 模板的打印，支持任意 Erupt 实体行数据', tag: 'NEW'},
+        {id: 'erupt-ai', ai: true, name: 'AI Harness', icon: '🤖', desc: 'Integrate 50+ LLMs: GPT, Claude, DeepSeek…', descZh: '集成 50+ 大模型：GPT、Claude、DeepSeek…'},
+        {id: 'erupt-ai-claw', ai: true, name: 'AI Claw', icon: '🦞', desc: 'Control your server via natural language', descZh: '用自然语言控制你的服务器', requires: 'erupt-ai'},
+        {id: 'erupt-ai-canvas', ai: true, name: 'AI Canvas', icon: '🎨', desc: 'Generate live pages from one sentence', descZh: '一句话生成页面，数据实时来自后端', requires: 'erupt-ai'},
+        {id: 'erupt-ai-rag', ai: true, name: 'AI RAG', icon: '📚', desc: 'Knowledge base with semantic retrieval — 11 embedding providers, Qdrant / Milvus vector stores', descZh: '知识库 / RAG 语义检索 — 支持 11 家向量模型，Qdrant / Milvus 向量库', requires: 'erupt-ai', tag: 'NEW'},
+        {id: 'erupt-ai-staff', ai: true, name: 'AI Staff', icon: '🧑‍💼', desc: 'Digital AI employees — duties, cron schedules, work reports, IM channels', descZh: 'AI 数字员工 — 职责设定、定时执行、工作汇报、IM 通道', requires: 'erupt-ai-claw', tag: 'NEW'},
+        {id: 'erupt-designer', name: 'Designer', icon: '✏️', desc: 'Visual form designer — drag-and-drop entity models at runtime, publish without restart', descZh: '可视化表单设计器 — 运行时拖拽设计实体模型，无需重启发布'},
+        {id: 'erupt-print', name: 'Print', icon: '🖨️', desc: 'HTML template-based printing for any Erupt entity row', descZh: '基于 HTML 模板的打印，支持任意 Erupt 实体行数据'},
 
         {id: 'erupt-terminal', name: 'Terminal', icon: '💻', desc: 'Web SSH / shell terminal in the admin UI', descZh: '管理界面内置 Web SSH / Shell 终端'},
         {id: 'erupt-notice', name: 'Notice', icon: '🔔', desc: 'In-app notifications with sms support', descZh: '站内通知，支持短信等渠道推送'},
@@ -1554,9 +1604,21 @@
         {id: 'erupt-websocket', name: 'WebSocket', icon: '⚡', desc: 'Real-time interaction via WebSocket', descZh: '基于 WebSocket 的实时交互'},
         {id: 'erupt-generator', name: 'Generator', icon: '⚙️', desc: 'Assisted code generation IDE', descZh: '辅助代码生成'},
         {id: 'erupt-tpl', name: 'TPL', icon: '🎨', desc: 'Custom page template framework', descZh: '自定义页面模板框架'},
-        {id: 'erupt-data-mongodb', name: 'MongoDB', icon: '🍃', desc: 'MongoDB data source support', descZh: 'MongoDB 数据源支持'},
+        {id: 'erupt-report', name: 'Report', icon: '📊', desc: 'Reports & data visualization in pure SQL', descZh: '纯 SQL 定义报表图表 / 数据可视化'},
 
-        {id: 'erupt-report', name: 'Report', icon: '📊', desc: 'Reports & data visualization in pure SQL', descZh: '纯 SQL 定义报表图表 / 数据可视化', tag: 'NEW'},
+        // ── Data sources · bind @Erupt models to non-JPA backends ──
+        {id: 'erupt-data-mongodb', data: true, name: 'MongoDB', icon: '🍃', desc: 'MongoDB data source support', descZh: 'MongoDB 数据源支持'},
+        {id: 'erupt-data-jdbc', data: true, name: 'JDBC', icon: '🔌', desc: 'Plain JDBC table binding — ClickHouse, Doris, TiDB, any JDBC driver', descZh: '纯 JDBC 直连数据表 — ClickHouse、Doris、TiDB 等任意 JDBC 数据库', tag: 'NEW'},
+        {id: 'erupt-data-es', data: true, name: 'Elasticsearch', icon: '🔍', desc: 'Elasticsearch index as data source — search pushed down to _search', descZh: 'Elasticsearch 索引数据源，检索 / 排序 / 分页下推', tag: 'NEW'},
+        {id: 'erupt-data-redis', data: true, name: 'Redis', icon: '🟥', desc: 'Redis hash-backed data source for config & dictionaries', descZh: 'Redis Hash 数据源，适合配置与字典数据', tag: 'NEW'},
+        {id: 'erupt-data-http', data: true, name: 'HTTP', icon: '🌐', desc: 'REST API-backed data source — no DAO needed', descZh: 'REST 接口数据源，无需编写 DAO', tag: 'NEW'},
+        {id: 'erupt-data-file', data: true, name: 'File', icon: '📄', desc: 'Flat-file data source — CSV, JSON, YAML, Properties…', descZh: '文件数据源 — CSV、JSON、YAML、Properties…', tag: 'NEW'},
+        {id: 'erupt-data-memory', data: true, name: 'Memory', icon: '⚡️', desc: 'In-memory data source for prototypes, tests & demos', descZh: '内存数据源 — 原型、测试、演示', tag: 'NEW'},
+        {id: 'erupt-data-ldap', data: true, name: 'LDAP', icon: '📇', desc: 'LDAP / Active Directory entries managed as tables', descZh: 'LDAP / AD 目录条目当作数据表管理', tag: 'NEW'},
+        {id: 'erupt-data-k8s', data: true, name: 'K8s', icon: '☸️', desc: 'Kubernetes resources admin view — Pod, Deployment, Service…', descZh: 'Kubernetes 资源管理视图 — Pod、Deployment、Service…', tag: 'NEW'},
+        {id: 'erupt-data-s3', data: true, name: 'S3', icon: '🪣', desc: 'S3-compatible object storage view — MinIO, OSS, COS, R2…', descZh: 'S3 兼容对象存储视图 — MinIO、OSS、COS、R2…', tag: 'NEW'},
+        {id: 'erupt-data-feishu', data: true, name: 'Feishu', icon: '📋', desc: 'Feishu Bitable as data source via open platform API', descZh: '飞书多维表格数据源', tag: 'NEW'},
+        {id: 'erupt-data-notion', data: true, name: 'Notion', icon: '📓', desc: 'Notion database as data source', descZh: 'Notion 数据库数据源', tag: 'NEW'},
 
         // ── Commercial modules · cannot be added via generator, click to view pricing ──
         {id: 'erupt-flow', name: 'Flow', icon: '🔀', desc: 'Workflow / approval engine', descZh: '流程引擎 / 审批工作流', tag: 'PRO', pro: true, proUrl: 'https://www.erupt.xyz/#!/flow'},
@@ -1688,15 +1750,13 @@
                 const idx = arr.indexOf(id);
                 if (idx > -1) {
                     arr.splice(idx, 1);
-                    // remove dependents
+                    // remove dependents (recursively, e.g. ai → claw → staff)
                     MODULES.forEach(m => {
-                        if (m.requires === id) {
-                            const di = arr.indexOf(m.id);
-                            if (di > -1) arr.splice(di, 1);
-                        }
+                        if (m.requires === id && arr.includes(m.id)) toggleMod(m.id);
                     });
                 } else {
-                    if (mod?.requires && !arr.includes(mod.requires)) arr.push(mod.requires);
+                    // resolve requires chain recursively, e.g. staff → claw → ai
+                    if (mod?.requires && !arr.includes(mod.requires)) toggleMod(mod.requires);
                     arr.push(id);
                 }
             }

@@ -173,7 +173,7 @@
             margin-left: auto;
             display: flex;
             align-items: center;
-            gap: 22px;
+            gap: 12px;
         }
 
         .nav-links a {
@@ -185,7 +185,7 @@
             border-bottom: 2.5px solid transparent;
         }
 
-        .nav-links a:hover {
+        .nav-links a:not(.gh):hover {
             border-bottom-color: var(--yellow);
         }
 
@@ -213,6 +213,10 @@
         .nav-links .gh:active { transform: translate(1px, 1px); box-shadow: 1px 1px 0 var(--ink); }
 
         .nav-links .gh svg { width: 14px; height: 14px; display: block; }
+
+        .nav-links .skill { background: var(--cyan); }
+        .nav-links .site  { background: var(--green); }
+        .nav-links .doc   { background: var(--pink); }
 
         .lang-btn {
             font-family: var(--mono);
@@ -1160,7 +1164,7 @@
 
         @media (max-width: 560px) {
             .nav { flex-wrap: wrap; gap: 12px; }
-            .nav-links { gap: 14px; }
+            .nav-links { gap: 10px; }
             .grid-4, .grid-5, .grid-3, .grid-2, .mods { grid-template-columns: 1fr; }
             .mod.wide { grid-column: auto; }
             .bar-hint { display: none; }
@@ -1183,8 +1187,9 @@
                     </span>
                 </a>
                 <nav class="nav-links">
-                    <a href="https://www.erupt.xyz" target="_blank">{{ t('navWebsite') }}</a>
-                    <a href="https://docs.erupt.xyz" target="_blank">{{ t('navDocs') }}</a>
+                    <a class="gh site" href="https://www.erupt.xyz" target="_blank">{{ t('navWebsite') }}</a>
+                    <a class="gh doc" href="https://docs.erupt.xyz" target="_blank">{{ t('navDocs') }}</a>
+                    <a class="gh skill" href="https://skill.erupt.xyz" target="_blank">⚡ {{ t('navSkill') }}</a>
                     <a class="gh" href="https://github.com/erupts/erupt" target="_blank">
                         <svg viewBox="0 0 24 24" fill="var(--ink)" stroke="var(--ink)" stroke-width="1.8" stroke-linejoin="round"><path d="M12 3l2.7 5.9 6.3.6-4.8 4.3 1.4 6.2L12 17.7 6.4 20.2l1.4-6.2-4.8-4.3 6.3-.6z"/></svg>
                         GitHub
@@ -1459,7 +1464,7 @@
 
     const LANG = {
         en: {
-            navWebsite: 'Website', navDocs: 'Docs', langToggle: '中文',
+            navWebsite: 'Website', navDocs: 'Docs', navSkill: 'No-Code Build', langToggle: '中文',
             logoSub: 'Project Generator',
             heroEyebrow: 'Project Generator',
             titleL1: 'Bootstrap your',
@@ -1498,7 +1503,7 @@
             cloudNodeTip: 'Generate a worker-node project that registers to this server',
         },
         zh: {
-            navWebsite: '官网', navDocs: '文档', langToggle: 'EN',
+            navWebsite: '官网', navDocs: '文档', navSkill: '零代码构建', langToggle: 'EN',
             logoSub: '项目生成器',
             heroEyebrow: '项目生成器',
             titleL1: '三分钟，启动你的',

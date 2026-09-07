@@ -12,6 +12,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="viz.js"></script>
     <style>
         /* ══════════════════════════════════════════════
            ERUPT RAFT · start.erupt.xyz
@@ -728,6 +729,70 @@
         .mod-tag.mod-tag-pro { background: var(--ink); color: var(--bg); }
         .mod.on .mod-tag { right: 28px; }
 
+        /* ── hover sketch: a sticker that pops up above the card with a tiny animated SVG ── */
+        .mod:hover { z-index: 5; }
+
+        .mod-viz {
+            position: absolute;
+            left: -2px;
+            right: -2px;
+            bottom: calc(100% + 10px);
+            padding: 6px;
+            background: var(--paper);
+            background-image: radial-gradient(var(--faint) 1px, transparent 1px);
+            background-size: 10px 10px;
+            border: var(--bw) solid var(--ink);
+            box-shadow: 4px 4px 0 var(--ink);
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transform: translateY(8px) rotate(-1.2deg);
+            transition: opacity .18s ease, transform .18s cubic-bezier(.2, .7, .3, 1), visibility 0s .18s;
+            z-index: 30;
+        }
+
+        .mods .mod:nth-child(even) .mod-viz { transform: translateY(8px) rotate(1.2deg); }
+        .mod:hover .mod-viz { opacity: 1; visibility: visible; transform: translateY(0) rotate(-1.2deg); transition-delay: 0s; }
+        .mods .mod:nth-child(even):hover .mod-viz { transform: translateY(0) rotate(1.2deg); }
+
+        /* sticker tail: small ink square peeking out of the bottom edge */
+        .mod-viz::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: -7px;
+            width: 10px;
+            height: 10px;
+            background: var(--paper);
+            border: var(--bw) solid var(--ink);
+            border-top: 0;
+            border-left: 0;
+            transform: translateX(-50%) rotate(45deg);
+        }
+
+        .mod-viz svg { display: block; width: 100%; height: auto; }
+
+        /* animation vocabulary — only runs while hovered so each hover replays from the start */
+        .mod:hover .mod-viz .ap { animation: vz-pop .4s cubic-bezier(.2, .7, .3, 1) both; animation-delay: var(--d, 0s); transform-box: fill-box; transform-origin: center; }
+        .mod:hover .mod-viz .ad { stroke-dasharray: 100; stroke-dashoffset: 100; animation: vz-draw .7s ease-out both; animation-delay: var(--d, 0s); }
+        .mod:hover .mod-viz .ar { animation: vz-rise .6s cubic-bezier(.2, .7, .3, 1) both; animation-delay: var(--d, 0s); transform-box: fill-box; transform-origin: bottom; }
+        .mod:hover .mod-viz .af { animation: vz-flow 1.4s linear infinite both; animation-delay: var(--d, 0s); }
+        .mod:hover .mod-viz .ab { animation: vz-blink 1s steps(2, jump-none) infinite; animation-delay: var(--d, 0s); }
+        .mod:hover .mod-viz .aw { animation: vz-swing 1.4s ease-in-out both; animation-delay: var(--d, 0s); transform-box: fill-box; transform-origin: top center; }
+        .mod:hover .mod-viz .as { animation: vz-spin 1.2s cubic-bezier(.2, .7, .3, 1) both; animation-delay: var(--d, 0s); transform-box: fill-box; transform-origin: center; }
+        .mod:hover .mod-viz .at { animation: vz-type 1s steps(16) both; animation-delay: var(--d, 0s); }
+        .mod:hover .mod-viz .ax { animation: vz-slide .8s cubic-bezier(.2, .7, .3, 1) both; animation-delay: var(--d, 0s); }
+
+        @keyframes vz-pop { from { opacity: 0; transform: scale(.4); } 70% { transform: scale(1.08); } to { opacity: 1; transform: scale(1); } }
+        @keyframes vz-draw { to { stroke-dashoffset: 0; } }
+        @keyframes vz-rise { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+        @keyframes vz-flow { 0% { transform: translate(0, 0); opacity: 0; } 12% { opacity: 1; } 88% { opacity: 1; } 100% { transform: translate(var(--dx, 0px), var(--dy, 0px)); opacity: 0; } }
+        @keyframes vz-blink { from { opacity: 1; } to { opacity: 0; } }
+        @keyframes vz-swing { 0%, 100% { transform: rotate(0); } 20% { transform: rotate(14deg); } 45% { transform: rotate(-11deg); } 70% { transform: rotate(6deg); } 85% { transform: rotate(-3deg); } }
+        @keyframes vz-spin { from { transform: rotate(0); } to { transform: rotate(var(--deg, 180deg)); } }
+        @keyframes vz-type { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+        @keyframes vz-slide { from { transform: translate(var(--fx, 0px), var(--fy, 0px)); opacity: var(--fo, 1); } to { transform: translate(0, 0); opacity: 1; } }
+
         /* inline action button on a module card */
         .mod-action {
             display: inline-flex;
@@ -905,6 +970,7 @@
         @media (prefers-reduced-motion: reduce) {
             .reveal { transition: none; opacity: 1; transform: none; }
             .btn, .mod, .lang-btn { transition: none; }
+            .mod-viz, .mod-viz * { transition: none; animation: none !important; }
         }
 
         /* ══ Element Plus — squared, ink borders, cyan focus ══ */
@@ -1379,6 +1445,7 @@
                         <div class="mod-icon">{{ m.icon }}</div>
                         <div class="mod-name">{{ m.name }}</div>
                         <div class="mod-desc">{{ locale === 'zh' ? m.descZh : m.desc }}</div>
+                        <div class="mod-viz" v-html="VIZ[m.id]"></div>
                     </div>
                 </div>
                 <div class="mods-divider">
@@ -1392,6 +1459,7 @@
                         <div class="mod-icon">{{ m.icon }}</div>
                         <div class="mod-name">{{ m.name }}</div>
                         <div class="mod-desc">{{ locale === 'zh' ? m.descZh : m.desc }}</div>
+                        <div class="mod-viz" v-html="VIZ[m.id]"></div>
                         <button class="mod-action" v-if="m.id === 'erupt-cloud-server'"
                                 :title="t('cloudNodeTip')"
                                 @click.stop="generateCloudNode">{{ t('cloudNodeBtn') }}</button>
@@ -1408,6 +1476,7 @@
                         <div class="mod-icon">{{ m.icon }}</div>
                         <div class="mod-name">{{ m.name }}</div>
                         <div class="mod-desc">{{ locale === 'zh' ? m.descZh : m.desc }}</div>
+                        <div class="mod-viz" v-html="VIZ[m.id]"></div>
                     </div>
                 </div>
                 <div class="mods-divider">
@@ -1421,6 +1490,7 @@
                         <div class="mod-icon">{{ m.icon }}</div>
                         <div class="mod-name">{{ m.name }}</div>
                         <div class="mod-desc">{{ locale === 'zh' ? m.descZh : m.desc }}</div>
+                        <div class="mod-viz" v-html="VIZ[m.id]"></div>
                     </div>
                 </div>
             </div>
@@ -2404,7 +2474,7 @@ Docs: [docs.erupt.xyz/modules/cloud-node](https://docs.erupt.xyz/modules/cloud-n
             });
 
             return {
-                ERUPT_VER, BOOT_VER, MODULES, DB, JAVA_VERSIONS, LOCALES,
+                ERUPT_VER, BOOT_VER, MODULES, DB, JAVA_VERSIONS, LOCALES, VIZ,
                 form, selectedMods, pkgEdited, nameEdited,
                 modal, previewFiles, treeEntries,
                 locale, t, toggleLang,

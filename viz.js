@@ -142,6 +142,38 @@
         R(104, 72, 7, 10, K, 'ab', 1.4, 'stroke="none"')
     );
 
+    // browser on the left shows a live remote desktop; websocket bridge to the host on the right
+    VIZ['erupt-remote'] = wrap(
+        Win(12, 12, 120, 96) +
+        R(20, 32, 104, 68, I) +
+        R(28, 40, 44, 26, C, 'ap', .5) + Ln(28, 48, 72, 48) +
+        R(56, 54, 60, 38, W, 'ap', .7) + Ln(56, 62, 116, 62) + Ph(62, 72, 108, 1) + Ph(62, 80, 96, 1.1) +
+        `<g class="ap" style="--d:1.25s">` + Pth('M0 0 L0 13 L3.6 10 L6.2 15 L8.4 14 L5.8 9 L10.5 9 Z', W, '', 0, 'transform="translate(98 76)"') + `</g>` +
+        L(132, 60, 168, 60, .2) + Dot(132, 60, 36, 0, .5) + Dot(168, 60, -36, 0, 1.1, C) +
+        R(168, 22, 60, 76, W, 'ap', .3) +
+        [0, 1, 2].map(i => Ph(176, 34 + i * 10, 208, .4 + i * .1) + Ci(218, 34 + i * 10, 2.5, i ? F : G, i ? '' : 'ab', .8)).join('') +
+        R(174, 68, 22, 12, V, 'ap', .9) + T(185, 77, 'VNC', 6) +
+        R(200, 68, 22, 12, Y, 'ap', 1) + T(211, 77, 'SSH', 6)
+    );
+
+    // model graph: user → role / org / menu; role ↔ org closes a cycle (pink), log is an orphan; audit panel on the right
+    VIZ['erupt-atlas'] = wrap(
+        L(66, 52, 46, 34, .2, `stroke="${P}" stroke-width="3"`) +
+        L(94, 52, 114, 34, .35, `stroke="${P}" stroke-width="3"`) +
+        L(50, 25, 110, 25, .5, `stroke="${P}" stroke-width="3"`) +
+        L(66, 68, 46, 86, .4) +
+        R(14, 16, 36, 18, C, 'ap', 0) + T(32, 29, 'role', 7) +
+        R(110, 16, 36, 18, G, 'ap', .1) + T(128, 29, 'org', 7) +
+        R(60, 50, 40, 20, Y, 'ap', 0) + T(80, 64, 'user', 8) +
+        R(14, 86, 36, 18, V, 'ap', .2) + T(32, 99, 'menu', 7) +
+        `<rect x="110" y="86" width="36" height="18" fill="none" stroke-dasharray="4 3" stroke-opacity=".5"/>` +
+        T(128, 99, 'log', 7, I, 'middle', 'opacity=".5"') +
+        Pth('M80 3 L89 19 L71 19 Z', P, 'ap', .9) + T(80, 17, '!', 8) +
+        R(160, 14, 68, 92, W) + T(194, 28, 'AUDIT', 7) +
+        [['cycle', P, '1'], ['shared', Y, '2'], ['orphan', F, '1']].map((r, i) =>
+            Ci(171, 46 + i * 20, 4, r[1], 'ap', 1 + i * .15) + T(180, 49 + i * 20, r[0], 7, I, 'start') + T(220, 49 + i * 20, r[2], 7, I, 'end')).join('')
+    );
+
     VIZ['erupt-notice'] = wrap(
         `<g class="aw" style="--d:.1s;transform-origin:78px 24px;transform-box:view-box">` +
         Ln(78, 22, 78, 30) +

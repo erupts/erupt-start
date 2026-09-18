@@ -12,6 +12,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="viz.js"></script>
     <style>
         /* ══════════════════════════════════════════════
            ERUPT RAFT · start.erupt.xyz
@@ -22,20 +23,28 @@
            ══════════════════════════════════════════════ */
 
         :root {
-            --ink: #14120B;
-            --bg: #F4F1EA;
+            /* neutrals — doris paper + ink */
+            --ink: #0F1A14;
+            --bg: #F5EFE4;
             --paper: #FFFFFF;
             --card: #FFFFFF;
             --muted: #5C5647;
             --faint: #D9D2C2;
+            /* accents */
             --cyan: #4FC8EC;
             --accent: #4FC8EC;
-            --pink: #F585B4;
-            --yellow: #FFD447;
-            --green: #93D655;
-            --purple: #BCA0F2;
-            --code-bg: #1A170F;
-            --code-fg: #F0E8D6;
+            --pink: #FF8FA3;   /* doris syntax red-pink */
+            --yellow: #FFD23F; /* doris signature yellow */
+            --green: #98D9A0;  /* doris syntax green */
+            --purple: #C7B5FF; /* doris syntax purple */
+            --code-bg: #0F1A14;
+            --code-fg: #D8DCD0;
+            /* doris brand green — merged header + hero band */
+            --night: #06805F;
+            --night-2: #054C39;
+            --night-line: rgba(245, 239, 228, .18);
+            --night-ink: #FAF6EE;
+            --night-muted: rgba(250, 246, 238, .72);
             --bw: 2px;
             --shadow: 4px 4px 0 var(--ink);
             --shadow-lg: 6px 6px 0 var(--ink);
@@ -81,22 +90,39 @@
             pointer-events: none;
         }
 
-        /* ══ Nav ═══════════════════════════════ */
+        /* ══ Nav + Hero band — unified dark-green surface (doris grammar) ═══ */
+        .band {
+            background: var(--night);
+            border-bottom: var(--bw) solid var(--ink);
+            position: relative;
+        }
+
+        /* faint dotted texture inside the band, replaces global body texture here */
+        .band::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: radial-gradient(rgba(255, 255, 255, .06) 1px, transparent 1px);
+            background-size: 22px 22px;
+            pointer-events: none;
+        }
+
         .topbar {
             position: sticky;
             top: 0;
             z-index: 200;
-            background: var(--paper);
-            border-bottom: var(--bw) solid var(--ink);
+            background: var(--night);
+            border-bottom: 1px solid var(--night-line);
         }
 
         .nav {
             max-width: 1180px;
             margin: 0 auto;
-            padding: 9px 24px;
+            padding: 12px 24px;
             display: flex;
             align-items: center;
             gap: 20px;
+            position: relative;
         }
 
         .brand {
@@ -104,7 +130,7 @@
             align-items: center;
             gap: 12px;
             text-decoration: none;
-            color: var(--ink);
+            color: var(--night-ink);
             transition: transform .12s ease;
         }
 
@@ -120,14 +146,17 @@
             font-size: 18px;
             font-weight: 900;
             letter-spacing: -.02em;
+            color: var(--night-ink);
         }
 
         .brand-name b {
             font-weight: 900;
-            background: var(--cyan);
+            background: var(--yellow);
+            color: var(--ink);
             box-shadow: 2px 2px 0 var(--ink);
             padding: 0 4px;
             margin-left: 1px;
+            border: 2px solid var(--ink);
         }
 
         .brand-sub {
@@ -137,7 +166,7 @@
             font-weight: 700;
             letter-spacing: .16em;
             text-transform: uppercase;
-            color: var(--muted);
+            color: var(--night-muted);
             margin-top: 4px;
         }
 
@@ -145,11 +174,11 @@
             margin-left: auto;
             display: flex;
             align-items: center;
-            gap: 22px;
+            gap: 12px;
         }
 
         .nav-links a {
-            color: var(--ink);
+            color: var(--night-ink);
             text-decoration: none;
             font-size: 13px;
             font-weight: 700;
@@ -157,11 +186,11 @@
             border-bottom: 2.5px solid transparent;
         }
 
-        .nav-links a:hover {
-            border-bottom-color: var(--cyan);
+        .nav-links a:not(.gh):hover {
+            border-bottom-color: var(--yellow);
         }
 
-        /* GitHub sticker chip */
+        /* GitHub chip */
         .nav-links .gh {
             display: inline-flex;
             align-items: center;
@@ -171,14 +200,13 @@
             font-weight: 700;
             padding: 6px 11px;
             border: var(--bw) solid var(--ink);
-            border-bottom: var(--bw) solid var(--ink);
-            background: var(--cyan);
+            background: var(--yellow);
+            color: var(--ink);
             box-shadow: 2px 2px 0 var(--ink);
             transition: transform .12s ease, box-shadow .12s ease;
         }
 
         .nav-links .gh:hover {
-            border-bottom-color: var(--ink);
             transform: translate(-1px, -1px);
             box-shadow: 3px 3px 0 var(--ink);
         }
@@ -187,30 +215,42 @@
 
         .nav-links .gh svg { width: 14px; height: 14px; display: block; }
 
+        .nav-links .skill { background: var(--cyan); }
+        .nav-links .site  { background: var(--green); }
+        .nav-links .doc   { background: var(--pink); }
+
         .lang-btn {
             font-family: var(--mono);
             font-size: 12px;
             font-weight: 700;
             border: var(--bw) solid var(--ink);
-            background: var(--paper);
-            color: var(--ink);
+            background: var(--night);
+            color: var(--night-ink);
             padding: 5px 9px;
             cursor: pointer;
             box-shadow: 2px 2px 0 var(--ink);
             transition: transform .12s, box-shadow .12s;
         }
 
-        .lang-btn:hover { transform: translate(-1px, -1px); box-shadow: 3px 3px 0 var(--ink); }
+        .lang-btn:hover { transform: translate(-1px, -1px); box-shadow: 3px 3px 0 var(--ink); background: var(--night-2); }
         .lang-btn:active { transform: translate(1px, 1px); box-shadow: 1px 1px 0 var(--ink); }
 
         /* ══ Page ══════════════════════════════ */
         .page {
             max-width: 1180px;
             margin: 0 auto;
-            padding: 40px 24px 150px;
+            padding: 44px 24px 150px;
             display: flex;
             flex-direction: column;
             gap: 34px;
+        }
+
+        /* hero sits inside the dark band, with its own inner container */
+        .band-inner {
+            max-width: 1180px;
+            margin: 0 auto;
+            padding: 48px 24px 64px;
+            position: relative;
         }
 
         /* ══ Buttons ═══════════════════════════ */
@@ -236,87 +276,82 @@
 
         .btn-primary { background: var(--pink); }
 
-        /* ══ Hero ══════════════════════════════ */
+        /* ══ Hero — doris grammar: two-column, left copy · right code editor ══ */
         .hero {
             display: grid;
-            grid-template-columns: 1.05fr .95fr;
-            gap: 40px;
+            grid-template-columns: 1fr 1.15fr;
+            gap: 56px;
             align-items: center;
-            padding: 0;
+            position: relative;
         }
 
-        /* slogan title — same treatment as the erupt-docs home hero */
+        .hero-left { min-width: 0; }
+
+        /* eyebrow pill */
+        .hero-eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: var(--mono);
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: .18em;
+            text-transform: uppercase;
+            color: var(--ink);
+            background: var(--yellow);
+            border: 2px solid var(--ink);
+            box-shadow: 3px 3px 0 var(--ink);
+            padding: 5px 13px;
+            margin: 0 0 22px;
+        }
+
+        .hero-eyebrow .dot {
+            width: 8px;
+            height: 8px;
+            background: var(--pink);
+            border: 2px solid var(--ink);
+        }
+
+        /* big bold headline on dark green background */
         .hero-title {
-            font-size: clamp(36px, 4.2vw, 56px);
+            font-size: clamp(40px, 5.2vw, 68px);
             font-weight: 900;
-            line-height: 1.18;
-            letter-spacing: -.01em;
-            color: var(--ink);
-            margin: 0 0 18px;
+            line-height: 1.05;
+            letter-spacing: -.02em;
+            color: var(--night-ink);
+            margin: 0 0 22px;
+            text-transform: uppercase;
         }
 
+        /* doris title emphasis — just color the text, no boxes */
         .hero-title .hl {
-            display: inline-block;
-            background: var(--cyan);
-            color: var(--ink);
-            padding: 0 12px 3px;
-            transform: rotate(-1deg);
-            box-shadow: 4px 4px 0 var(--ink);
+            color: var(--yellow);
         }
+
+        .hero-title .hl-pink { color: var(--pink); }
+        .hero-title .hl-yellow { color: var(--yellow); }
+        .hero-title .hl-cyan { color: var(--cyan); }
 
         .lead {
-            font-size: 15px;
-            color: var(--muted);
-            max-width: 460px;
-            margin: 0 0 18px;
-        }
-
-        /* ── hero value bullets ── */
-        .hero-bullets {
-            list-style: none;
-            margin: 0 0 26px;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            gap: 9px;
-        }
-
-        .hero-bullets li {
-            display: flex;
-            align-items: flex-start;
-            gap: 10px;
-            font-size: 13.5px;
-            font-weight: 500;
-            color: var(--ink);
-        }
-
-        .hero-bullets li i {
-            width: 15px;
-            height: 15px;
-            flex-shrink: 0;
-            margin-top: 3px;
-            background: var(--green);
-            border: 2px solid var(--ink);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .hero-bullets li i::after {
-            content: '✓';
-            font-size: 9px;
-            font-weight: 900;
-            line-height: 1;
+            font-size: 16px;
+            color: var(--night-muted);
+            max-width: 520px;
+            margin: 0 0 28px;
+            line-height: 1.6;
         }
 
         .hero-actions {
             display: flex;
             flex-wrap: wrap;
-            gap: 14px;
-            margin-bottom: 22px;
+            gap: 12px;
+            margin: 0 0 22px;
         }
 
-        .chips { display: flex; flex-wrap: wrap; gap: 12px; }
+        .chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
 
         .chip {
             display: inline-flex;
@@ -326,7 +361,8 @@
             font-size: 11.5px;
             font-weight: 700;
             border: var(--bw) solid var(--ink);
-            background: var(--paper);
+            background: var(--night-2);
+            color: var(--night-ink);
             box-shadow: 3px 3px 0 var(--ink);
             padding: 6px 12px;
         }
@@ -334,70 +370,90 @@
         .chip .dot {
             width: 9px;
             height: 9px;
-            background: var(--green);
+            background: var(--yellow);
             border: 2px solid var(--ink);
             flex-shrink: 0;
         }
 
-        /* sticker feel — alternate tilt */
-        .chips .chip:nth-child(odd)  { transform: rotate(-1deg); }
-        .chips .chip:nth-child(even) { transform: rotate(1deg); }
-
-        /* ══ Hero board — stacked-windows collage (same grammar as docs home) ══ */
-        .board { position: relative; padding: 10px 8px; }
-
-        /* emoji corner stickers */
-        .bd-sticker {
-            position: absolute;
-            z-index: 5;
-            display: grid;
-            place-items: center;
-            width: 44px;
-            height: 44px;
-            font-size: 22px;
-            border: 2px solid var(--ink);
-            box-shadow: 3px 3px 0 var(--ink);
+        /* ── right column: single dark code editor card, doris-style ── */
+        .hero-code {
+            position: relative;
+            background: var(--code-bg);
+            border: var(--bw) solid var(--ink);
+            box-shadow: 8px 8px 0 var(--ink);
+            min-width: 0;
         }
 
-        .bd-s1 { top: -14px; right: 8%; background: var(--green); transform: rotate(8deg); }
-        .bd-s2 { bottom: -8px; left: 2%; background: var(--purple); transform: rotate(-7deg); }
+        .hc-bar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 14px;
+            background: #0F0D08;
+            border-bottom: var(--bw) solid var(--ink);
+        }
 
-        /* cyan chip pinned where the two windows meet */
-        .bd-arrow {
-            position: absolute;
-            left: 2%;
-            top: 54%;
-            z-index: 4;
+        .hc-bar .tl {
+            width: 11px;
+            height: 11px;
+            border-radius: 50%;
+            border: 2px solid var(--ink);
+        }
+
+        .hc-file {
+            margin-left: 6px;
+            font-family: var(--mono);
+            font-size: 12px;
+            font-weight: 700;
+            color: #b8ae97;
+        }
+
+        .hc-run {
+            margin-left: auto;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
             font-family: var(--mono);
             font-size: 11.5px;
             font-weight: 800;
-            letter-spacing: .08em;
+            letter-spacing: .06em;
             text-transform: uppercase;
             color: var(--ink);
-            background: var(--cyan);
+            background: var(--yellow);
             border: 2px solid var(--ink);
-            box-shadow: 3px 3px 0 var(--ink);
-            padding: 4px 11px;
-            transform: rotate(-4deg);
+            box-shadow: 2px 2px 0 var(--ink);
+            padding: 3px 10px;
+            cursor: pointer;
         }
 
-        .win {
-            position: relative;
+        .hc-body {
             margin: 0;
-            background: var(--paper);
-            border: var(--bw) solid var(--ink);
-            box-shadow: 7px 7px 0 var(--ink);
+            padding: 18px 20px 20px;
+            font-family: var(--mono);
+            font-size: 13px;
+            line-height: 1.75;
+            color: var(--code-fg);
+            overflow: hidden;
+            white-space: pre;
         }
 
-        .win-code { width: 84%; z-index: 2; transform: rotate(-1.4deg); }
-
-        .win-ui {
-            width: 76%;
-            margin: -30px 0 0 auto;
-            z-index: 3;
-            transform: rotate(1.2deg);
+        .hc-body .ln {
+            display: inline-block;
+            width: 20px;
+            margin-right: 14px;
+            color: #524a3a;
+            font-weight: 700;
+            user-select: none;
+            text-align: right;
         }
 
+        .hc-body .anno { color: var(--pink); font-weight: 700; }
+        .hc-body .kw   { color: var(--cyan); font-weight: 700; }
+        .hc-body .ty   { color: var(--yellow); font-weight: 700; }
+        .hc-body .str  { color: var(--green); font-weight: 700; }
+        .hc-body .cm   { color: #7d7565; font-style: italic; }
+
+        /* preserve legacy .win-bar reset for downstream .win elsewhere (none in hero) */
         .win-bar {
             display: flex;
             align-items: center;
@@ -448,14 +504,12 @@
         .win-body .tr-cfg   { color: var(--green); font-weight: 700; }
         .win-body .tr-file  { color: #b8ae97; }
         .win-body .tr-line  { color: #6a6350; }
-        /* ── admin-ui wireframe (front window) ── */
-        .ui { padding: 10px 14px 14px; }
-
+        /* ── admin-ui wireframe (no longer used in hero — kept in case referenced) ── */
         .ui-bar {
             display: flex;
             align-items: center;
             gap: 8px;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
         }
 
         .ui-title { font-size: 13px; font-weight: 800; margin-right: auto; }
@@ -476,7 +530,7 @@
             grid-template-columns: 22px 1.2fr .9fr 1fr;
             align-items: center;
             gap: 8px;
-            padding: 7px 2px;
+            padding: 8px 2px;
             border-top: 1px solid var(--faint);
         }
 
@@ -608,8 +662,6 @@
         .mod:hover { transform: translate(-2px, -2px); box-shadow: 5px 5px 0 var(--ink); background: #EDFAFD; }
         .mod:active { transform: translate(1px, 1px); box-shadow: 1px 1px 0 var(--ink); }
 
-        .mod.wide { grid-column: span 2; }
-
         .mod.on { background: var(--cyan); }
         .mod.on:hover { background: var(--cyan); }
 
@@ -677,6 +729,70 @@
         .mod-tag.mod-tag-pro { background: var(--ink); color: var(--bg); }
         .mod.on .mod-tag { right: 28px; }
 
+        /* ── hover sketch: a sticker that pops up above the card with a tiny animated SVG ── */
+        .mod:hover { z-index: 5; }
+
+        .mod-viz {
+            position: absolute;
+            left: -2px;
+            right: -2px;
+            bottom: calc(100% + 10px);
+            padding: 6px;
+            background: var(--paper);
+            background-image: radial-gradient(var(--faint) 1px, transparent 1px);
+            background-size: 10px 10px;
+            border: var(--bw) solid var(--ink);
+            box-shadow: 4px 4px 0 var(--ink);
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transform: translateY(8px) rotate(-1.2deg);
+            transition: opacity .18s ease, transform .18s cubic-bezier(.2, .7, .3, 1), visibility 0s .18s;
+            z-index: 30;
+        }
+
+        .mods .mod:nth-child(even) .mod-viz { transform: translateY(8px) rotate(1.2deg); }
+        .mod:hover .mod-viz { opacity: 1; visibility: visible; transform: translateY(0) rotate(-1.2deg); transition-delay: 0s; }
+        .mods .mod:nth-child(even):hover .mod-viz { transform: translateY(0) rotate(1.2deg); }
+
+        /* sticker tail: small ink square peeking out of the bottom edge */
+        .mod-viz::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: -7px;
+            width: 10px;
+            height: 10px;
+            background: var(--paper);
+            border: var(--bw) solid var(--ink);
+            border-top: 0;
+            border-left: 0;
+            transform: translateX(-50%) rotate(45deg);
+        }
+
+        .mod-viz svg { display: block; width: 100%; height: auto; }
+
+        /* animation vocabulary — only runs while hovered so each hover replays from the start */
+        .mod:hover .mod-viz .ap { animation: vz-pop .4s cubic-bezier(.2, .7, .3, 1) both; animation-delay: var(--d, 0s); transform-box: fill-box; transform-origin: center; }
+        .mod:hover .mod-viz .ad { stroke-dasharray: 100; stroke-dashoffset: 100; animation: vz-draw .7s ease-out both; animation-delay: var(--d, 0s); }
+        .mod:hover .mod-viz .ar { animation: vz-rise .6s cubic-bezier(.2, .7, .3, 1) both; animation-delay: var(--d, 0s); transform-box: fill-box; transform-origin: bottom; }
+        .mod:hover .mod-viz .af { animation: vz-flow 1.4s linear infinite both; animation-delay: var(--d, 0s); }
+        .mod:hover .mod-viz .ab { animation: vz-blink 1s steps(2, jump-none) infinite; animation-delay: var(--d, 0s); }
+        .mod:hover .mod-viz .aw { animation: vz-swing 1.4s ease-in-out both; animation-delay: var(--d, 0s); transform-box: fill-box; transform-origin: top center; }
+        .mod:hover .mod-viz .as { animation: vz-spin 1.2s cubic-bezier(.2, .7, .3, 1) both; animation-delay: var(--d, 0s); transform-box: fill-box; transform-origin: center; }
+        .mod:hover .mod-viz .at { animation: vz-type 1s steps(16) both; animation-delay: var(--d, 0s); }
+        .mod:hover .mod-viz .ax { animation: vz-slide .8s cubic-bezier(.2, .7, .3, 1) both; animation-delay: var(--d, 0s); }
+
+        @keyframes vz-pop { from { opacity: 0; transform: scale(.4); } 70% { transform: scale(1.08); } to { opacity: 1; transform: scale(1); } }
+        @keyframes vz-draw { to { stroke-dashoffset: 0; } }
+        @keyframes vz-rise { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+        @keyframes vz-flow { 0% { transform: translate(0, 0); opacity: 0; } 12% { opacity: 1; } 88% { opacity: 1; } 100% { transform: translate(var(--dx, 0px), var(--dy, 0px)); opacity: 0; } }
+        @keyframes vz-blink { from { opacity: 1; } to { opacity: 0; } }
+        @keyframes vz-swing { 0%, 100% { transform: rotate(0); } 20% { transform: rotate(14deg); } 45% { transform: rotate(-11deg); } 70% { transform: rotate(6deg); } 85% { transform: rotate(-3deg); } }
+        @keyframes vz-spin { from { transform: rotate(0); } to { transform: rotate(var(--deg, 180deg)); } }
+        @keyframes vz-type { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+        @keyframes vz-slide { from { transform: translate(var(--fx, 0px), var(--fy, 0px)); opacity: var(--fo, 1); } to { transform: translate(0, 0); opacity: 1; } }
+
         /* inline action button on a module card */
         .mod-action {
             display: inline-flex;
@@ -730,6 +846,21 @@
             padding: 1px 7px;
             transform: rotate(-2deg);
         }
+
+        .data-chip, .ai-chip, .plugin-chip {
+            font-family: var(--mono);
+            font-size: 10px;
+            font-weight: 800;
+            color: var(--ink);
+            background: var(--green);
+            border: 2px solid var(--ink);
+            box-shadow: 2px 2px 0 var(--ink);
+            padding: 1px 7px;
+            transform: rotate(-2deg);
+        }
+
+        .ai-chip { background: var(--cyan); }
+        .plugin-chip { background: var(--yellow); }
 
         /* ══ Selected row ══════════════════════ */
         .selected {
@@ -839,6 +970,7 @@
         @media (prefers-reduced-motion: reduce) {
             .reveal { transition: none; opacity: 1; transform: none; }
             .btn, .mod, .lang-btn { transition: none; }
+            .mod-viz, .mod-viz * { transition: none; animation: none !important; }
         }
 
         /* ══ Element Plus — squared, ink borders, cyan focus ══ */
@@ -1104,17 +1236,15 @@
 
         /* ══ Responsive ════════════════════════ */
         @media (max-width: 900px) {
-            .hero { grid-template-columns: 1fr; gap: 28px; }
-            .win { transform: none; }
+            .hero { grid-template-columns: 1fr; gap: 36px; }
             .grid-4, .grid-5, .grid-3 { grid-template-columns: repeat(2, 1fr); }
             .mods { grid-template-columns: repeat(2, 1fr); }
         }
 
         @media (max-width: 560px) {
             .nav { flex-wrap: wrap; gap: 12px; }
-            .nav-links { gap: 14px; }
+            .nav-links { gap: 10px; }
             .grid-4, .grid-5, .grid-3, .grid-2, .mods { grid-template-columns: 1fr; }
-            .mod.wide { grid-column: auto; }
             .bar-hint { display: none; }
             .bar { justify-content: center; }
         }
@@ -1123,43 +1253,37 @@
 <body>
 <div id="app">
 
-    <!-- ══ Nav ══ -->
-    <header class="topbar">
-        <div class="nav">
-            <a class="brand" href="/">
-                <img src="logo.svg" alt="Erupt"/>
-                <span>
-                    <span class="brand-name">erupt<b>.xyz</b></span>
-                    <span class="brand-sub">{{ t('logoSub') }}</span>
-                </span>
-            </a>
-            <nav class="nav-links">
-                <a href="https://www.erupt.xyz" target="_blank">{{ t('navWebsite') }}</a>
-                <a href="https://docs.erupt.xyz" target="_blank">{{ t('navDocs') }}</a>
-                <a class="gh" href="https://github.com/erupts/erupt" target="_blank">
-                    <svg viewBox="0 0 24 24" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.8" stroke-linejoin="round"><path d="M12 3l2.7 5.9 6.3.6-4.8 4.3 1.4 6.2L12 17.7 6.4 20.2l1.4-6.2-4.8-4.3 6.3-.6z"/></svg>
-                    GitHub
+    <!-- ══ Unified dark band: topbar + hero share one surface ══ -->
+    <div class="band">
+        <header class="topbar">
+            <div class="nav">
+                <a class="brand" href="/">
+                    <img src="logo.svg" alt="Erupt"/>
+                    <span>
+                        <span class="brand-name">erupt<b>.xyz</b></span>
+                        <span class="brand-sub">{{ t('logoSub') }}</span>
+                    </span>
                 </a>
-                <button class="lang-btn" @click="toggleLang">{{ t('langToggle') }}</button>
-            </nav>
-        </div>
-    </header>
+                <nav class="nav-links">
+                    <a class="gh site" href="https://www.erupt.xyz" target="_blank">{{ t('navWebsite') }}</a>
+                    <a class="gh doc" href="https://docs.erupt.xyz" target="_blank">{{ t('navDocs') }}</a>
+                    <a class="gh skill" href="https://skill.erupt.xyz" target="_blank">⚡ {{ t('navSkill') }}</a>
+                    <a class="gh" href="https://github.com/erupts/erupt" target="_blank">
+                        <svg viewBox="0 0 24 24" fill="var(--ink)" stroke="var(--ink)" stroke-width="1.8" stroke-linejoin="round"><path d="M12 3l2.7 5.9 6.3.6-4.8 4.3 1.4 6.2L12 17.7 6.4 20.2l1.4-6.2-4.8-4.3 6.3-.6z"/></svg>
+                        GitHub
+                    </a>
+                    <button class="lang-btn" @click="toggleLang">{{ t('langToggle') }}</button>
+                </nav>
+            </div>
+        </header>
 
-    <main class="page">
-
-        <!-- ══ Hero ══ -->
-        <section class="hero reveal">
+        <div class="band-inner">
+            <!-- ══ Hero — doris grammar: two-column, left copy · right code editor ══ -->
+            <section class="hero reveal">
             <div class="hero-left">
-                <h1 class="hero-title">
-                    {{ t('titleL1') }}<br>
-                    <mark class="hl">{{ t('titleHl') }}</mark>
-                </h1>
+                <span class="hero-eyebrow"><i class="dot"></i>{{ t('heroEyebrow') }}</span>
+                <h1 class="hero-title" v-html="t('heroTitle')"></h1>
                 <p class="lead">{{ t('heroSub') }}</p>
-                <ul class="hero-bullets">
-                    <li><i></i>{{ t('bullet1') }}</li>
-                    <li><i></i>{{ t('bullet2') }}</li>
-                    <li><i></i>{{ t('bullet4') }}</li>
-                </ul>
                 <div class="hero-actions">
                     <button class="btn btn-primary" @click="generate">{{ t('heroBtn') }}</button>
                     <button class="btn" @click="openExplore">{{ t('btnExplore') }}</button>
@@ -1169,57 +1293,38 @@
                     <span class="chip"><i class="dot"></i>Spring Boot {{ BOOT_VER }}</span>
                 </div>
             </div>
-            <div class="hero-right">
-                <div class="board">
-                    <span class="bd-sticker bd-s1" aria-hidden="true">⚡</span>
-                    <span class="bd-sticker bd-s2" aria-hidden="true">🚀</span>
 
-                    <figure class="win win-code">
-                        <figcaption class="win-bar">
-                            <span class="tl tl-pink"></span>
-                            <span class="tl tl-cyan"></span>
-                            <span class="tl tl-green"></span>
-                            <span class="win-file">{{ form.artifact || 'demo' }}.zip</span>
-                        </figcaption>
-<pre class="win-body"><span class="tr-dir">▾ {{ form.artifact || 'demo' }}</span>
-<span class="tr-line">├──</span> <span class="tr-dir">src/main/java</span>
-<span class="tr-line">│   └──</span> <span class="tr-dir">{{ (form.pkg || 'com.example.demo').replaceAll('.','/') }}</span>
-<span class="tr-line">│       ├──</span> <span class="tr-java">{{ (form.name || 'Demo') }}Application.java</span>
-<span class="tr-line">│       └──</span> <span class="tr-java">SampleModel.java</span>
-<span class="tr-line">├──</span> <span class="tr-dir">src/main/resources</span>
-<span class="tr-line">│   └──</span> <span class="tr-cfg">application.yml</span>
-<span class="tr-line">├──</span> <span class="tr-cfg">{{ form.build === 'gradle' ? 'build.gradle' : 'pom.xml' }}</span>
-<span class="tr-line">└──</span> <span class="tr-file">Dockerfile</span></pre>
-                    </figure>
+            <!-- ── right column: single dark code editor card ── -->
+            <figure class="hero-code">
+                <figcaption class="hc-bar">
+                    <span class="tl tl-pink"></span>
+                    <span class="tl tl-cyan"></span>
+                    <span class="tl tl-green"></span>
+                    <span class="hc-file">SampleModel.java</span>
+                    <button class="hc-run" @click="generate">▶ Run</button>
+                </figcaption>
+<pre class="hc-body"><span class="ln">01</span><span class="anno">@Erupt</span>(name = <span class="str">"Sample"</span>)
+<span class="ln">02</span><span class="anno">@Entity</span>
+<span class="ln">03</span><span class="kw">public class</span> <span class="ty">SampleModel</span> <span class="kw">extends</span> <span class="ty">BaseModel</span> {
+<span class="ln">04</span>
+<span class="ln">05</span>    <span class="anno">@EruptField</span>(
+<span class="ln">06</span>        views = <span class="anno">@View</span>(title = <span class="str">"Name"</span>),
+<span class="ln">07</span>        edit  = <span class="anno">@Edit</span>(title = <span class="str">"Name"</span>, search = <span class="anno">@Search</span>)
+<span class="ln">08</span>    )
+<span class="ln">09</span>    <span class="kw">private</span> <span class="ty">String</span> name;
+<span class="ln">10</span>
+<span class="ln">11</span>    <span class="anno">@EruptField</span>(views = <span class="anno">@View</span>(title = <span class="str">"Active"</span>))
+<span class="ln">12</span>    <span class="kw">private</span> <span class="ty">Boolean</span> active = <span class="kw">true</span>;
+<span class="ln">13</span>
+<span class="ln">14</span>    <span class="anno">@EruptField</span>(views = <span class="anno">@View</span>(title = <span class="str">"Date"</span>))
+<span class="ln">15</span>    <span class="kw">private</span> <span class="ty">Date</span> date;
+<span class="ln">16</span>}</pre>
+            </figure>
+            </section>
+        </div>
+    </div>
 
-                    <span class="bd-arrow">{{ t('arrowChip') }} ↓</span>
-
-                    <figure class="win win-ui">
-                        <figcaption class="win-bar">
-                            <span class="tl tl-green"></span>
-                            <span class="win-file">localhost:{{ form.port || 8080 }} · {{ t('winUi') }}</span>
-                        </figcaption>
-                        <div class="ui">
-                            <div class="ui-bar">
-                                <span class="ui-title">Sample</span>
-                                <span class="ui-btn ui-btn-acc">{{ t('uiAdd') }}</span>
-                                <span class="ui-btn">{{ t('uiSearch') }}</span>
-                            </div>
-                            <div class="ui-row ui-head">
-                                <i class="ui-cb"></i>
-                                <span v-for="c in t('uiCols')" :key="c">{{ c }}</span>
-                            </div>
-                            <div v-for="i in 3" :key="i" class="ui-row">
-                                <i class="ui-cb"></i>
-                                <span><i class="ui-line" :style="{ width: (72 - i * 12) + '%' }"></i></span>
-                                <span><i class="ui-pill" :class="{ off: i === 3 }"></i></span>
-                                <span><i class="ui-line" style="width:55%"></i></span>
-                            </div>
-                        </div>
-                    </figure>
-                </div>
-            </div>
-        </section>
+    <main class="page">
 
         <!-- ══ Configuration ══ -->
         <section class="card reveal">
@@ -1329,16 +1434,49 @@
                 <span class="card-hint">{{ t('secModulesHint') }}</span>
             </div>
             <div class="card-body">
+                <div class="mods-divider" style="margin-top:0">
+                    <span class="ai-chip">AI</span>
+                    <span>{{ t('secModulesAi') }}</span>
+                </div>
                 <div class="mods">
-                    <div class="mod" :class="{on: selectedMods.includes(m.id), wide: m.id === 'erupt-ai' || m.id === 'erupt-cloud-server'}"
-                         v-for="m in MODULES.filter(x => !x.pro)" :key="m.id" @click="toggleMod(m.id)">
+                    <div class="mod" :class="{on: selectedMods.includes(m.id)}"
+                         v-for="m in MODULES.filter(x => x.ai)" :key="m.id" @click="toggleMod(m.id)">
                         <span class="mod-tag" v-if="m.tag">{{ m.tag }}</span>
                         <div class="mod-icon">{{ m.icon }}</div>
                         <div class="mod-name">{{ m.name }}</div>
                         <div class="mod-desc">{{ locale === 'zh' ? m.descZh : m.desc }}</div>
+                        <div class="mod-viz" v-html="VIZ[m.id]"></div>
+                    </div>
+                </div>
+                <div class="mods-divider">
+                    <span class="plugin-chip">PLUGIN</span>
+                    <span>{{ t('secModulesPlugin') }}</span>
+                </div>
+                <div class="mods">
+                    <div class="mod" :class="{on: selectedMods.includes(m.id)}"
+                         v-for="m in MODULES.filter(x => !x.pro && !x.data && !x.ai)" :key="m.id" @click="toggleMod(m.id)">
+                        <span class="mod-tag" v-if="m.tag">{{ m.tag }}</span>
+                        <div class="mod-icon">{{ m.icon }}</div>
+                        <div class="mod-name">{{ m.name }}</div>
+                        <div class="mod-desc">{{ locale === 'zh' ? m.descZh : m.desc }}</div>
+                        <div class="mod-viz" v-html="VIZ[m.id]"></div>
                         <button class="mod-action" v-if="m.id === 'erupt-cloud-server'"
                                 :title="t('cloudNodeTip')"
                                 @click.stop="generateCloudNode">{{ t('cloudNodeBtn') }}</button>
+                    </div>
+                </div>
+                <div class="mods-divider">
+                    <span class="data-chip">DATA</span>
+                    <span>{{ t('secModulesData') }}</span>
+                </div>
+                <div class="mods">
+                    <div class="mod" :class="{on: selectedMods.includes(m.id)}"
+                         v-for="m in MODULES.filter(x => x.data)" :key="m.id" @click="toggleMod(m.id)">
+                        <span class="mod-tag" v-if="m.tag">{{ m.tag }}</span>
+                        <div class="mod-icon">{{ m.icon }}</div>
+                        <div class="mod-name">{{ m.name }}</div>
+                        <div class="mod-desc">{{ locale === 'zh' ? m.descZh : m.desc }}</div>
+                        <div class="mod-viz" v-html="VIZ[m.id]"></div>
                     </div>
                 </div>
                 <div class="mods-divider">
@@ -1352,6 +1490,7 @@
                         <div class="mod-icon">{{ m.icon }}</div>
                         <div class="mod-name">{{ m.name }}</div>
                         <div class="mod-desc">{{ locale === 'zh' ? m.descZh : m.desc }}</div>
+                        <div class="mod-viz" v-html="VIZ[m.id]"></div>
                     </div>
                 </div>
             </div>
@@ -1432,16 +1571,17 @@
 <script>
     const {createApp, reactive, ref, computed, watch, onMounted} = Vue;
 
-    const ERUPT_VER = '2.0.4';
+    const ERUPT_VER = '2.2.0';
     const BOOT_VER = '3.5.16';
 
     const LANG = {
         en: {
-            navWebsite: 'Website', navDocs: 'Docs', langToggle: '中文',
+            navWebsite: 'Website', navDocs: 'Docs', navSkill: 'No-Code Build', langToggle: '中文',
             logoSub: 'Project Generator',
             heroEyebrow: 'Project Generator',
             titleL1: 'Bootstrap your',
             titleHl: 'Erupt project.',
+            heroTitle: 'Bootstrap your <span class="hl">Erupt</span> project.',
             heroSub: 'Generate a pre-configured Erupt + Spring Boot project. Pick your stack, choose modules, and download a ready-to-run ZIP.',
             bullet1: 'Zero boilerplate — annotate a Java class and get a full CRUD admin UI',
             bullet2: 'Spring Boot 3 · JPA · multi-database support out of the box',
@@ -1467,7 +1607,10 @@
             proDesc: 'Source-code delivery · one-time purchase · no License/project/commercial restrictions. Added to your project separately after purchase.',
             proBtn: 'View pricing →',
             secModulesPro: 'Commercial — added as commented dependency',
-            arrowChip: 'ready-to-run',
+            secModulesAi: 'AI — agents, knowledge base, digital staff',
+            secModulesPlugin: 'Plugins — admin capability extensions',
+            secModulesData: 'Data sources — bind @Erupt models to any backend',
+            arrowChip: 'renders',
             winUi: 'Admin UI',
             uiAdd: '+ New', uiSearch: 'Search…',
             uiCols: ['Name', 'Active', 'Date'],
@@ -1475,11 +1618,12 @@
             cloudNodeTip: 'Generate a worker-node project that registers to this server',
         },
         zh: {
-            navWebsite: '官网', navDocs: '文档', langToggle: 'EN',
+            navWebsite: '官网', navDocs: '文档', navSkill: '零代码构建', langToggle: 'EN',
             logoSub: '项目生成器',
             heroEyebrow: '项目生成器',
             titleL1: '三分钟，启动你的',
             titleHl: 'Erupt 项目。',
+            heroTitle: '三分钟，启动你的 <span class="hl">Erupt</span> 项目。',
             heroSub: '生成一个开箱即用的 Erupt + Spring Boot 项目。选择技术栈、勾选模块，下载即可运行。',
             bullet1: '零样板代码 — 注解一个 Java 类，即得完整 CRUD 管理界面',
             bullet2: 'Spring Boot 3 · JPA · 开箱即用的多数据库支持',
@@ -1505,7 +1649,10 @@
             proDesc: '源码交付 · 一次买断 · 无 License / 项目数 / 商用限制 · 单独购买后接入项目。',
             proBtn: '查看定价 →',
             secModulesPro: '商业模块 — 依赖以注释形式添加',
-            arrowChip: '下载即运行',
+            secModulesAi: 'AI 能力 — 智能体、知识库、数字员工',
+            secModulesPlugin: '插件 — 管理端能力扩展',
+            secModulesData: '数据源 — 将 @Erupt 模型绑定到任意后端',
+            arrowChip: '即为',
             winUi: '管理界面',
             uiAdd: '+ 新增', uiSearch: '搜索…',
             uiCols: ['名称', '状态', '日期'],
@@ -1515,12 +1662,17 @@
     };
 
     const MODULES = [
-        {id: 'erupt-ai', name: 'AI', icon: '🤖', desc: 'Integrate 50+ LLMs: GPT, Claude, DeepSeek…', descZh: '集成 50+ 大模型：GPT、Claude、DeepSeek…'},
-        {id: 'erupt-ai-claw', name: 'AI Claw', icon: '🦞', desc: 'Control your server via natural language', descZh: '用自然语言控制你的服务器', requires: 'erupt-ai'},
-        {id: 'erupt-designer', name: 'Designer', icon: '✏️', desc: 'Visual form designer — drag-and-drop entity models at runtime, publish without restart', descZh: '可视化表单设计器 — 运行时拖拽设计实体模型，无需重启发布', tag: 'NEW'},
-        {id: 'erupt-print', name: 'Print', icon: '🖨️', desc: 'HTML template-based printing for any Erupt entity row', descZh: '基于 HTML 模板的打印，支持任意 Erupt 实体行数据', tag: 'NEW'},
+        {id: 'erupt-ai', ai: true, name: 'AI Harness', icon: '🤖', desc: 'Integrate 50+ LLMs: GPT, Claude, DeepSeek…', descZh: '集成 50+ 大模型：GPT、Claude、DeepSeek…'},
+        {id: 'erupt-ai-claw', ai: true, name: 'AI Claw', icon: '🦞', desc: 'Control your server via natural language', descZh: '用自然语言控制你的服务器', requires: 'erupt-ai'},
+        {id: 'erupt-ai-canvas', ai: true, name: 'AI Canvas', icon: '🎨', desc: 'Generate live pages from one sentence', descZh: '一句话生成页面，数据实时来自后端', requires: 'erupt-ai'},
+        {id: 'erupt-ai-rag', ai: true, name: 'AI RAG', icon: '📚', desc: 'Knowledge base with semantic retrieval — 11 embedding providers, Qdrant / Milvus vector stores', descZh: '知识库 / RAG 语义检索 — 支持 11 家向量模型，Qdrant / Milvus 向量库', requires: 'erupt-ai', tag: 'NEW'},
+        {id: 'erupt-ai-staff', ai: true, name: 'AI Staff', icon: '🧑‍💼', desc: 'Digital AI employees — duties, cron schedules, work reports, IM channels', descZh: 'AI 数字员工 — 职责设定、定时执行、工作汇报、IM 通道', requires: 'erupt-ai-claw', tag: 'NEW'},
+        {id: 'erupt-designer', name: 'Designer', icon: '✏️', desc: 'Visual form designer — drag-and-drop entity models at runtime, publish without restart', descZh: '可视化表单设计器 — 运行时拖拽设计实体模型，无需重启发布'},
+        {id: 'erupt-print', name: 'Print', icon: '🖨️', desc: 'HTML template-based printing for any Erupt entity row', descZh: '基于 HTML 模板的打印，支持任意 Erupt 实体行数据'},
 
         {id: 'erupt-terminal', name: 'Terminal', icon: '💻', desc: 'Web SSH / shell terminal in the admin UI', descZh: '管理界面内置 Web SSH / Shell 终端'},
+        {id: 'erupt-remote', name: 'Remote', icon: '🖥️', desc: 'VNC desktops and SSH shells for remote hosts, in the browser', descZh: '浏览器直连远程主机，VNC 桌面与 SSH 终端', tag: 'NEW'},
+        {id: 'erupt-atlas', name: 'Atlas', icon: '🕸️', desc: 'Live model relation graph with structural audit — dependency cycles, shared tables, orphans, permission drift', descZh: '模型关系图谱与结构审计 — 依赖环、共享表、孤立模型、权限漂移', tag: 'NEW'},
         {id: 'erupt-notice', name: 'Notice', icon: '🔔', desc: 'In-app notifications with sms support', descZh: '站内通知，支持短信等渠道推送'},
         {id: 'erupt-magic-api', name: 'Magic API', icon: '🪄', desc: 'Online API development IDE', descZh: '在线 API 开发 IDE'},
         {id: 'erupt-cloud-server', name: 'Cloud', icon: '☁️', desc: 'Distributed cloud-native cluster support', descZh: '分布式云原生集群支持'},
@@ -1529,10 +1681,23 @@
         {id: 'erupt-websocket', name: 'WebSocket', icon: '⚡', desc: 'Real-time interaction via WebSocket', descZh: '基于 WebSocket 的实时交互'},
         {id: 'erupt-generator', name: 'Generator', icon: '⚙️', desc: 'Assisted code generation IDE', descZh: '辅助代码生成'},
         {id: 'erupt-tpl', name: 'TPL', icon: '🎨', desc: 'Custom page template framework', descZh: '自定义页面模板框架'},
-        {id: 'erupt-mongodb', name: 'MongoDB', icon: '🍃', desc: 'MongoDB data source support', descZh: 'MongoDB 数据源支持'},
+        {id: 'erupt-report', name: 'Report', icon: '📊', desc: 'Reports & data visualization in pure SQL', descZh: '纯 SQL 定义报表图表 / 数据可视化'},
+
+        // ── Data sources · bind @Erupt models to non-JPA backends ──
+        {id: 'erupt-data-mongodb', data: true, name: 'MongoDB', icon: '🍃', desc: 'MongoDB data source support', descZh: 'MongoDB 数据源支持'},
+        {id: 'erupt-data-jdbc', data: true, name: 'JDBC', icon: '🔌', desc: 'Plain JDBC table binding — ClickHouse, Doris, TiDB, any JDBC driver', descZh: '纯 JDBC 直连数据表 — ClickHouse、Doris、TiDB 等任意 JDBC 数据库', tag: 'NEW'},
+        {id: 'erupt-data-es', data: true, name: 'Elasticsearch', icon: '🔍', desc: 'Elasticsearch index as data source — search pushed down to _search', descZh: 'Elasticsearch 索引数据源，检索 / 排序 / 分页下推', tag: 'NEW'},
+        {id: 'erupt-data-redis', data: true, name: 'Redis', icon: '🟥', desc: 'Redis hash-backed data source for config & dictionaries', descZh: 'Redis Hash 数据源，适合配置与字典数据', tag: 'NEW'},
+        {id: 'erupt-data-http', data: true, name: 'HTTP', icon: '🌐', desc: 'REST API-backed data source — no DAO needed', descZh: 'REST 接口数据源，无需编写 DAO', tag: 'NEW'},
+        {id: 'erupt-data-file', data: true, name: 'File', icon: '📄', desc: 'Flat-file data source — CSV, JSON, YAML, Properties…', descZh: '文件数据源 — CSV、JSON、YAML、Properties…', tag: 'NEW'},
+        {id: 'erupt-data-memory', data: true, name: 'Memory', icon: '⚡️', desc: 'In-memory data source for prototypes, tests & demos', descZh: '内存数据源 — 原型、测试、演示', tag: 'NEW'},
+        {id: 'erupt-data-ldap', data: true, name: 'LDAP', icon: '📇', desc: 'LDAP / Active Directory entries managed as tables', descZh: 'LDAP / AD 目录条目当作数据表管理', tag: 'NEW'},
+        {id: 'erupt-data-k8s', data: true, name: 'K8s', icon: '☸️', desc: 'Kubernetes resources admin view — Pod, Deployment, Service…', descZh: 'Kubernetes 资源管理视图 — Pod、Deployment、Service…', tag: 'NEW'},
+        {id: 'erupt-data-s3', data: true, name: 'S3', icon: '🪣', desc: 'S3-compatible object storage view — MinIO, OSS, COS, R2…', descZh: 'S3 兼容对象存储视图 — MinIO、OSS、COS、R2…', tag: 'NEW'},
+        {id: 'erupt-data-feishu', data: true, name: 'Feishu', icon: '📋', desc: 'Feishu Bitable as data source via open platform API', descZh: '飞书多维表格数据源', tag: 'NEW'},
+        {id: 'erupt-data-notion', data: true, name: 'Notion', icon: '📓', desc: 'Notion database as data source', descZh: 'Notion 数据库数据源', tag: 'NEW'},
 
         // ── Commercial modules · cannot be added via generator, click to view pricing ──
-        {id: 'erupt-chart', name: 'Report', icon: '📊', desc: 'Reports & data visualization — open source on Aug 23', descZh: '报表图表 / 数据可视化 — 8 月 23 日开源', tag: 'PRO', pro: true, proUrl: 'https://www.erupt.xyz/?utm_source=start&utm_medium=card_chart&utm_campaign=pro#!/pro'},
         {id: 'erupt-flow', name: 'Flow', icon: '🔀', desc: 'Workflow / approval engine', descZh: '流程引擎 / 审批工作流', tag: 'PRO', pro: true, proUrl: 'https://www.erupt.xyz/#!/flow'},
         {id: 'erupt-tenant', name: 'SaaS', icon: '🏢', desc: 'Multi-tenant infrastructure', descZh: '多租户基建', tag: 'PRO', pro: true, proUrl: 'https://www.erupt.xyz/?utm_source=start&utm_medium=card_tenant&utm_campaign=pro#!/pro'},
         {id: 'erupt-cube', name: 'Cube', icon: '🧊', desc: 'BI platform with semantic layer', descZh: 'BI 平台 / 语义层', tag: 'PRO', pro: true, proUrl: 'https://www.erupt.xyz/#!/cube'},
@@ -1662,15 +1827,13 @@
                 const idx = arr.indexOf(id);
                 if (idx > -1) {
                     arr.splice(idx, 1);
-                    // remove dependents
+                    // remove dependents (recursively, e.g. ai → claw → staff)
                     MODULES.forEach(m => {
-                        if (m.requires === id) {
-                            const di = arr.indexOf(m.id);
-                            if (di > -1) arr.splice(di, 1);
-                        }
+                        if (m.requires === id && arr.includes(m.id)) toggleMod(m.id);
                     });
                 } else {
-                    if (mod?.requires && !arr.includes(mod.requires)) arr.push(mod.requires);
+                    // resolve requires chain recursively, e.g. staff → claw → ai
+                    if (mod?.requires && !arr.includes(mod.requires)) toggleMod(mod.requires);
                     arr.push(id);
                 }
             }
@@ -1923,16 +2086,37 @@ ENTRYPOINT ["java", "-jar", "app.jar"]`;
             }
 
             function renderReadme() {
-                const run = form.build === 'maven' ? '```bash\nmvn spring-boot:run\n```' : '```bash\n./gradlew bootRun\n```';
+                const port = form.port || 8080;
+                const account = form.adminAccount || 'erupt';
+                const password = form.adminPassword || 'erupt';
+                const usage = form.build === 'maven'
+                    ? `The Maven Wrapper (\`mvnw\`) is included — no local Maven install required.
+
+\`\`\`bash
+# macOS / Linux
+./mvnw spring-boot:run
+
+# Windows
+mvnw.cmd spring-boot:run
+\`\`\``
+                    : `The Gradle Wrapper (\`gradlew\`) is included — no local Gradle install required.
+
+\`\`\`bash
+# macOS / Linux
+./gradlew bootRun
+
+# Windows
+gradlew.bat bootRun
+\`\`\``;
                 return `# ${form.name}
 
 > Generated by [start.erupt.xyz](https://start.erupt.xyz)
 
 ## Quick Start
 
-${run}
+${usage}
 
-Open [http://localhost:8080](http://localhost:8080) — login: \`${form.adminAccount || 'erupt'} / ${form.adminPassword || 'erupt'}\`
+Open [http://localhost:${port}](http://localhost:${port}) — login: \`${account} / ${password}\`
 
 ## Stack
 
@@ -2028,11 +2212,48 @@ Erupt is a low-code framework that turns annotated Java classes into full-featur
             }
 
             // ── generate ──────────────────────────────────
+            // fetch a static asset from ./assets/ as text or binary buffer
+            async function fetchAsset(name, binary = false) {
+                const res = await fetch(`assets/${name}`);
+                if (!res.ok) throw new Error(`asset ${name} missing`);
+                return binary ? await res.arrayBuffer() : await res.text();
+            }
+
+            // add maven wrapper — mvnw needs the unix executable bit
+            async function addMavenWrapper(folder) {
+                const [mvnw, mvnwCmd, wrapperProps] = await Promise.all([
+                    fetchAsset('mvnw'),
+                    fetchAsset('mvnw.cmd'),
+                    fetchAsset('mvn-wrapper/maven-wrapper.properties'),
+                ]);
+                folder.file('mvnw', mvnw, {unixPermissions: 0o755});
+                folder.file('mvnw.cmd', mvnwCmd);
+                folder.file('.mvn/wrapper/maven-wrapper.properties', wrapperProps);
+            }
+
+            // add gradle wrapper — gradlew needs the unix executable bit,
+            // gradle-wrapper.jar is binary. rootName drives settings.gradle.kts.
+            async function addGradleWrapper(folder, rootName) {
+                const [gradlew, gradlewBat, wrapperJar, wrapperProps] = await Promise.all([
+                    fetchAsset('gradlew'),
+                    fetchAsset('gradlew.bat'),
+                    fetchAsset('gradle-wrapper/gradle-wrapper.jar', true),
+                    fetchAsset('gradle-wrapper/gradle-wrapper.properties'),
+                ]);
+                folder.file('gradlew', gradlew, {unixPermissions: 0o755});
+                folder.file('gradlew.bat', gradlewBat);
+                folder.file('gradle/wrapper/gradle-wrapper.jar', wrapperJar);
+                folder.file('gradle/wrapper/gradle-wrapper.properties', wrapperProps);
+                folder.file('settings.gradle.kts', `rootProject.name = "${rootName}"\n`);
+            }
+
             async function generate() {
                 const zip = new JSZip();
                 const folder = zip.folder(form.artifact);
                 Object.entries(previewFiles.value).forEach(([path, content]) => folder.file(path, content));
-                const blob = await zip.generateAsync({type: 'blob'});
+                if (form.build === 'maven')  await addMavenWrapper(folder);
+                if (form.build === 'gradle') await addGradleWrapper(folder, form.artifact);
+                const blob = await zip.generateAsync({type: 'blob', platform: 'UNIX'});
                 saveAs(blob, `${form.artifact}.zip`);
             }
 
@@ -2241,7 +2462,9 @@ Docs: [docs.erupt.xyz/modules/cloud-node](https://docs.erupt.xyz/modules/cloud-n
                 const zip = new JSZip();
                 const folder = zip.folder(nodeArtifact());
                 Object.entries(files).forEach(([path, content]) => folder.file(path, content));
-                const blob = await zip.generateAsync({type: 'blob'});
+                if (form.build === 'maven')  await addMavenWrapper(folder);
+                if (form.build === 'gradle') await addGradleWrapper(folder, nodeArtifact());
+                const blob = await zip.generateAsync({type: 'blob', platform: 'UNIX'});
                 saveAs(blob, `${nodeArtifact()}.zip`);
             }
 
@@ -2253,7 +2476,7 @@ Docs: [docs.erupt.xyz/modules/cloud-node](https://docs.erupt.xyz/modules/cloud-n
             });
 
             return {
-                ERUPT_VER, BOOT_VER, MODULES, DB, JAVA_VERSIONS, LOCALES,
+                ERUPT_VER, BOOT_VER, MODULES, DB, JAVA_VERSIONS, LOCALES, VIZ,
                 form, selectedMods, pkgEdited, nameEdited,
                 modal, previewFiles, treeEntries,
                 locale, t, toggleLang,

@@ -111,6 +111,20 @@
         R(200, 82, 20, 12, G, 'ap', 2) + T(210, 91, '✓', 9)
     );
 
+    // question card → decision model → typed answer with probabilities; code branches on a threshold
+    VIZ['erupt-ai-decision'] = wrap(
+        R(12, 36, 60, 48, Y, 'ap', 0) + T(42, 56, 'refund', 8) + T(42, 76, '?', 14) +
+        L(72, 60, 90, 60, .2) + Dot(72, 60, 18, 0, .5) +
+        R(90, 44, 40, 32, V, 'ap', .3) + T(110, 65, 'AI', 12) +
+        L(130, 60, 148, 60, .6) + Dot(130, 60, 18, 0, .9) +
+        R(148, 14, 80, 92, W) +
+        T(156, 32, 'yes', 7, I, 'start') + R(176, 24, 28, 10, G, 'ap', 1) + T(222, 32, '.82', 7, I, 'end') +
+        T(156, 50, 'no', 7, I, 'start') + R(176, 42, 6, 10, P, 'ap', 1.2) + T(222, 50, '.18', 7, I, 'end') +
+        Ln(154, 60, 222, 60, `stroke="${F}"`) +
+        R(154, 68, 68, 14, I, 'ap', 1.5) + T(188, 78, 'if p &gt; .8', 7, K) +
+        R(154, 88, 30, 12, G, 'ap', 1.8) + T(169, 97, '✓ go', 6)
+    );
+
     // ═══ Plugins ═════════════════════════════════════════════
     VIZ['erupt-designer'] = wrap(
         R(12, 12, 64, 96, W) + T(44, 26, 'FIELDS', 7) +
@@ -174,6 +188,34 @@
             Ci(171, 46 + i * 20, 4, r[1], 'ap', 1 + i * .15) + T(180, 49 + i * 20, r[0], 7, I, 'start') + T(220, 49 + i * 20, r[2], 7, I, 'end')).join('')
     );
 
+    // table row with a comment count → thread panel: pinned comment with an @mention, an indented reply, resolved tag
+    VIZ['erupt-comment'] = wrap(
+        R(12, 16, 100, 88, W) + R(12, 16, 100, 14, C) +
+        R(14, 48, 96, 12, Y, 'ap', .4) +
+        [0, 1, 2, 3].map(i => Ph(20, 40 + i * 14, 84, .1 + i * .1)).join('') +
+        Ci(106, 54, 7, P, 'ap', .6) + T(106, 57, '3', 8) +
+        L(113, 54, 136, 54, .6) + Dot(113, 54, 23, 0, .9) +
+        R(136, 12, 92, 96, W) +
+        R(142, 20, 80, 26, K, 'ap', .9) + Ci(218, 21, 3, Y, 'ap', 1.4) + Ln(218, 24, 218, 30) +
+        R(146, 25, 22, 9, C, 'ap', 1.1) + T(157, 32, '@lee', 6) + Ph(172, 29, 208, 1.2) + Ph(146, 40, 200, 1.3) +
+        R(154, 52, 68, 22, K, 'ap', 1.5) + Ph(160, 60, 214, 1.7) + Ph(160, 68, 196, 1.8) +
+        R(142, 84, 56, 14, G, 'ap', 2) + T(170, 94, '✓ resolved', 6)
+    );
+
+    // identity providers → OAuth2 exchange → signed-in erupt session
+    VIZ['erupt-sso'] = wrap(
+        [['KEYCLOAK', C], ['GITHUB', V], ['FEISHU', G]].map((p, i) =>
+            R(12, 16 + i * 32, 52, 22, p[1], 'ap', i * .12) + T(38, 31 + i * 32, p[0], 7)).join('') +
+        [0, 1, 2].map(i => L(64, 27 + i * 32, 96, 60, .2 + i * .1) + Dot(64, 27 + i * 32, 32, 33 - i * 32, .6 + i * .25)).join('') +
+        R(96, 30, 52, 60, Y, 'ap', .35) +
+        Pth('M113 54 V48 A9 9 0 0 1 131 48 V54', 'none', 'ad', .5) + R(108, 54, 28, 18, I, 'ap', .6) + Ci(122, 62, 2.5, Y) +
+        T(122, 84, 'OAuth2', 7) +
+        L(148, 60, 176, 60, .9) + Dot(148, 60, 28, 0, 1.1) +
+        Win(176, 22, 52, 76) +
+        Ci(202, 52, 9, W, 'ap', 1.2) + Pth('M188 84 Q188 66 202 66 Q216 66 216 84 Z', W, 'ap', 1.3) +
+        R(192, 86, 20, 10, G, 'ap', 1.6) + T(202, 94, '✓', 8)
+    );
+
     VIZ['erupt-notice'] = wrap(
         `<g class="aw" style="--d:.1s;transform-origin:78px 24px;transform-box:view-box">` +
         Ln(78, 22, 78, 30) +
@@ -233,15 +275,20 @@
         Pth('M124 36 L112 62 L122 62 L114 84 L132 54 L122 54 L130 36 Z', Y, 'ap', .4)
     );
 
+    // database table → generator → Java entity classes (comments become titles, foreign keys become references)
     VIZ['erupt-generator'] = wrap(
-        spin(48, 60, 90, .1,
-            Array.from({length: 8}, (_, k) => `<rect x="44" y="34" width="8" height="10" fill="${V}" transform="rotate(${k * 45} 48 60)"/>`).join('') +
-            Ci(48, 60, 20, V) + Ci(48, 60, 7, W)) +
-        L(76, 60, 96, 60, .3) + Dot(76, 60, 20, 0, .6) +
-        R(96, 46, 60, 28, Y, 'ap', .4) + T(126, 64, '@Erupt', 8) +
-        L(156, 60, 172, 60, .7) + Dot(156, 60, 16, 0, .9) +
-        [['.java', 14], ['.ts', 44], ['.sql', 74]].map((f, i) =>
-            Pth(`M176 ${f[1]} H208 L216 ${f[1] + 8} V${f[1] + 26} H176 Z`, W, 'ap', 1 + i * .2) + T(196, f[1] + 19, f[0], 7)).join('')
+        Pth('M14 34 V84 A22 8 0 0 0 58 84 V34', W, 'ap', 0) +
+        Pth('M14 50 A22 8 0 0 0 58 50', 'none', 'ad', .2) + Pth('M14 66 A22 8 0 0 0 58 66', 'none', 'ad', .3) +
+        `<ellipse cx="36" cy="34" rx="22" ry="8" fill="${C}" class="ap"/>` + T(36, 37, 'table', 7) +
+        L(58, 60, 78, 60, .3) + Dot(58, 60, 20, 0, .6) +
+        spin(104, 60, 90, .4,
+            Array.from({length: 8}, (_, k) => `<rect x="100" y="34" width="8" height="10" fill="${V}" transform="rotate(${k * 45} 104 60)"/>`).join('') +
+            Ci(104, 60, 20, V) + Ci(104, 60, 7, W)) +
+        L(130, 60, 150, 60, .7) + Dot(130, 60, 20, 0, .9) +
+        [['User.java', 14], ['Order.java', 46], ['Dept.java', 78]].map((f, i) =>
+            Pth(`M154 ${f[1]} H200 L210 ${f[1] + 8} V${f[1] + 28} H154 Z`, W, 'ap', 1 + i * .2) +
+            R(158, f[1] + 5, 22, 7, Y, 'ap', 1.1 + i * .2) + T(169, f[1] + 10.5, '@Erupt', 4.5) +
+            T(182, f[1] + 23, f[0], 6)).join('')
     );
 
     VIZ['erupt-tpl'] = wrap(
@@ -324,6 +371,19 @@
     VIZ['erupt-data-notion'] = bind(
         R(20, 20, 50, 80, W, 'ap', 0) + T(45, 72, 'N', 34, I, 'middle', 'class="ap" style="--d:.2s"') +
         Ph(28, 86, 62, .5)
+    );
+    VIZ['erupt-data-dingtalk'] = bind(
+        R(16, 28, 58, 64, W) + R(16, 28, 58, 16, P, 'ap', 0) + T(45, 39.5, 'notable', 7) +
+        Ln(35, 44, 35, 92) + Ln(55, 44, 55, 92) +
+        L(16, 60, 74, 60, .3) + L(16, 76, 74, 76, .4) +
+        R(17, 45, 17, 14, C, 'ap', .6) + R(36, 61, 18, 14, Y, 'ap', .8) + R(56, 77, 17, 14, G, 'ap', 1)
+    );
+    // a base: several tables fanned as cards, the front one showing its grid
+    VIZ['erupt-data-airtable'] = bind(
+        [P, C, Y].map((c, i) => R(14 + i * 8, 18 + i * 10, 48, 46, W, 'ap', i * .15) + R(14 + i * 8, 18 + i * 10, 48, 10, c, 'ap', i * .15)).join('') +
+        Ln(54, 48, 54, 84) + L(30, 60, 78, 60, .5) + L(30, 72, 78, 72, .6) +
+        R(31, 49, 22, 10, G, 'ap', .8) + R(55, 73, 22, 10, V, 'ap', 1) +
+        R(38, 88, 32, 12, W, 'ap', 1.1) + T(54, 97, 'base', 7)
     );
 
     // ═══ Commercial ══════════════════════════════════════════

@@ -126,6 +126,18 @@
     );
 
     // ═══ Plugins ═════════════════════════════════════════════
+    // AI Skill: one-sentence prompt → ⚡ → a finished admin window
+    VIZ['erupt-skill'] = wrap(
+        Pth('M12 24 H104 V58 H30 L20 68 V58 H12 Z', W, 'ap', 0) +
+        T(58, 38, '"a CRM"', 9, I, 'middle', 'class="at" style="--d:.25s"') +
+        Ph(22, 50, 92, .5) +
+        Pth('M120 26 L110 52 H122 L112 78 L136 46 H123 L132 26 Z', Y, 'ap', .7) +
+        Win(148, 12, 80, 96) +
+        R(154, 32, 68, 10, C, 'ap', 1) +
+        [46, 58, 70, 82].map((y, i) => R(154, y, 68, 8, i % 2 ? K : F, 'ax', 0, `style="--d:${1.1 + i * .1}s;--fx:-10px;--fy:0px"`)).join('') +
+        R(200, 96, 22, 8, P, 'ap', 1.6)
+    );
+
     VIZ['erupt-designer'] = wrap(
         R(12, 12, 64, 96, W) + T(44, 26, 'FIELDS', 7) +
         R(20, 34, 48, 14, C) + R(20, 54, 48, 14, G) + R(20, 74, 48, 14, V) +

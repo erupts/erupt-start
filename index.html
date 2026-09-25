@@ -727,6 +727,9 @@
         }
 
         .mod-tag.mod-tag-pro { background: var(--ink); color: var(--bg); }
+        .mod.link .mod-name::after { content: ' ↗'; font-weight: 800; }
+        .mod.link .mod-tag { background: var(--yellow); }
+        .mod.link:hover { background: #FFF6D6; }
         .mod.on .mod-tag { right: 28px; }
 
         /* ── hover sketch: a sticker that pops up above the card with a tiny animated SVG ── */
@@ -1439,8 +1442,9 @@
                     <span>{{ t('secModulesAi') }}</span>
                 </div>
                 <div class="mods">
-                    <div class="mod" :class="{on: selectedMods.includes(m.id)}"
-                         v-for="m in MODULES.filter(x => x.ai)" :key="m.id" @click="toggleMod(m.id)">
+                    <div class="mod" :class="{on: selectedMods.includes(m.id), link: !!m.link}"
+                         v-for="m in MODULES.filter(x => x.ai)" :key="m.id"
+                         :title="m.link || ''" @click="m.link ? openLink(m.link) : toggleMod(m.id)">
                         <span class="mod-tag" v-if="m.tag">{{ m.tag }}</span>
                         <div class="mod-icon">{{ m.icon }}</div>
                         <div class="mod-name">{{ m.name }}</div>
@@ -1668,6 +1672,7 @@
         {id: 'erupt-ai-rag', ai: true, name: 'AI RAG', icon: '📚', desc: 'Knowledge base with semantic retrieval — 11 embedding providers, Qdrant / Milvus vector stores', descZh: '知识库 / RAG 语义检索 — 支持 11 家向量模型，Qdrant / Milvus 向量库', requires: 'erupt-ai', tag: 'NEW'},
         {id: 'erupt-ai-staff', ai: true, name: 'AI Staff', icon: '🧑‍💼', desc: 'Digital AI employees — duties, cron schedules, work reports, IM channels', descZh: 'AI 数字员工 — 职责设定、定时执行、工作汇报、IM 通道', requires: 'erupt-ai-claw', tag: 'NEW'},
         {id: 'erupt-ai-decision', ai: true, name: 'AI Decision', icon: '🔀', desc: 'Typed, probability-backed judgements code can branch on — yes/no, choice, score', descZh: 'AI 决策 — 是否 / 选项 / 评分三类带概率的类型化判断，代码直接分支', tag: 'NEW'},
+        {id: 'erupt-skill', ai: true, name: 'AI Skill', icon: '⚡', desc: 'Describe your system in one sentence — an AI agent builds the whole Erupt app, no code', descZh: '一句话描述系统，AI 智能体直接生成完整 Erupt 应用，零代码', tag: 'SKILL', link: 'https://skill.erupt.xyz/'},
         {id: 'erupt-comment', name: 'Comment', icon: '💬', desc: 'Comment stream on any record — @mentions, pinned / resolved threads', descZh: '记录评论 — 任意记录可评论，@提及通知、置顶与已解决', requires: 'erupt-notice', tag: 'NEW'},
         {id: 'erupt-sso', name: 'SSO', icon: '🔑', desc: 'OAuth2 / OIDC single sign-on — Keycloak, Authing, GitHub, Feishu…', descZh: '单点登录 — OAuth2 / OIDC，Keycloak、Authing、GitHub、飞书…', tag: 'NEW'},
         {id: 'erupt-designer', name: 'Designer', icon: '✏️', desc: 'Visual form designer — drag-and-drop entity models at runtime, publish without restart', descZh: '可视化表单设计器 — 运行时拖拽设计实体模型，无需重启发布'},
@@ -1842,6 +1847,8 @@
                     arr.push(id);
                 }
             }
+
+            function openLink(url) { window.open(url, '_blank', 'noopener'); }
 
             // ── template renderers ────────────────────────
             function renderPom() {
@@ -2486,7 +2493,7 @@ Docs: [docs.erupt.xyz/modules/cloud-node](https://docs.erupt.xyz/modules/cloud-n
                 form, selectedMods, pkgEdited, nameEdited,
                 modal, previewFiles, treeEntries,
                 locale, t, toggleLang,
-                syncPkg, onArtifact, toggleMod,
+                syncPkg, onArtifact, toggleMod, openLink,
                 openExplore, copyFile, generate, generateCloudNode, highlightedContent,
             };
         }

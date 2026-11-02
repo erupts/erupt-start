@@ -125,6 +125,18 @@
         R(154, 88, 30, 12, G, 'ap', 1.8) + T(169, 97, '✓ go', 6)
     );
 
+    // requirement pool → coding CLI in a workspace → diff → review → push
+    VIZ['erupt-ai-dev'] = wrap(
+        R(12, 16, 52, 88, W) + T(38, 30, 'POOL', 7) +
+        [['REQ-3', Y], ['REQ-2', W], ['REQ-1', G]].map((r, i) => R(18, 38 + i * 20, 40, 14, r[1], 'ap', .1 + i * .12) + T(38, 48 + i * 20, r[0], 6)).join('') +
+        L(64, 45, 84, 45, .4) + Dot(64, 45, 20, 0, .6) +
+        Win(84, 20, 70, 50, true) + T(92, 50, '$ claude', 7, G, 'start', 'class="at" style="--d:.8s"') +
+        R(84, 78, 70, 26, W, 'ap', 1) + T(90, 89, '+ 42', 6, '#2E8B57', 'start') + T(90, 99, '- 7', 6, '#C0392B', 'start') +
+        L(154, 60, 172, 60, 1.2) + Dot(154, 60, 18, 0, 1.4) +
+        R(172, 30, 56, 22, Y, 'ap', 1.5) + T(200, 44, 'review', 7) +
+        R(172, 66, 56, 22, G, 'ap', 1.7) + T(200, 80, 'push ✓', 7)
+    );
+
     // ═══ Plugins ═════════════════════════════════════════════
     // AI Skill: one-sentence prompt → ⚡ → a finished admin window
     VIZ['erupt-skill'] = wrap(
@@ -226,6 +238,64 @@
         Win(176, 22, 52, 76) +
         Ci(202, 52, 9, W, 'ap', 1.2) + Pth('M188 84 Q188 66 202 66 Q216 66 216 84 Z', W, 'ap', 1.3) +
         R(192, 86, 20, 10, G, 'ap', 1.6) + T(202, 94, '✓', 8)
+    );
+
+    // public link → landing card with a password box → a lone form, no admin layout
+    VIZ['erupt-share'] = wrap(
+        R(12, 44, 64, 32, Y, 'ap', .1) + T(44, 58, '/share/', 7) + T(44, 69, 'x7Kq', 7) +
+        L(76, 60, 100, 60, .3) + Dot(76, 60, 24, 0, .5) +
+        R(100, 30, 52, 60, W, 'ap', .4) + T(126, 44, 'TITLE', 7) + R(106, 52, 40, 12, K, 'ap', .6) + T(126, 61, '••••', 7) +
+        R(110, 70, 32, 12, C, 'ap', .7) + T(126, 79, 'open', 6) +
+        L(152, 60, 172, 60, .8) + Dot(152, 60, 20, 0, 1) +
+        Win(172, 18, 56, 84) +
+        [0, 1, 2].map(i => R(178, 38 + i * 16, 44, 10, K, 'ap', 1.1 + i * .1)).join('') +
+        R(178, 86, 26, 10, G, 'ap', 1.5) + T(191, 94, 'send', 6)
+    );
+
+    // a committed change → signed JSON POST → three receivers, a delivery log beneath
+    VIZ['erupt-webhook'] = wrap(
+        R(12, 30, 60, 60, W) + R(12, 30, 60, 14, C) +
+        [0, 1, 2].map(i => Ph(18, 54 + i * 12, 66, .1 + i * .1)).join('') + R(14, 64, 56, 12, Y, 'ap', .4, 'fill-opacity=".6"') +
+        R(84, 46, 48, 28, P, 'ap', .5) + T(108, 58, 'POST', 7) + T(108, 68, 'HMAC', 6) +
+        L(72, 60, 84, 60, .4) +
+        [0, 1, 2].map(i => L(132, 60, 172, 24 + i * 36, .7 + i * .1) + Dot(132, 60, 40, -36 + i * 36, .9 + i * .2)).join('') +
+        [0, 1, 2].map(i => R(172, 14 + i * 36, 56, 20, [G, G, F][i], 'ap', 1 + i * .15) + T(200, 28 + i * 36, ['200', '200', 'retry'][i], 7)).join('')
+    );
+
+    // profile tree (default / prod) → layered key/values → @Value bean refreshed live
+    VIZ['erupt-config'] = wrap(
+        R(12, 16, 56, 88, W) + T(40, 30, 'PROFILE', 6) +
+        R(18, 38, 44, 14, K, 'ap', .1) + T(40, 48, 'default', 6) +
+        R(24, 58, 38, 14, Y, 'ap', .25) + T(43, 68, 'prod', 6) +
+        R(80, 16, 82, 88, W) + R(80, 16, 82, 14, C) +
+        [['mail.host', 'smtp'], ['timeout', '30'], ['feature', 'on']].map((r, i) =>
+            T(84, 46 + i * 18, r[0], 6, I, 'start') + T(158, 46 + i * 18, r[1], 6, I, 'end') + Ph(84, 50 + i * 18, 158, .3 + i * .15)).join('') +
+        L(162, 60, 180, 60, .8) + Dot(162, 60, 18, 0, 1) +
+        R(180, 40, 48, 40, G, 'ap', 1.1) + T(204, 56, '@Value', 7) + T(204, 70, '↻ live', 6)
+    );
+
+    // a record's history: v1 → v2 → v3, a field diff, rollback arrow; a bin with a restored row
+    VIZ['erupt-revision'] = wrap(
+        Ln(28, 22, 28, 98) +
+        [['v3', Y], ['v2', W], ['v1', W]].map((v, i) =>
+            Ci(28, 30 + i * 30, 8, v[1], 'ap', .1 + i * .15) + T(28, 33 + i * 30, v[0], 6)).join('') +
+        R(46, 20, 108, 52, W, 'ap', .5) + T(52, 34, 'price', 7, I, 'start') +
+        R(52, 40, 38, 12, P, 'ap', .7, 'fill-opacity=".5"') + T(71, 49, '12.0', 6) +
+        T(98, 49, '→', 8) + R(106, 40, 42, 12, G, 'ap', .8) + T(127, 49, '15.0', 6) +
+        Pth('M150 64 Q160 84 140 84 L96 84', 'none', 'ad', 1) + T(118, 98, 'rollback', 6) +
+        R(172, 30, 56, 70, F, 'ap', 1.1) + T(200, 44, 'BIN', 7) +
+        R(178, 54, 44, 12, W, 'ap', 1.3) + R(178, 72, 44, 12, G, 'ap', 1.5) + T(200, 81, 'restore', 6)
+    );
+
+    // Finder columns: stores → folder → files, with a preview pane
+    VIZ['erupt-file-center'] = wrap(
+        Win(12, 12, 216, 96) +
+        R(12, 26, 54, 82, K) + [['Uploads', Y], ['S3', C], ['SFTP', V]].map((s, i) =>
+            R(16, 32 + i * 20, 46, 14, s[1], 'ap', .1 + i * .12) + T(39, 42 + i * 20, s[0], 6)).join('') +
+        Ln(66, 26, 66, 108) + [0, 1, 2, 3].map(i => R(70, 32 + i * 16, 50, 10, i === 1 ? Y : W, 'ap', .5 + i * .1)).join('') +
+        Ln(124, 26, 124, 108) + [0, 1, 2].map(i => Ph(130, 38 + i * 14, 168, .9 + i * .1)).join('') +
+        Ln(172, 26, 172, 108) + R(178, 34, 44, 34, G, 'ap', 1.3) + Pth('M182 64 L194 50 L204 60 L210 54 L218 64 Z', W, 'ap', 1.5) +
+        Ph(178, 80, 218, 1.6) + Ph(178, 92, 206, 1.7)
     );
 
     VIZ['erupt-notice'] = wrap(

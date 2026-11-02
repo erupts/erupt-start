@@ -1575,7 +1575,7 @@
 <script>
     const {createApp, reactive, ref, computed, watch, onMounted} = Vue;
 
-    const ERUPT_VER = '2.3.0';
+    const ERUPT_VER = '2.4.0';
     const BOOT_VER = '3.5.16';
 
     const LANG = {
@@ -1672,9 +1672,15 @@
         {id: 'erupt-ai-rag', ai: true, name: 'AI RAG', icon: '📚', desc: 'Knowledge base with semantic retrieval — 11 embedding providers, Qdrant / Milvus vector stores', descZh: '知识库 / RAG 语义检索 — 支持 11 家向量模型，Qdrant / Milvus 向量库', requires: 'erupt-ai', tag: 'NEW'},
         {id: 'erupt-ai-staff', ai: true, name: 'AI Staff', icon: '🧑‍💼', desc: 'Digital AI employees — duties, cron schedules, work reports, IM channels', descZh: 'AI 数字员工 — 职责设定、定时执行、工作汇报、IM 通道', requires: 'erupt-ai-claw', tag: 'NEW'},
         {id: 'erupt-ai-decision', ai: true, name: 'AI Decision', icon: '🔀', desc: 'Typed, probability-backed judgements code can branch on — yes/no, choice, score', descZh: 'AI 决策 — 是否 / 选项 / 评分三类带概率的类型化判断，代码直接分支', tag: 'NEW'},
+        {id: 'erupt-ai-dev', ai: true, name: 'AI Dev', icon: '🛠️', desc: 'AI software delivery — a requirement pool run by coding CLIs (Claude Code, Codex…), reviewed and pushed', descZh: 'AI 软件交付 — 需求池交给编码 CLI（Claude Code、Codex…）自动开发，评审验收后推送', requires: 'erupt-ai', tag: 'NEW'},
         {id: 'erupt-skill', ai: true, name: 'AI Skill', icon: '⚡', desc: 'Describe your system in one sentence — an AI agent builds the whole Erupt app, no code', descZh: '一句话描述系统，AI 智能体直接生成完整 Erupt 应用，零代码', tag: 'SKILL', link: 'https://skill.erupt.xyz/'},
         {id: 'erupt-comment', name: 'Comment', icon: '💬', desc: 'Comment stream on any record — @mentions, pinned / resolved threads', descZh: '记录评论 — 任意记录可评论，@提及通知、置顶与已解决', requires: 'erupt-notice', tag: 'NEW'},
         {id: 'erupt-sso', name: 'SSO', icon: '🔑', desc: 'OAuth2 / OIDC single sign-on — Keycloak, Authing, GitHub, Feishu…', descZh: '单点登录 — OAuth2 / OIDC，Keycloak、Authing、GitHub、飞书…', tag: 'NEW'},
+        {id: 'erupt-share', name: 'Share', icon: '🔗', desc: 'Public links to a form or any menu page — expiry, visit cap, password', descZh: '公开链接 — 对外开放表单或任意菜单页面，可过期、限次、设密码', tag: 'NEW'},
+        {id: 'erupt-webhook', name: 'Webhook', icon: '📮', desc: 'POST add / update / delete events to external URLs, HMAC-signed with retries', descZh: '数据事件推送 — 新增 / 修改 / 删除推送到外部 URL，HMAC 签名与重试', tag: 'NEW'},
+        {id: 'erupt-config', name: 'Config', icon: '🎛️', desc: 'Runtime settings per Spring profile, applied without a restart', descZh: '运行时配置 — 按 Spring Profile 分层，保存即生效无需重启', tag: 'NEW'},
+        {id: 'erupt-revision', name: 'Revision', icon: '🕘', desc: 'Field-level record history with rollback and a recycle bin', descZh: '记录历史 — 字段级变更、回滚与回收站', tag: 'NEW'},
+        {id: 'erupt-file-center', name: 'File Center', icon: '🗄️', desc: 'Finder-style file browser over uploads, local folders, S3 and SFTP', descZh: '文件中心 — Finder 式浏览上传目录、本地文件夹、S3 与 SFTP', tag: 'NEW'},
         {id: 'erupt-designer', name: 'Designer', icon: '✏️', desc: 'Visual form designer — drag-and-drop entity models at runtime, publish without restart', descZh: '可视化表单设计器 — 运行时拖拽设计实体模型，无需重启发布'},
         {id: 'erupt-atlas', name: 'Atlas', icon: '🕸️', desc: 'Live model relation graph with structural audit — dependency cycles, shared tables, orphans, permission drift', descZh: '模型关系图谱与结构审计 — 依赖环、共享表、孤立模型、权限漂移', tag: 'NEW'},
 

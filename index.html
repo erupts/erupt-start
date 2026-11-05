@@ -13,44 +13,34 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     <script src="viz.js"></script>
+    <script src="nodes.js"></script>
     <style>
         /* ══════════════════════════════════════════════
-           ERUPT RAFT · start.erupt.xyz
-           neo-brutalism × 手作纸感
-           warm ink · cream paper · hard offset shadows ·
-           zero radius · cyan accent · pink primary CTA ·
-           sticker rotations · window chrome
+           start.erupt.xyz · same Playful-Brutalist language as erupt.xyz
+           white paper · ink lines · cyan primary · hard shadows · zero radius
+           layout: bounded 1200px frame · steps on the left · live project panel on the right
            ══════════════════════════════════════════════ */
 
         :root {
-            /* neutrals — doris paper + ink */
-            --ink: #0F1A14;
-            --bg: #F5EFE4;
+            --ink: #14120B;
+            --bg: #FFFFFF;
             --paper: #FFFFFF;
             --card: #FFFFFF;
             --muted: #5C5647;
-            --faint: #D9D2C2;
-            /* accents */
+            --faint: #E4DED0;
             --cyan: #4FC8EC;
             --accent: #4FC8EC;
-            --pink: #FF8FA3;   /* doris syntax red-pink */
-            --yellow: #FFD23F; /* doris signature yellow */
-            --green: #98D9A0;  /* doris syntax green */
-            --purple: #C7B5FF; /* doris syntax purple */
-            --code-bg: #0F1A14;
-            --code-fg: #D8DCD0;
-            /* doris brand green — merged header + hero band */
-            --night: #06805F;
-            --night-2: #054C39;
-            --night-line: rgba(245, 239, 228, .18);
-            --night-ink: #FAF6EE;
-            --night-muted: rgba(250, 246, 238, .72);
+            --pink: #FF8FA3;
+            --yellow: #FCE566;
+            --green: #93D655;
+            --purple: #BCA0F2;
+            --code-bg: #1A170F;
+            --code-fg: #F0E8D6;
             --bw: 2px;
             --shadow: 4px 4px 0 var(--ink);
             --shadow-lg: 6px 6px 0 var(--ink);
             --sans: -apple-system, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
             --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-            /* Element Plus */
             --el-color-primary: #1093C6;
             --el-color-primary-light-3: #4FC8EC;
             --el-color-primary-light-5: #A7E4F6;
@@ -64,673 +54,123 @@
         }
 
         *, *::before, *::after { box-sizing: border-box; }
-
-        ::selection { background: var(--ink); color: var(--bg); }
-
-        body {
-            margin: 0;
-            font-family: var(--sans);
-            background: var(--bg);
-            color: var(--ink);
-            font-size: 14px;
-            line-height: 1.6;
-            -webkit-font-smoothing: antialiased;
-            min-height: 100vh;
-        }
-
-        /* faint corkboard dot texture */
-        body::before {
-            content: '';
-            position: fixed;
-            inset: 0;
-            z-index: -1;
-            background-image: radial-gradient(var(--faint) 1px, transparent 1px);
-            background-size: 26px 26px;
-            opacity: .45;
-            pointer-events: none;
-        }
-
-        /* ══ Nav + Hero band — unified dark-green surface (doris grammar) ═══ */
-        .band {
-            background: var(--night);
-            border-bottom: var(--bw) solid var(--ink);
-            position: relative;
-        }
-
-        /* faint dotted texture inside the band, replaces global body texture here */
-        .band::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background-image: radial-gradient(rgba(255, 255, 255, .06) 1px, transparent 1px);
-            background-size: 22px 22px;
-            pointer-events: none;
-        }
-
-        .topbar {
-            position: sticky;
-            top: 0;
-            z-index: 200;
-            background: var(--night);
-            border-bottom: 1px solid var(--night-line);
-        }
-
-        .nav {
-            max-width: 1180px;
-            margin: 0 auto;
-            padding: 12px 24px;
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            position: relative;
-        }
-
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            text-decoration: none;
-            color: var(--night-ink);
-            transition: transform .12s ease;
-        }
-
-        .brand:hover { transform: translateY(-1px); }
-
-        .brand img {
-            width: 34px;
-            height: 34px;
-        }
-
-        .brand-name {
-            display: block;
-            font-size: 18px;
-            font-weight: 900;
-            letter-spacing: -.02em;
-            color: var(--night-ink);
-        }
-
-        .brand-name b {
-            font-weight: 900;
-            background: var(--yellow);
-            color: var(--ink);
-            box-shadow: 2px 2px 0 var(--ink);
-            padding: 0 4px;
-            margin-left: 1px;
-            border: 2px solid var(--ink);
-        }
-
-        .brand-sub {
-            display: block;
-            font-family: var(--mono);
-            font-size: 9px;
-            font-weight: 700;
-            letter-spacing: .16em;
-            text-transform: uppercase;
-            color: var(--night-muted);
-            margin-top: 4px;
-        }
-
-        .nav-links {
-            margin-left: auto;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .nav-links a {
-            color: var(--night-ink);
-            text-decoration: none;
-            font-size: 13px;
-            font-weight: 700;
-            padding-bottom: 3px;
-            border-bottom: 2.5px solid transparent;
-        }
-
-        .nav-links a:not(.gh):hover {
-            border-bottom-color: var(--yellow);
-        }
-
-        /* GitHub chip */
-        .nav-links .gh {
-            display: inline-flex;
-            align-items: center;
-            gap: 7px;
-            font-family: var(--mono);
-            font-size: 12px;
-            font-weight: 700;
-            padding: 6px 11px;
-            border: var(--bw) solid var(--ink);
-            background: var(--yellow);
-            color: var(--ink);
-            box-shadow: 2px 2px 0 var(--ink);
-            transition: transform .12s ease, box-shadow .12s ease;
-        }
-
-        .nav-links .gh:hover {
-            transform: translate(-1px, -1px);
-            box-shadow: 3px 3px 0 var(--ink);
-        }
-
-        .nav-links .gh:active { transform: translate(1px, 1px); box-shadow: 1px 1px 0 var(--ink); }
-
-        .nav-links .gh svg { width: 14px; height: 14px; display: block; }
-
-        .nav-links .skill { background: var(--cyan); }
-        .nav-links .site  { background: var(--green); }
-        .nav-links .doc   { background: var(--pink); }
-
-        .lang-btn {
-            font-family: var(--mono);
-            font-size: 12px;
-            font-weight: 700;
-            border: var(--bw) solid var(--ink);
-            background: var(--night);
-            color: var(--night-ink);
-            padding: 5px 9px;
-            cursor: pointer;
-            box-shadow: 2px 2px 0 var(--ink);
-            transition: transform .12s, box-shadow .12s;
-        }
-
-        .lang-btn:hover { transform: translate(-1px, -1px); box-shadow: 3px 3px 0 var(--ink); background: var(--night-2); }
-        .lang-btn:active { transform: translate(1px, 1px); box-shadow: 1px 1px 0 var(--ink); }
-
-        /* ══ Page ══════════════════════════════ */
-        .page {
-            max-width: 1180px;
-            margin: 0 auto;
-            padding: 44px 24px 150px;
-            display: flex;
-            flex-direction: column;
-            gap: 34px;
-        }
-
-        /* hero sits inside the dark band, with its own inner container */
-        .band-inner {
-            max-width: 1180px;
-            margin: 0 auto;
-            padding: 48px 24px 64px;
-            position: relative;
-        }
-
-        /* ══ Buttons ═══════════════════════════ */
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            font-family: var(--sans);
-            font-size: 14px;
-            font-weight: 800;
-            color: var(--ink);
-            background: var(--paper);
-            border: var(--bw) solid var(--ink);
-            box-shadow: var(--shadow);
-            padding: 11px 22px;
-            cursor: pointer;
-            text-decoration: none;
-            transition: transform .15s ease, box-shadow .15s ease;
-        }
-
-        .btn:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--ink); }
-        .btn:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--ink); }
-
-        .btn-primary { background: var(--pink); }
-
-        /* ══ Hero — doris grammar: two-column, left copy · right code editor ══ */
-        .hero {
-            display: grid;
-            grid-template-columns: 1fr 1.15fr;
-            gap: 56px;
-            align-items: center;
-            position: relative;
-        }
-
-        .hero-left { min-width: 0; }
-
-        /* eyebrow pill */
-        .hero-eyebrow {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            font-family: var(--mono);
-            font-size: 11px;
-            font-weight: 800;
-            letter-spacing: .18em;
-            text-transform: uppercase;
-            color: var(--ink);
-            background: var(--yellow);
-            border: 2px solid var(--ink);
-            box-shadow: 3px 3px 0 var(--ink);
-            padding: 5px 13px;
-            margin: 0 0 22px;
-        }
-
-        .hero-eyebrow .dot {
-            width: 8px;
-            height: 8px;
-            background: var(--pink);
-            border: 2px solid var(--ink);
-        }
-
-        /* big bold headline on dark green background */
-        .hero-title {
-            font-size: clamp(40px, 5.2vw, 68px);
-            font-weight: 900;
-            line-height: 1.05;
-            letter-spacing: -.02em;
-            color: var(--night-ink);
-            margin: 0 0 22px;
-            text-transform: uppercase;
-        }
-
-        /* doris title emphasis — just color the text, no boxes */
-        .hero-title .hl {
-            color: var(--yellow);
-        }
-
-        .hero-title .hl-pink { color: var(--pink); }
-        .hero-title .hl-yellow { color: var(--yellow); }
-        .hero-title .hl-cyan { color: var(--cyan); }
-
-        .lead {
-            font-size: 16px;
-            color: var(--night-muted);
-            max-width: 520px;
-            margin: 0 0 28px;
-            line-height: 1.6;
-        }
-
-        .hero-actions {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-            margin: 0 0 22px;
-        }
-
-        .chips {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .chip {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            font-family: var(--mono);
-            font-size: 11.5px;
-            font-weight: 700;
-            border: var(--bw) solid var(--ink);
-            background: var(--night-2);
-            color: var(--night-ink);
-            box-shadow: 3px 3px 0 var(--ink);
-            padding: 6px 12px;
-        }
-
-        .chip .dot {
-            width: 9px;
-            height: 9px;
-            background: var(--yellow);
-            border: 2px solid var(--ink);
-            flex-shrink: 0;
-        }
-
-        /* ── right column: single dark code editor card, doris-style ── */
-        .hero-code {
-            position: relative;
-            background: var(--code-bg);
-            border: var(--bw) solid var(--ink);
-            box-shadow: 8px 8px 0 var(--ink);
-            min-width: 0;
-        }
-
-        .hc-bar {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 10px 14px;
-            background: #0F0D08;
-            border-bottom: var(--bw) solid var(--ink);
-        }
-
-        .hc-bar .tl {
-            width: 11px;
-            height: 11px;
-            border-radius: 50%;
-            border: 2px solid var(--ink);
-        }
-
-        .hc-file {
-            margin-left: 6px;
-            font-family: var(--mono);
-            font-size: 12px;
-            font-weight: 700;
-            color: #b8ae97;
-        }
-
-        .hc-run {
-            margin-left: auto;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            font-family: var(--mono);
-            font-size: 11.5px;
-            font-weight: 800;
-            letter-spacing: .06em;
-            text-transform: uppercase;
-            color: var(--ink);
-            background: var(--yellow);
-            border: 2px solid var(--ink);
-            box-shadow: 2px 2px 0 var(--ink);
-            padding: 3px 10px;
-            cursor: pointer;
-        }
-
-        .hc-body {
-            margin: 0;
-            padding: 18px 20px 20px;
-            font-family: var(--mono);
-            font-size: 13px;
-            line-height: 1.75;
-            color: var(--code-fg);
-            overflow: hidden;
-            white-space: pre;
-        }
-
-        .hc-body .ln {
-            display: inline-block;
-            width: 20px;
-            margin-right: 14px;
-            color: #524a3a;
-            font-weight: 700;
-            user-select: none;
-            text-align: right;
-        }
-
-        .hc-body .anno { color: var(--pink); font-weight: 700; }
-        .hc-body .kw   { color: var(--cyan); font-weight: 700; }
-        .hc-body .ty   { color: var(--yellow); font-weight: 700; }
-        .hc-body .str  { color: var(--green); font-weight: 700; }
-        .hc-body .cm   { color: #7d7565; font-style: italic; }
-
-        /* preserve legacy .win-bar reset for downstream .win elsewhere (none in hero) */
-        .win-bar {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 10px 14px;
-            background: var(--paper);
-            border-bottom: var(--bw) solid var(--ink);
-        }
-
-        .win-bar .tl {
-            width: 11px;
-            height: 11px;
-            border-radius: 50%;
-            border: 2px solid var(--ink);
-        }
-
-        .tl-pink { background: var(--pink); }
-        .tl-cyan { background: var(--cyan); }
-        .tl-green { background: var(--green); }
-
-        .win-file {
-            margin-left: auto;
-            font-family: var(--mono);
-            font-size: 11.5px;
-            font-weight: 700;
-            color: var(--muted);
-        }
-
-        .win-body {
-            margin: 0;
-            padding: 16px 18px;
-            background: var(--code-bg);
-            font-family: var(--mono);
-            font-size: 12px;
-            line-height: 1.7;
-            color: var(--code-fg);
-            overflow-x: auto;
-        }
-
-        .win-body .anno { color: var(--pink); font-weight: 700; }
-        .win-body .kw   { color: var(--cyan); font-weight: 700; }
-        .win-body .str  { color: var(--green); font-weight: 700; }
-        .win-body .cm   { color: #7d7565; }
-
-        /* ── project tree (hero preview) ── */
-        .win-body .tr-dir   { color: var(--cyan);  font-weight: 700; }
-        .win-body .tr-java  { color: var(--pink);  font-weight: 700; }
-        .win-body .tr-cfg   { color: var(--green); font-weight: 700; }
-        .win-body .tr-file  { color: #b8ae97; }
-        .win-body .tr-line  { color: #6a6350; }
-        /* ── admin-ui wireframe (no longer used in hero — kept in case referenced) ── */
-        .ui-bar {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 12px;
-        }
-
-        .ui-title { font-size: 13px; font-weight: 800; margin-right: auto; }
-
-        .ui-btn {
-            font-family: var(--mono);
-            font-size: 10px;
-            font-weight: 700;
-            color: var(--muted);
-            border: 2px solid var(--ink);
-            padding: 3px 10px;
-        }
-
-        .ui-btn-acc { color: var(--ink); background: var(--pink); }
-
-        .ui-row {
-            display: grid;
-            grid-template-columns: 22px 1.2fr .9fr 1fr;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 2px;
-            border-top: 1px solid var(--faint);
-        }
-
-        .ui-head {
-            border-top: 2px solid var(--ink);
-            font-family: var(--mono);
-            font-size: 10.5px;
-            font-weight: 700;
-            letter-spacing: .05em;
-            color: var(--muted);
-        }
-
-        .ui-cb { width: 10px; height: 10px; border: 2px solid var(--faint); }
-
-        .ui-line { display: inline-block; height: 7px; background: var(--faint); }
-
-        .ui-pill {
-            display: inline-block;
-            width: 30px;
-            height: 13px;
-            background: var(--green);
-            border: 2px solid var(--ink);
-        }
-
-        .ui-pill.off { background: var(--faint); }
-
-        /* ══ Card ══════════════════════════════ */
-        .card {
-            background: var(--card);
-            border: var(--bw) solid var(--ink);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .card-head {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 14px 24px;
-            border-bottom: var(--bw) solid var(--ink);
-        }
-
-        /* numbered step sticker */
-        .step-no {
-            font-family: var(--mono);
-            font-size: 11px;
-            font-weight: 800;
-            border: 2px solid var(--ink);
-            box-shadow: 2px 2px 0 var(--ink);
-            padding: 2px 8px;
-            transform: rotate(-2deg);
-            flex-shrink: 0;
-        }
-
-        .step-no.n1 { background: var(--cyan); }
-        .step-no.n2 { background: var(--green); }
-        .step-no.n3 { background: var(--purple); }
-
-        .card-title {
-            font-family: var(--mono);
-            font-size: 12.5px;
-            font-weight: 800;
-            letter-spacing: .16em;
-            text-transform: uppercase;
-        }
-
-        .card-hint {
-            font-family: var(--mono);
-            font-size: 11px;
-            font-weight: 500;
-            color: var(--muted);
-            letter-spacing: .04em;
-        }
-
-        .card-body { padding: 26px 24px; }
+        ::selection { background: var(--ink); color: #fff; }
+        body { margin: 0; font-family: var(--sans); background: var(--bg); color: var(--ink); font-size: 14px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+        a { color: inherit; }
+
+        /* ══ Header ════════════════════════════ */
+        .hdr { position: sticky; top: 0; z-index: 50; background: #fff; border-bottom: var(--bw) solid var(--ink); }
+        .hdr-in { max-width: 1200px; height: 56px; margin: 0 auto; display: flex; align-items: center; gap: 14px; padding: 0 24px; border-left: var(--bw) solid var(--ink); border-right: var(--bw) solid var(--ink); }
+        .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        .brand img { width: 28px; height: 28px; }
+        .brand-name { font-size: 18px; font-weight: 800; letter-spacing: -.02em; }
+        .brand-tag { padding: 1px 7px; background: var(--cyan); border: 1.5px solid var(--ink); box-shadow: 2px 2px 0 var(--ink); font-family: var(--mono); font-size: 10px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; transform: rotate(-2deg); }
+        .hdr-nav { margin-left: auto; display: flex; align-items: center; gap: 4px; }
+        .hdr-nav a { padding: 6px 10px; font-size: 13px; font-weight: 600; text-decoration: none; color: var(--muted); }
+        .hdr-nav a:hover { color: var(--ink); background: rgba(79, 200, 236, .12); }
+        .lang-btn { margin-left: 8px; padding: 4px 10px; border: var(--bw) solid var(--ink); background: #fff; font-family: var(--mono); font-size: 11px; font-weight: 800; cursor: pointer; box-shadow: 2px 2px 0 var(--ink); }
+
+        /* ══ Frame ═════════════════════════════ */
+        .frame { max-width: 1200px; margin: 0 auto; border-left: var(--bw) solid var(--ink); border-right: var(--bw) solid var(--ink); border-bottom: var(--bw) solid var(--ink); }
+        .g-bg { background-image: linear-gradient(rgba(20, 18, 11, .05) 1px, transparent 1px), linear-gradient(90deg, rgba(20, 18, 11, .05) 1px, transparent 1px); background-size: 32px 32px; }
+        .intro { display: flex; align-items: flex-end; justify-content: space-between; gap: 32px; padding: 44px 40px 38px; border-bottom: var(--bw) solid var(--ink); }
+        .intro-eyebrow { display: inline-block; padding: 3px 9px; background: var(--cyan); border: var(--bw) solid var(--ink); box-shadow: 3px 3px 0 var(--ink); font-family: var(--mono); font-size: 11px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; transform: rotate(-1deg); }
+        .intro h1 { margin: 18px 0 10px; font-size: clamp(30px, 4vw, 46px); font-weight: 900; line-height: 1.08; letter-spacing: -.03em; }
+        .intro h1 .hl { box-shadow: inset 0 -.38em 0 var(--cyan); padding: 0 4px; }
+        .intro p { margin: 0; max-width: 62ch; font-size: 15px; color: var(--muted); }
+        .intro-stats { display: flex; flex-shrink: 0; border: var(--bw) solid var(--ink); box-shadow: var(--shadow); background: #fff; }
+        .intro-stats div { padding: 10px 16px; border-right: 1px solid var(--ink); }
+        .intro-stats div:last-child { border-right: none; }
+        .intro-stats b { display: block; font-family: var(--mono); font-size: 20px; font-weight: 800; line-height: 1.1; }
+        .intro-stats span { font-family: var(--mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
+
+        /* ══ Workspace: steps · live panel ═════ */
+        .work { display: grid; grid-template-columns: minmax(0, 1fr) 340px; }
+        .steps { min-width: 0; border-right: var(--bw) solid var(--ink); }
+        .step { border-bottom: var(--bw) solid var(--ink); }
+        .step:last-child { border-bottom: none; }
+        .step-hd { display: flex; align-items: center; gap: 12px; padding: 14px 28px; border-bottom: 1px solid var(--ink); background: rgba(79, 200, 236, .06); }
+        .step-no { width: 28px; height: 24px; display: inline-flex; align-items: center; justify-content: center; background: var(--ink); color: #fff; font-family: var(--mono); font-size: 11px; font-weight: 800; }
+        .step-title { font-family: var(--mono); font-size: 12.5px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
+        .step-hint { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+        .step-link { margin-left: auto; font-family: var(--mono); font-size: 11px; font-weight: 700; text-decoration: none; }
+        .step-link:hover { text-decoration: underline; }
+        .step-bd { padding: 24px 28px 28px; }
 
         /* ══ Grid + fields ═════════════════════ */
-        .grid { display: grid; gap: 22px; }
+        .grid { display: grid; gap: 18px 20px; }
         .grid-2 { grid-template-columns: repeat(2, 1fr); }
         .grid-3 { grid-template-columns: repeat(3, 1fr); }
         .grid-4 { grid-template-columns: repeat(4, 1fr); }
-        .grid-5 { grid-template-columns: repeat(5, 1fr); }
-        .grid + .grid { margin-top: 22px; }
-
-        .field-label {
-            font-family: var(--mono);
-            font-size: 10px;
-            font-weight: 700;
-            letter-spacing: .14em;
-            text-transform: uppercase;
-            color: var(--ink);
-            margin-bottom: 10px;
-        }
-
-        .color-field {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .color-field input[type=color] {
-            width: 46px;
-            height: 36px;
-            border: var(--bw) solid var(--ink);
-            padding: 0;
-            background: none;
-            cursor: pointer;
-        }
-
+        .grid + .grid { margin-top: 18px; }
+        .field-label { font-family: var(--mono); font-size: 10px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; margin-bottom: 8px; }
+        .color-field { display: flex; align-items: center; gap: 10px; }
+        .color-field input[type=color] { width: 46px; height: 34px; border: var(--bw) solid var(--ink); padding: 0; background: none; cursor: pointer; }
         .color-val { font-family: var(--mono); font-size: 13px; }
 
+        /* ══ Choice tiles (project type, language) ══ */
+        .kinds { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+        .kind { display: flex; gap: 14px; align-items: flex-start; padding: 14px 16px; border: var(--bw) solid var(--ink); background: #fff; cursor: pointer; user-select: none; transition: transform .12s, box-shadow .12s, background .1s; }
+        .kind:hover { transform: translate(-2px, -2px); box-shadow: var(--shadow); }
+        .kind.on { background: var(--cyan); box-shadow: var(--shadow); }
+        .kind-ico { width: 36px; height: 36px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 17px; border: var(--bw) solid var(--ink); background: #fff; }
+        .kind-name { font-size: 14px; font-weight: 800; }
+        .kind-desc { margin-top: 3px; font-size: 12.5px; color: var(--muted); line-height: 1.5; }
+        .kind.on .kind-desc { color: rgba(20, 18, 11, .78); }
+        .fws { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 14px; padding: 12px 14px; border: 1.5px dashed rgba(20, 18, 11, .35); background: #F6FBEF; }
+        .fws-label { margin-right: 4px; font-family: var(--mono); font-size: 10px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+        .fw { display: inline-flex; flex-direction: column; align-items: flex-start; padding: 5px 10px; border: 1.5px solid var(--ink); background: #fff; cursor: pointer; font-size: 12.5px; font-weight: 800; line-height: 1.2; box-shadow: 2px 2px 0 var(--ink); transition: transform .12s, box-shadow .12s; }
+        .fw small { font-family: var(--mono); font-size: 9.5px; font-weight: 500; color: var(--muted); }
+        .fw:hover { transform: translate(-1px, -1px); box-shadow: 3px 3px 0 var(--ink); }
+        .fw.on { background: var(--green); box-shadow: 3px 3px 0 var(--ink); }
+        .fw.on small { color: var(--ink); }
+        .langs { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-top: 16px; }
+        .lang { display: flex; align-items: center; gap: 9px; padding: 8px 9px; border: 1.5px solid var(--ink); background: #fff; cursor: pointer; user-select: none; transition: transform .12s, box-shadow .12s; }
+        .lang:hover { transform: translate(-1px, -1px); box-shadow: 2px 2px 0 var(--ink); }
+        .lang.on { background: var(--cyan); box-shadow: 3px 3px 0 var(--ink); }
+        .lang-ava { width: 28px; height: 28px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-family: var(--mono); font-size: 10px; font-weight: 800; border: 1.5px solid var(--ink); }
+        .lang-name { font-size: 12px; font-weight: 800; line-height: 1.2; }
+        .lang-req { font-family: var(--mono); font-size: 10px; color: var(--muted); }
+        .lang.on .lang-req { color: var(--ink); }
+
         /* ══ Modules ═══════════════════════════ */
-        .mods {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 14px;
-        }
-
-        .mod {
-            position: relative;
-            border: var(--bw) solid var(--ink);
-            background: var(--paper);
-            box-shadow: 3px 3px 0 var(--ink);
-            padding: 14px 14px 16px;
-            cursor: pointer;
-            user-select: none;
-            transition: transform .15s ease, box-shadow .15s ease, background .1s;
-        }
-
-        .mod:hover { transform: translate(-2px, -2px); box-shadow: 5px 5px 0 var(--ink); background: #EDFAFD; }
-        .mod:active { transform: translate(1px, 1px); box-shadow: 1px 1px 0 var(--ink); }
-
-        .mod.on { background: var(--cyan); }
-        .mod.on:hover { background: var(--cyan); }
-
-        .mod.on::after {
-            content: '✓';
-            position: absolute;
-            top: -2px;
-            right: -2px;
-            width: 22px;
-            height: 22px;
-            background: var(--ink);
-            color: var(--bg);
-            font-size: 12px;
-            font-weight: 700;
-            line-height: 22px;
-            text-align: center;
-        }
-
-        /* emoji in a candy sticker tile — column-cycled colors */
-        .mod-icon {
-            width: 32px;
-            height: 32px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 17px;
-            line-height: 1;
-            background: var(--paper);
-            border: 2px solid var(--ink);
-            box-shadow: 2px 2px 0 var(--ink);
-            margin-bottom: 12px;
-        }
-
-        .mods .mod:nth-child(4n+1) .mod-icon { background: var(--cyan); }
-        .mods .mod:nth-child(4n+2) .mod-icon { background: var(--green); }
-        .mods .mod:nth-child(4n+3) .mod-icon { background: var(--purple); }
-        .mods .mod:nth-child(4n+4) .mod-icon { background: var(--pink); }
-        .mod.on .mod-icon { background: var(--paper) !important; }
-
-        .mod-name {
-            font-size: 13px;
-            font-weight: 800;
-            letter-spacing: .01em;
-            text-transform: uppercase;
-            margin-bottom: 5px;
-        }
-
-        .mod-desc { font-size: 12px; color: var(--muted); line-height: 1.5; }
-        .mod.on .mod-desc { color: rgba(20, 18, 11, .72); }
-
-        .mod-tag {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            font-family: var(--mono);
-            font-size: 9px;
-            font-weight: 700;
-            letter-spacing: .08em;
-            text-transform: uppercase;
-            border: 2px solid var(--ink);
-            background: var(--paper);
-            padding: 1px 6px;
-        }
-
-        .mod-tag.mod-tag-pro { background: var(--ink); color: var(--bg); }
+        .mod-bar { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
+        .mod-tabs { display: flex; border: var(--bw) solid var(--ink); }
+        .mod-tab { padding: 6px 11px; border: none; border-right: 1px solid var(--ink); background: #fff; font-family: var(--mono); font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; cursor: pointer; }
+        .mod-tab:last-child { border-right: none; }
+        .mod-tab i { font-style: normal; margin-left: 6px; color: var(--muted); }
+        .mod-tab.on { background: var(--ink); color: #fff; }
+        .mod-tab.on i { color: var(--cyan); }
+        .mod-search { margin-left: auto; width: 220px; padding: 7px 10px; border: var(--bw) solid var(--ink); font-family: var(--mono); font-size: 12px; outline: none; }
+        .mod-search:focus { box-shadow: 3px 3px 0 var(--cyan); }
+        .mods { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+        .mod { position: relative; display: grid; grid-template-columns: 28px 1fr; column-gap: 10px; align-items: center; padding: 8px 10px; border: 1.5px solid var(--ink); background: #fff; cursor: pointer; user-select: none; transition: transform .12s, box-shadow .12s, background .1s; }
+        .mod:hover { z-index: 5; transform: translate(-1px, -1px); box-shadow: 3px 3px 0 var(--ink); }
+        .mod.on { background: var(--cyan); box-shadow: 3px 3px 0 var(--ink); }
+        .mod.pro { background: #FFF9DA; }
+        .mod.pro.on { background: var(--yellow); }
+        .mod-icon { grid-row: span 2; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; font-size: 14px; border: 1.5px solid var(--ink); background: #fff; }
+        .mod-name { font-size: 12px; font-weight: 800; padding-right: 30px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .mod-desc { font-size: 11px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .mod.on .mod-desc { color: rgba(20, 18, 11, .75); padding-right: 20px; }
+        .mod-tag { position: absolute; top: 6px; right: 6px; padding: 0 4px; border: 1.5px solid var(--ink); background: #fff; font-family: var(--mono); font-size: 8px; font-weight: 800; letter-spacing: .06em; }
+        .mod-tag.mod-tag-pro { background: var(--ink); color: #fff; }
+        .mod.on::after { content: '✓'; position: absolute; right: 6px; bottom: 6px; width: 16px; height: 16px; background: var(--ink); color: #fff; font-size: 10px; line-height: 16px; text-align: center; }
         .mod.link .mod-name::after { content: ' ↗'; font-weight: 800; }
         .mod.link .mod-tag { background: var(--yellow); }
         .mod.link:hover { background: #FFF6D6; }
-        .mod.on .mod-tag { right: 28px; }
+        .mods-grp { display: flex; align-items: center; gap: 10px; margin: 22px 0 10px; }
+        .mods-grp:first-of-type { margin-top: 0; }
+        .mods-grp span { padding: 1px 8px; border: 1.5px solid var(--ink); box-shadow: 2px 2px 0 var(--ink); font-family: var(--mono); font-size: 10.5px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
+        .mods-grp .mg-ai { background: var(--purple); }
+        .mods-grp .mg-plugin { background: var(--cyan); }
+        .mods-grp .mg-data { background: var(--green); }
+        .mods-grp .mg-pro { background: var(--yellow); }
+        .mods-grp i { font-style: normal; font-size: 12px; color: var(--muted); }
+        .mods-grp b { margin-left: auto; font-family: var(--mono); font-size: 11px; color: var(--muted); font-weight: 600; }
+        .mods-grp::after { content: ""; order: 2; flex: 1; border-top: 1px dashed rgba(20, 18, 11, .25); }
+        .mods-grp b { order: 3; margin-left: 0; }
+        .mods-empty { padding: 20px; text-align: center; font-family: var(--mono); font-size: 12px; color: var(--muted); border: 2px dashed var(--faint); }
 
         /* ── hover sketch: a sticker that pops up above the card with a tiny animated SVG ── */
         .mod:hover { z-index: 5; }
@@ -796,185 +236,56 @@
         @keyframes vz-type { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
         @keyframes vz-slide { from { transform: translate(var(--fx, 0px), var(--fy, 0px)); opacity: var(--fo, 1); } to { transform: translate(0, 0); opacity: 1; } }
 
-        /* inline action button on a module card */
-        .mod-action {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            margin-top: 12px;
-            font-family: var(--mono);
-            font-size: 10.5px;
-            font-weight: 700;
-            letter-spacing: .04em;
-            color: var(--ink);
-            background: var(--paper);
-            border: 2px solid var(--ink);
-            box-shadow: 2px 2px 0 var(--ink);
-            padding: 4px 10px;
-            cursor: pointer;
-            transition: transform .15s ease, box-shadow .15s ease;
-        }
 
-        .mod-action:hover { transform: translate(-1px, -1px); box-shadow: 3px 3px 0 var(--ink); }
-        .mod-action:active { transform: translate(1px, 1px); box-shadow: 1px 1px 0 var(--ink); }
+        /* ══ Ready-made apps ═══════════════════ */
+        .apps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        .app { display: flex; gap: 10px; padding: 11px 12px; border: 1.5px solid var(--ink); background: #fff; text-decoration: none; transition: transform .12s, box-shadow .12s, background .1s; }
+        .app:hover { transform: translate(-2px, -2px); box-shadow: var(--shadow); background: #F2FBFE; }
+        .app-ico { width: 30px; height: 30px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 15px; border: 1.5px solid var(--ink); }
+        .apps .app:nth-child(3n+1) .app-ico { background: var(--cyan); }
+        .apps .app:nth-child(3n+2) .app-ico { background: var(--green); }
+        .apps .app:nth-child(3n) .app-ico { background: var(--purple); }
+        .app-txt { min-width: 0; display: flex; flex-direction: column; }
+        .app-txt b { font-size: 13px; font-weight: 800; }
+        .app-txt small { margin-top: 2px; font-size: 11.5px; line-height: 1.45; color: var(--muted); }
+        .app-txt i { margin-top: 6px; font-style: normal; font-family: var(--mono); font-size: 10.5px; color: var(--ink); }
 
-        /* dashed divider between free and commercial modules */
-        .mods-divider {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin: 24px 0 16px;
-            font-family: var(--mono);
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: .08em;
-            text-transform: uppercase;
-            color: var(--muted);
-        }
+        /* ══ Buttons ═══════════════════════════ */
+        .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 10px 18px; border: var(--bw) solid var(--ink); background: #fff; color: var(--ink); font-family: var(--sans); font-size: 14px; font-weight: 800; text-decoration: none; cursor: pointer; box-shadow: var(--shadow); transition: transform .12s, box-shadow .12s; }
+        .btn:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--ink); }
+        .btn:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--ink); }
+        .btn-primary { background: var(--cyan); }
 
-        .mods-divider::after {
-            content: '';
-            flex: 1;
-            border-top: 2px dashed var(--faint);
-        }
-
-        .pro-chip {
-            font-family: var(--mono);
-            font-size: 10px;
-            font-weight: 800;
-            color: var(--ink);
-            background: var(--purple);
-            border: 2px solid var(--ink);
-            box-shadow: 2px 2px 0 var(--ink);
-            padding: 1px 7px;
-            transform: rotate(-2deg);
-        }
-
-        .data-chip, .ai-chip, .plugin-chip {
-            font-family: var(--mono);
-            font-size: 10px;
-            font-weight: 800;
-            color: var(--ink);
-            background: var(--green);
-            border: 2px solid var(--ink);
-            box-shadow: 2px 2px 0 var(--ink);
-            padding: 1px 7px;
-            transform: rotate(-2deg);
-        }
-
-        .ai-chip { background: var(--cyan); }
-        .plugin-chip { background: var(--yellow); }
-
-        /* ══ Selected row ══════════════════════ */
-        .selected {
-            border-top: var(--bw) solid var(--ink);
-            padding: 20px 24px;
-            display: flex;
-            align-items: flex-start;
-            gap: 16px;
-            flex-wrap: wrap;
-        }
-
-        .sel-label {
-            font-family: var(--mono);
-            font-size: 10px;
-            font-weight: 700;
-            letter-spacing: .14em;
-            text-transform: uppercase;
-            padding-top: 6px;
-            flex-shrink: 0;
-        }
-
-        .sel-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 9px;
-            align-items: center;
-            min-height: 30px;
-        }
-
-        .sel-empty { font-family: var(--mono); font-size: 12px; color: var(--muted); }
-
-        /* ══ Pro banner ════════════════════════ */
-        .pro {
-            background: var(--cyan);
-            border: var(--bw) solid var(--ink);
-            box-shadow: var(--shadow-lg);
-            padding: 26px 28px;
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            gap: 22px;
-        }
-
-        .pro-text { flex: 1; min-width: 280px; }
-
-        .pro-eyebrow {
-            font-family: var(--mono);
-            font-size: 10px;
-            font-weight: 700;
-            letter-spacing: .18em;
-            text-transform: uppercase;
-            margin-bottom: 8px;
-        }
-
-        .pro-title { font-size: 19px; font-weight: 900; letter-spacing: -.01em; margin-bottom: 6px; }
-        .pro-desc { font-size: 13px; font-weight: 500; color: rgba(20, 18, 11, .74); line-height: 1.55; max-width: 640px; }
-
-        /* ══ Action bar ════════════════════════ */
-        .bar {
-            position: fixed;
-            left: 50%;
-            bottom: 0;
-            transform: translateX(-50%);
-            width: 100%;
-            max-width: 1180px;
-            background: var(--paper);
-            border: var(--bw) solid var(--ink);
-            border-bottom: none;
-            box-shadow: 0 -6px 0 -2px var(--ink);
-            padding: 15px 24px;
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            gap: 14px;
-            z-index: 100;
-        }
-
-        .bar-hint {
-            margin-right: auto;
-            font-size: 12.5px;
-            font-weight: 500;
-            color: var(--muted);
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        kbd {
-            font-family: var(--mono);
-            font-size: 10px;
-            font-weight: 700;
-            border: 2px solid var(--ink);
-            box-shadow: 2px 2px 0 var(--ink);
-            background: var(--paper);
-            padding: 2px 6px;
-        }
+        /* ══ Live project panel ════════════════ */
+        .side { min-width: 0; background: #FBFAF6; }
+        .side-in { position: sticky; top: 56px; padding: 24px 22px 26px; display: flex; flex-direction: column; gap: 16px; max-height: calc(100vh - 56px); overflow-y: auto; }
+        .side-label { font-family: var(--mono); font-size: 10px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
+        .side-name { font-size: 22px; font-weight: 900; letter-spacing: -.02em; line-height: 1.15; word-break: break-all; }
+        .sum { border: var(--bw) solid var(--ink); background: #fff; }
+        .sum div { display: flex; justify-content: space-between; gap: 12px; padding: 6px 10px; border-bottom: 1px solid rgba(20, 18, 11, .14); font-size: 12.5px; }
+        .sum div:last-child { border-bottom: none; }
+        .sum span { font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+        .sum b { font-weight: 700; text-align: right; }
+        .chips { display: flex; flex-wrap: wrap; gap: 5px; }
+        .chip-x { display: inline-flex; align-items: center; gap: 5px; padding: 2px 4px 2px 7px; border: 1.5px solid var(--ink); background: var(--cyan); font-size: 11.5px; font-weight: 700; }
+        .chip-x.pro { background: var(--yellow); }
+        .chip-x button { border: none; background: none; cursor: pointer; font-size: 12px; line-height: 1; padding: 0 2px; }
+        .chips-empty { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+        .tree { background: var(--code-bg); border: var(--bw) solid var(--ink); padding: 10px 0; font-family: var(--mono); font-size: 11.5px; color: var(--code-fg); max-height: 260px; overflow-y: auto; }
+        .tree .t-dir { padding: 2px 12px; color: rgba(240, 232, 214, .5); }
+        .tree .t-file { padding: 2px 12px; cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .tree .t-file.indent { padding-left: 26px; }
+        .tree .t-file:hover { background: rgba(79, 200, 236, .18); color: #fff; }
+        .tree .t-file::before { content: "▸ "; color: var(--cyan); }
+        .side-btns { display: grid; grid-template-columns: 1fr; gap: 10px; }
+        .side-btns .btn { width: 100%; }
+        .side-kbd { font-family: var(--mono); font-size: 10.5px; color: var(--muted); text-align: center; }
+        kbd { padding: 0 5px; border: 1.5px solid var(--ink); background: #fff; font-family: var(--mono); font-size: 10px; }
+        .foot { max-width: 1200px; margin: 0 auto; padding: 18px 24px 40px; font-family: var(--mono); font-size: 11px; color: var(--muted); display: flex; justify-content: space-between; }
 
         /* ══ Reveal ════════════════════════════ */
-        .reveal {
-            opacity: 0;
-            transform: translateY(16px);
-            transition: opacity .6s cubic-bezier(.2, .7, .3, 1), transform .6s cubic-bezier(.2, .7, .3, 1);
-        }
-
+        .reveal { opacity: 0; transform: translateY(10px); transition: opacity .5s ease, transform .5s ease; }
         .reveal.in { opacity: 1; transform: none; }
-
-        @media (prefers-reduced-motion: reduce) {
-            .reveal { transition: none; opacity: 1; transform: none; }
-            .btn, .mod, .lang-btn { transition: none; }
-            .mod-viz, .mod-viz * { transition: none; animation: none !important; }
-        }
 
         /* ══ Element Plus — squared, ink borders, cyan focus ══ */
         .el-input__wrapper,
@@ -1237,105 +548,301 @@
             padding: 1px 5px;
         }
 
-        /* ══ Responsive ════════════════════════ */
-        @media (max-width: 900px) {
-            .hero { grid-template-columns: 1fr; gap: 36px; }
-            .grid-4, .grid-5, .grid-3 { grid-template-columns: repeat(2, 1fr); }
-            .mods { grid-template-columns: repeat(2, 1fr); }
+        /* ══ Polish — same layout and language, more character ══════════ */
+        @keyframes pop { 0% { transform: scale(.96); } 60% { transform: scale(1.03); } 100% { transform: none; } }
+        @keyframes marquee { to { transform: translateX(-50%); } }
+
+        /* intro: bigger statement, stats as stickers */
+        .intro { padding: 56px 44px 44px; position: relative; overflow: hidden; }
+        .intro h1 { font-size: clamp(36px, 5vw, 60px); letter-spacing: -.04em; margin: 22px 0 14px; }
+        /* the second line carries the promise: a cyan marker under it, no boxed sticker */
+        .intro h1 .hl { background: none; border: none; padding: 0 2px; display: inline; transform: none; box-shadow: inset 0 -.34em 0 var(--cyan); }
+        .intro p { font-size: 16px; line-height: 1.7; }
+        .intro-stats { border: none; box-shadow: none; background: none; gap: 12px; }
+        .intro-stats div { min-width: 92px; padding: 10px 14px; border: var(--bw) solid var(--ink); box-shadow: var(--shadow); background: #fff; }
+        .intro-stats div:nth-child(1) { background: var(--yellow); transform: rotate(-3deg); }
+        .intro-stats div:nth-child(2) { background: var(--green); transform: rotate(2deg) translateY(-8px); }
+        .intro-stats div:nth-child(3) { background: var(--purple); transform: rotate(-2deg); }
+        .intro-stats div:last-child { border-right: var(--bw) solid var(--ink); }
+        .intro-stats b { font-size: 26px; }
+        .intro-stats span { color: var(--ink); }
+
+        /* marquee band of module names */
+        .band { overflow: hidden; border-bottom: var(--bw) solid var(--ink); background: var(--cyan); }
+        .band-track { display: flex; width: max-content; animation: marquee 48s linear infinite; }
+        .band-track span { padding: 9px 18px; font-family: var(--mono); font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; }
+        .band-track span::after { content: "✦"; margin-left: 36px; }
+        .band:hover .band-track { animation-play-state: paused; }
+
+        /* steps: coloured sticker numbers, bigger titles, white header */
+        .step-hd { background: #fff; padding: 20px 28px 16px; border-bottom: 1px dashed rgba(20, 18, 11, .25); gap: 14px; }
+        .step-no { width: 40px; height: 32px; font-size: 13px; color: var(--ink); background: var(--cyan); border: var(--bw) solid var(--ink); box-shadow: 3px 3px 0 var(--ink); transform: rotate(-3deg); }
+        .step:nth-of-type(2) .step-no { background: var(--green); transform: rotate(2deg); }
+        .step:nth-of-type(3) .step-no { background: var(--purple); }
+        .step:nth-of-type(4) .step-no { background: var(--yellow); transform: rotate(2deg); }
+        .step:nth-of-type(5) .step-no { background: var(--pink); }
+        .step-title { font-family: var(--sans); font-size: 18px; letter-spacing: -.01em; text-transform: none; }
+        .step-bd { padding: 24px 28px 32px; }
+
+        /* selections: a little pop and a stamp */
+        .kind.on, .lang.on, .mod.on { animation: pop .28s ease-out; }
+        .kind { position: relative; padding: 18px 18px; box-shadow: 3px 3px 0 var(--ink); }
+        .kind-ico { width: 44px; height: 44px; font-size: 21px; box-shadow: 2px 2px 0 var(--ink); }
+        .kind-name { font-size: 16px; }
+        .kind.on { box-shadow: 6px 6px 0 var(--ink); transform: translate(-2px, -2px); }
+        .kind.on::after { content: "✓ SELECTED"; position: absolute; top: -11px; right: 12px; padding: 1px 8px; background: var(--ink); color: #fff; font-family: var(--mono); font-size: 10px; font-weight: 800; letter-spacing: .1em; transform: rotate(3deg); }
+        .lang { box-shadow: 2px 2px 0 var(--ink); }
+        .mod { box-shadow: 2px 2px 0 var(--ink); }
+        .mod-icon { background: var(--paper); }
+        .mods .mod:nth-child(4n+1) .mod-icon { background: #E3F6FC; }
+        .mods .mod:nth-child(4n+2) .mod-icon { background: #EEF9DF; }
+        .mods .mod:nth-child(4n+3) .mod-icon { background: #EDE4FF; }
+        .mods .mod:nth-child(4n) .mod-icon { background: #FDE1EA; }
+        .mod.on .mod-icon { background: #fff; }
+        .mod.on { box-shadow: 4px 4px 0 var(--ink); }
+        .mod-tab.on { background: var(--cyan); color: var(--ink); }
+        .mod-tab.on i { color: var(--ink); }
+        .app { box-shadow: 2px 2px 0 var(--ink); }
+
+        /* the side panel as a project ticket */
+        .side { background-image: radial-gradient(rgba(20, 18, 11, .12) 1px, transparent 1px); background-size: 14px 14px; background-color: #FBFAF6; }
+        .side-in { padding: 26px 22px; gap: 0; }
+        .ticket { background: #fff; border: var(--bw) solid var(--ink); box-shadow: 6px 6px 0 var(--ink); }
+        .ticket > * { padding: 14px 16px; border-bottom: 1.5px dashed rgba(20, 18, 11, .3); }
+        .ticket > *:last-child { border-bottom: none; }
+        .ticket-hd { display: flex; align-items: center; gap: 12px; background: var(--ink); color: #fff; border-bottom: none !important; }
+        .ticket-hd .zip { width: 40px; height: 46px; flex-shrink: 0; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 5px; background: var(--yellow); border: var(--bw) solid #fff; color: var(--ink); font-family: var(--mono); font-size: 9px; font-weight: 900; background-image: repeating-linear-gradient(180deg, var(--ink) 0 3px, transparent 3px 6px); background-size: 6px 22px; background-repeat: no-repeat; background-position: center 4px; }
+        .ticket-hd .side-label { color: rgba(255, 255, 255, .55); }
+        .ticket-hd .side-name { color: #fff; font-size: 20px; }
+        .sum { border: none; }
+        .sum div { padding: 5px 0; border-bottom: none; }
+        .tree { border-width: 1.5px; max-height: 220px; }
+        /* generate: one solid action bar — icon block, label + file count, shortcut */
+        .side-btns { gap: 12px; }
+        .gen { display: grid; grid-template-columns: 46px 1fr auto; align-items: center; gap: 12px; width: 100%; padding: 0 14px 0 0; border: var(--bw) solid var(--ink); background: var(--cyan); color: var(--ink); text-align: left; cursor: pointer; box-shadow: var(--shadow); transition: transform .12s, box-shadow .12s; }
+        .gen:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--ink); }
+        .gen:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--ink); }
+        .gen-ico { height: 54px; display: flex; align-items: center; justify-content: center; background: var(--ink); color: var(--cyan); font-size: 22px; font-weight: 900; }
+        .gen-txt b { display: block; font-size: 16px; font-weight: 900; letter-spacing: -.01em; line-height: 1.2; }
+        .gen-txt small { display: block; font-family: var(--mono); font-size: 11px; color: rgba(20, 18, 11, .7); }
+        .gen kbd { background: rgba(255, 255, 255, .6); }
+        .explore { justify-self: center; padding: 2px 4px; border: none; background: none; font-family: var(--mono); font-size: 12px; font-weight: 700; color: var(--muted); cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+        .explore:hover { color: var(--ink); }
+        .side-kbd { margin-top: 12px; }
+
+        @media (prefers-reduced-motion: reduce) {
+            .band-track, .kind.on, .lang.on, .mod.on { animation: none; }
         }
 
-        @media (max-width: 560px) {
-            .nav { flex-wrap: wrap; gap: 12px; }
-            .nav-links { gap: 10px; }
-            .grid-4, .grid-5, .grid-3, .grid-2, .mods { grid-template-columns: 1fr; }
-            .bar-hint { display: none; }
-            .bar { justify-content: center; }
+        /* ══ Project type — richer tiles, numbered node sub-steps ══ */
+        /* project type: two clean, equal tiles — icon, name, one line */
+        .kinds { gap: 12px; }
+        .kind { position: relative; display: grid; grid-template-columns: 34px 1fr; column-gap: 12px; row-gap: 0; align-items: center; padding: 11px 14px; box-shadow: 2px 2px 0 var(--ink); }
+        .kind:hover { transform: translate(-1px, -1px); box-shadow: 3px 3px 0 var(--ink); }
+        .kind.on { transform: translate(-2px, -2px); box-shadow: 4px 4px 0 var(--ink); }
+        .kind.on::after { content: "✓"; position: absolute; top: 50%; right: 14px; transform: translateY(-50%); font-size: 14px; font-weight: 900; }
+        .kind-ico { grid-row: span 3; align-self: start; width: 34px; height: 34px; font-size: 16px; border: 1.5px solid var(--ink); box-shadow: none; margin: 0; background: #fff; }
+        .kind.on .kind-ico { background: #fff; }
+        .kind-ico svg { width: 24px; height: 24px; color: var(--ink); }
+        .kind-name { font-size: 14px; font-weight: 800; line-height: 1.25; padding-right: 22px; }
+        .kind-desc { margin: 0; padding-right: 22px; font-size: 12px; line-height: 1.4; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .kind-radio { display: none; }
+        .kind-tags { grid-column: 2; display: flex; flex-wrap: nowrap; gap: 4px; margin-top: 7px; padding-right: 22px; overflow: hidden; }
+        .kind-tags span { padding: 0 6px; border: 1px solid var(--ink); background: #fff; font-family: var(--mono); font-size: 10px; font-weight: 700; line-height: 1.6; white-space: nowrap; }
+        .kind.on .kind-tags span { background: rgba(255, 255, 255, .75); }
+
+        .node-cfg { margin-top: 22px; padding: 18px 18px 20px; border: var(--bw) solid var(--ink); background: #FBFAF6; position: relative; }
+        .node-cfg::before { content: ""; position: absolute; top: -12px; right: 25%; width: 20px; height: 20px; background: #FBFAF6; border-left: var(--bw) solid var(--ink); border-top: var(--bw) solid var(--ink); transform: rotate(45deg); }
+        .nc-label { display: flex; align-items: center; gap: 8px; margin: 18px 0 10px; font-family: var(--mono); font-size: 11px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+        .nc-label:first-child { margin-top: 0; }
+        .nc-label b { width: 20px; height: 20px; display: inline-flex; align-items: center; justify-content: center; background: var(--ink); color: #fff; font-size: 11px; }
+
+        .langs { grid-template-columns: 1.2fr repeat(4, 1fr); grid-auto-rows: 1fr; gap: 10px; margin-top: 0; }
+        .lang { background: #fff; padding: 9px 10px; }
+        .lang-jvm { grid-row: span 2; flex-direction: column; align-items: flex-start; justify-content: center; gap: 4px; padding: 14px; }
+        .lang-jvm .lang-ava { width: 40px; height: 40px; font-size: 14px; margin-bottom: 6px; }
+        .lang-jvm .lang-name { font-size: 15px; }
+        .lang.on { background: var(--cyan); }
+
+        .fws { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 0; padding: 0; border: none; background: none; }
+        .fw { position: relative; align-items: flex-start; padding: 8px 10px; text-align: left; }
+        .fw b { font-size: 13px; font-weight: 800; }
+        .fw small { margin-top: 2px; font-size: 9.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+        .fw.on::after { content: "✓"; position: absolute; top: 6px; right: 8px; font-size: 12px; font-weight: 900; }
+
+        @media (max-width: 1020px) {
+            .langs { grid-template-columns: repeat(3, 1fr); }
+            .lang-jvm { grid-row: auto; grid-column: span 3; flex-direction: row; align-items: center; }
+            .fws { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        /* ══ Hero: copy left, a stack of the generated files right ══ */
+        .intro { display: grid; grid-template-columns: minmax(0, 1fr) 470px; align-items: center; gap: 40px; padding: 52px 44px 50px; }
+        .intro-copy h1 { margin: 20px 0 14px; }
+        .intro-stats { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+        .intro-stats div { min-width: 0; padding: 7px 12px; transform: none !important; box-shadow: 3px 3px 0 var(--ink); }
+        .intro-stats div:nth-child(4) { background: var(--cyan); }
+        .intro-stats b { display: inline; font-size: 18px; margin-right: 6px; }
+        .intro-stats span { font-size: 10px; }
+
+        .intro-viz { position: relative; height: 312px; }
+        .iv-card { position: absolute; border: var(--bw) solid var(--ink); box-shadow: 5px 5px 0 var(--ink); }
+        .iv-card > span { position: absolute; top: 8px; left: 12px; font-family: var(--mono); font-size: 11px; font-weight: 800; }
+        .iv-back { top: 0; left: 60px; width: 340px; height: 210px; background: var(--yellow); transform: rotate(5deg); }
+        .iv-mid { top: 26px; left: 44px; width: 360px; height: 220px; background: var(--purple); transform: rotate(-3deg); }
+        .iv-front { top: 64px; left: 0; width: 430px; height: 236px; background: var(--code-bg); overflow: hidden; transform: rotate(1deg); }
+        .iv-bar { display: flex; align-items: center; gap: 6px; padding: 8px 12px; border-bottom: 1px solid rgba(240, 232, 214, .12); font-family: var(--mono); font-size: 11px; color: rgba(240, 232, 214, .6); }
+        .iv-bar i { width: 9px; height: 9px; border-radius: 50%; background: rgba(240, 232, 214, .25); }
+        .iv-bar i:nth-child(1) { background: #ff5f57; } .iv-bar i:nth-child(2) { background: #ffbd2e; } .iv-bar i:nth-child(3) { background: #28c840; }
+        .iv-bar span { margin-left: 8px; }
+        .iv-front pre { margin: 0; padding: 12px 14px; background: transparent !important; color: var(--code-fg); font-family: var(--mono); font-size: 11.5px; line-height: 1.6; white-space: pre; overflow: hidden; }
+        .iv-zip { position: absolute; right: -6px; bottom: 0; padding: 7px 12px; background: var(--cyan); border: var(--bw) solid var(--ink); box-shadow: 4px 4px 0 var(--ink); transform: rotate(-4deg); font-family: var(--mono); line-height: 1.25; z-index: 2; }
+        .iv-zip b { display: block; font-size: 13px; }
+        .iv-zip span { font-size: 10.5px; }
+        .intro-viz .hljs-keyword, .intro-viz .hljs-built_in { color: var(--purple); }
+        .intro-viz .hljs-string { color: var(--green); }
+        .intro-viz .hljs-meta, .intro-viz .hljs-title, .intro-viz .hljs-title.class_ { color: var(--cyan); }
+        .intro-viz .hljs-comment { color: rgba(240, 232, 214, .38); }
+
+        @media (max-width: 1020px) {
+            .intro { grid-template-columns: 1fr; }
+            .intro-viz { display: none; }
+        }
+
+        /* ══ Responsive ════════════════════════ */
+        @media (max-width: 1020px) {
+            .work { grid-template-columns: 1fr; }
+            .steps { border-right: none; border-bottom: var(--bw) solid var(--ink); }
+            .side-in { position: static; max-height: none; }
+            .intro { flex-direction: column; align-items: flex-start; }
+            .intro-stats { flex-wrap: wrap; }
+            .langs { grid-template-columns: repeat(3, 1fr); }
+        }
+
+        @media (max-width: 640px) {
+            .hdr-nav a:not(.keep) { display: none; }
+            .intro, .step-bd, .step-hd { padding-left: 18px; padding-right: 18px; }
+            .kinds, .grid-2, .grid-3, .grid-4, .mods, .apps { grid-template-columns: 1fr; }
+            .langs { grid-template-columns: repeat(2, 1fr); }
+            .mod-search { margin-left: 0; width: 100%; }
         }
     </style>
 </head>
 <body>
 <div id="app">
 
-    <!-- ══ Unified dark band: topbar + hero share one surface ══ -->
-    <div class="band">
-        <header class="topbar">
-            <div class="nav">
-                <a class="brand" href="/">
-                    <img src="logo.svg" alt="Erupt"/>
-                    <span>
-                        <span class="brand-name">erupt<b>.xyz</b></span>
-                        <span class="brand-sub">{{ t('logoSub') }}</span>
-                    </span>
-                </a>
-                <nav class="nav-links">
-                    <a class="gh site" href="https://www.erupt.xyz" target="_blank">{{ t('navWebsite') }}</a>
-                    <a class="gh doc" href="https://docs.erupt.xyz" target="_blank">{{ t('navDocs') }}</a>
-                    <a class="gh skill" href="https://skill.erupt.xyz" target="_blank">⚡ {{ t('navSkill') }}</a>
-                    <a class="gh" href="https://github.com/erupts/erupt" target="_blank">
-                        <svg viewBox="0 0 24 24" fill="var(--ink)" stroke="var(--ink)" stroke-width="1.8" stroke-linejoin="round"><path d="M12 3l2.7 5.9 6.3.6-4.8 4.3 1.4 6.2L12 17.7 6.4 20.2l1.4-6.2-4.8-4.3 6.3-.6z"/></svg>
-                        GitHub
-                    </a>
-                    <button class="lang-btn" @click="toggleLang">{{ t('langToggle') }}</button>
-                </nav>
-            </div>
-        </header>
-
-        <div class="band-inner">
-            <!-- ══ Hero — doris grammar: two-column, left copy · right code editor ══ -->
-            <section class="hero reveal">
-            <div class="hero-left">
-                <span class="hero-eyebrow"><i class="dot"></i>{{ t('heroEyebrow') }}</span>
-                <h1 class="hero-title" v-html="t('heroTitle')"></h1>
-                <p class="lead">{{ t('heroSub') }}</p>
-                <div class="hero-actions">
-                    <button class="btn btn-primary" @click="generate">{{ t('heroBtn') }}</button>
-                    <button class="btn" @click="openExplore">{{ t('btnExplore') }}</button>
-                </div>
-                <div class="chips">
-                    <span class="chip"><i class="dot"></i>Erupt {{ ERUPT_VER }}</span>
-                    <span class="chip"><i class="dot"></i>Spring Boot {{ BOOT_VER }}</span>
-                </div>
-            </div>
-
-            <!-- ── right column: single dark code editor card ── -->
-            <figure class="hero-code">
-                <figcaption class="hc-bar">
-                    <span class="tl tl-pink"></span>
-                    <span class="tl tl-cyan"></span>
-                    <span class="tl tl-green"></span>
-                    <span class="hc-file">SampleModel.java</span>
-                    <button class="hc-run" @click="generate">▶ Run</button>
-                </figcaption>
-<pre class="hc-body"><span class="ln">01</span><span class="anno">@Erupt</span>(name = <span class="str">"Sample"</span>)
-<span class="ln">02</span><span class="anno">@Entity</span>
-<span class="ln">03</span><span class="kw">public class</span> <span class="ty">SampleModel</span> <span class="kw">extends</span> <span class="ty">BaseModel</span> {
-<span class="ln">04</span>
-<span class="ln">05</span>    <span class="anno">@EruptField</span>(
-<span class="ln">06</span>        views = <span class="anno">@View</span>(title = <span class="str">"Name"</span>),
-<span class="ln">07</span>        edit  = <span class="anno">@Edit</span>(title = <span class="str">"Name"</span>, search = <span class="anno">@Search</span>)
-<span class="ln">08</span>    )
-<span class="ln">09</span>    <span class="kw">private</span> <span class="ty">String</span> name;
-<span class="ln">10</span>
-<span class="ln">11</span>    <span class="anno">@EruptField</span>(views = <span class="anno">@View</span>(title = <span class="str">"Active"</span>))
-<span class="ln">12</span>    <span class="kw">private</span> <span class="ty">Boolean</span> active = <span class="kw">true</span>;
-<span class="ln">13</span>
-<span class="ln">14</span>    <span class="anno">@EruptField</span>(views = <span class="anno">@View</span>(title = <span class="str">"Date"</span>))
-<span class="ln">15</span>    <span class="kw">private</span> <span class="ty">Date</span> date;
-<span class="ln">16</span>}</pre>
-            </figure>
-            </section>
+    <header class="hdr">
+        <div class="hdr-in">
+            <a class="brand" href="/">
+                <img src="logo.svg" alt="Erupt"/>
+                <span class="brand-name">Erupt</span>
+                <span class="brand-tag">start</span>
+            </a>
+            <nav class="hdr-nav">
+                <a href="https://www.erupt.xyz" target="_blank">{{ t('navWebsite') }}</a>
+                <a href="https://docs.erupt.xyz" target="_blank">{{ t('navDocs') }}</a>
+                <a href="https://skill.erupt.xyz" target="_blank">⚡ {{ t('navSkill') }}</a>
+                <a class="keep" href="https://github.com/erupts/erupt" target="_blank">GitHub ↗</a>
+                <button class="lang-btn" @click="toggleLang">{{ t('langToggle') }}</button>
+            </nav>
         </div>
-    </div>
+    </header>
 
-    <main class="page">
-
-        <!-- ══ Configuration ══ -->
-        <section class="card reveal">
-            <div class="card-head">
-                <span class="step-no n1">01</span>
-                <span class="card-title">{{ t('secConfig') }}</span>
+    <div class="frame">
+        <section class="intro g-bg">
+            <div class="intro-copy">
+                <span class="intro-eyebrow">{{ t('heroEyebrow') }}</span>
+                <h1 v-html="t('heroTitle')"></h1>
+                <p>{{ t('heroSub') }}</p>
+                <div class="intro-stats">
+                    <div><b>{{ ERUPT_VER }}</b><span>Erupt</span></div>
+                    <div><b>{{ MODULES.length }}</b><span>{{ t('statMods') }}</span></div>
+                    <div><b>{{ NODE_LANGS.filter(l => !l.fw).length + 1 }}</b><span>{{ t('statNodes') }}</span></div>
+                    <div><b>{{ JVM_FWS.length }}</b><span>JVM {{ t('fwCount') }}</span></div>
+                </div>
             </div>
-            <div class="card-body">
+            <!-- a stack of the files you are about to get; the front card is the real entry file -->
+            <div class="intro-viz" aria-hidden="true">
+                <div class="iv-card iv-back"><span>pom.xml</span></div>
+                <div class="iv-card iv-mid"><span>application.yml</span></div>
+                <div class="iv-card iv-front">
+                    <div class="iv-bar"><i></i><i></i><i></i><span>{{ heroFile.split('/').pop() }}</span></div>
+                    <pre class="hljs" v-html="heroCode"></pre>
+                </div>
+                <div class="iv-zip"><b>{{ form.kind === 'node' ? nodeArtifact() : form.artifact }}.zip</b><span>{{ Object.keys(previewFiles).length }} {{ t('sumFiles').toLowerCase() }}</span></div>
+            </div>
+        </section>
+
+        <!-- a moving band of what you can add -->
+        <div class="band" aria-hidden="true">
+            <div class="band-track"><span v-for="(m, i) in MODULES.concat(MODULES)" :key="i">{{ m.icon }} {{ m.name }}</span></div>
+        </div>
+
+        <div class="work">
+            <main class="steps">
+                <section class="step">
+                    <div class="step-hd"><span class="step-no">00</span><span class="step-title">{{ t('secKind') }}</span><span class="step-hint">{{ t('secKindHint') }}</span></div>
+                    <div class="step-bd">
+                <div class="kinds">
+                    <div class="kind k-app" :class="{on: form.kind === 'app'}" @click="form.kind = 'app'">
+                        <i class="kind-radio"></i>
+                        <span class="kind-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="miter"><rect x="2.5" y="4" width="19" height="16"/><path d="M2.5 8h19"/><rect x="2.5" y="8" width="5" height="12" fill="#FCE566"/><path d="M10 11.5h8.5M10 14.5h8.5M10 17.5h5"/></svg></span>
+                        <div class="kind-name">{{ t('kindApp') }}</div>
+                        <div class="kind-desc">{{ t('kindAppDesc') }}</div>
+                        <div class="kind-tags"><span>Spring Boot</span><span>RBAC</span><span>{{ MODULES.length }} {{ t('statMods') }}</span></div>
+                    </div>
+                    <div class="kind k-node" :class="{on: form.kind === 'node'}" @click="form.kind = 'node'">
+                        <i class="kind-radio"></i>
+                        <span class="kind-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="miter"><rect x="9" y="2.5" width="6" height="5" fill="#BCA0F2"/><path d="M12 7.5v4M4.5 11.5h15M4.5 11.5v4M12 11.5v4M19.5 11.5v4"/><rect x="2" y="15.5" width="5" height="5"/><rect x="9.5" y="15.5" width="5" height="5"/><rect x="17" y="15.5" width="5" height="5"/></svg></span>
+                        <div class="kind-name">{{ t('kindNode') }}</div>
+                        <div class="kind-desc">{{ t('kindNodeDesc') }}</div>
+                        <div class="kind-tags"><span>{{ NODE_LANGS.filter(x => !x.fw).length + 1 }} {{ t('kindLangs') }}</span><span>{{ JVM_FWS.length }} JVM {{ t('fwCount') }}</span><span>Cloud Server</span></div>
+                    </div>
+                </div>
+                <div class="node-cfg" v-if="form.kind === 'node'">
+                    <div class="nc-label"><b>1</b>{{ t('ncLang') }}</div>
+                    <div class="langs">
+                        <!-- every JVM host is one featured tile; its frameworks follow -->
+                        <div class="lang lang-jvm" :class="{on: isJvmNode}" @click="pickJvm()">
+                            <span class="lang-ava" style="background:#EEF9DF">J</span>
+                            <div class="lang-name">Java / Kotlin</div>
+                            <div class="lang-req">{{ JVM_FWS.length }} {{ t('fwCount') }} · Java 17+</div>
+                        </div>
+                        <div class="lang" :class="{on: form.nodeLang === l.k}" @click="form.nodeLang = l.k" v-for="l in NODE_LANGS.filter(x => !x.fw)" :key="l.k">
+                            <span class="lang-ava" :style="{background: l.bg}">{{ l.ini }}</span>
+                            <div><div class="lang-name">{{ l.name }}</div><div class="lang-req">{{ l.req }}</div></div>
+                        </div>
+                    </div>
+                    <template v-if="isJvmNode">
+                        <div class="nc-label"><b>2</b>{{ t('fwLabel') }}</div>
+                        <div class="fws">
+                            <button class="fw" :class="{on: form.nodeLang === f.k}" @click="form.nodeLang = f.k" v-for="f in JVM_FWS" :key="f.k">
+                                <b>{{ f.fwn }}</b><small>{{ f.art }}</small>
+                            </button>
+                        </div>
+                    </template>
+                    <div class="nc-label"><b>{{ isJvmNode ? 3 : 2 }}</b>{{ t('ncConnect') }}</div>
+                    <div class="grid grid-3">
+                        <div>
+                            <div class="field-label">{{ t('fServer') }}</div>
+                            <el-input v-model="form.server" spellcheck="false" autocomplete="off" placeholder="http://localhost:8080"/>
+                        </div>
+                        <div>
+                            <div class="field-label">{{ t('fNodePort') }}</div>
+                            <el-input v-model="form.nodePort" spellcheck="false" autocomplete="off" placeholder="9090"/>
+                        </div>
+                        <div>
+                            <div class="field-label">{{ t('fNodeName') }}</div>
+                            <el-input :model-value="nodeName()" disabled/>
+                        </div>
+                    </div>
+                </div>
+                    </div>
+                </section>
+
+                <section class="step" v-if="form.kind === 'app' || form.nodeLang === 'java-spring'">
+                    <div class="step-hd"><span class="step-no">01</span><span class="step-title">{{ t('secConfig') }}</span></div>
+                    <div class="step-bd">
                 <div class="grid grid-4">
                     <div>
                         <div class="field-label">{{ t('fieldBuild') }}</div>
@@ -1363,7 +870,7 @@
                         </el-select>
                     </div>
                 </div>
-                <div class="grid grid-5">
+                <div class="grid grid-4">
                     <div>
                         <div class="field-label">{{ t('fieldPort') }}</div>
                         <el-input v-model="form.port" style="width:100%" spellcheck="false" autocomplete="off" placeholder="8080"/>
@@ -1390,16 +897,12 @@
                         </div>
                     </div>
                 </div>
-            </div>
-        </section>
+                    </div>
+                </section>
 
-        <!-- ══ Metadata ══ -->
-        <section class="card reveal">
-            <div class="card-head">
-                <span class="step-no n2">02</span>
-                <span class="card-title">{{ t('secMeta') }}</span>
-            </div>
-            <div class="card-body">
+                <section class="step">
+                    <div class="step-hd"><span class="step-no">02</span><span class="step-title">{{ t('secMeta') }}</span></div>
+                    <div class="step-bd">
                 <div class="grid grid-3">
                     <el-form label-position="top" :model="form">
                         <el-form-item :label="t('fGroup')">
@@ -1426,117 +929,107 @@
                         </el-form-item>
                     </el-form>
                 </div>
-            </div>
-        </section>
+                    </div>
+                </section>
 
-        <!-- ══ Modules ══ -->
-        <section class="card reveal">
-            <div class="card-head">
-                <span class="step-no n3">03</span>
-                <span class="card-title">{{ t('secModules') }}</span>
-                <span class="card-hint">{{ t('secModulesHint') }}</span>
-            </div>
-            <div class="card-body">
-                <div class="mods-divider" style="margin-top:0">
-                    <span class="ai-chip">AI</span>
-                    <span>{{ t('secModulesAi') }}</span>
+                <section class="step" v-if="form.kind === 'app'">
+                    <div class="step-hd"><span class="step-no">03</span><span class="step-title">{{ t('secModules') }}</span><span class="step-hint">{{ t('secModulesHint') }}</span></div>
+                    <div class="step-bd">
+                <div class="mod-bar">
+                    <div class="mod-tabs">
+                        <button class="mod-tab" :class="{on: modCat === c.k}" @click="modCat = c.k" v-for="c in MOD_CATS" :key="c.k">
+                            {{ t(c.t) }}<i>{{ catCount(c.k) }}</i>
+                        </button>
+                    </div>
+                    <input class="mod-search" v-model="modQ" :placeholder="t('modSearch')" spellcheck="false"/>
                 </div>
+                <template v-for="g in shownGroups" :key="g.k">
+                <div class="mods-grp" v-if="modCat === 'all'"><span :class="'mg-' + g.k">{{ t(g.t) }}</span><i>{{ t(g.t + 'Desc') }}</i><b>{{ catCount(g.k) }}</b></div>
                 <div class="mods">
-                    <div class="mod" :class="{on: selectedMods.includes(m.id), link: !!m.link}"
-                         v-for="m in MODULES.filter(x => x.ai)" :key="m.id"
-                         :title="m.link || ''" @click="m.link ? openLink(m.link) : toggleMod(m.id)">
-                        <span class="mod-tag" v-if="m.tag">{{ m.tag }}</span>
+                    <div class="mod" :class="{on: selectedMods.includes(m.id), pro: m.pro, link: !!m.link}"
+                         v-for="m in g.mods" :key="m.id" @click="m.link ? openLink(m.link) : toggleMod(m.id)"
+                         :title="m.link || (locale === 'zh' ? m.descZh : m.desc)">
+                        <span class="mod-tag" :class="{'mod-tag-pro': m.pro}" v-if="m.tag">{{ m.tag }}</span>
                         <div class="mod-icon">{{ m.icon }}</div>
                         <div class="mod-name">{{ m.name }}</div>
                         <div class="mod-desc">{{ locale === 'zh' ? m.descZh : m.desc }}</div>
                         <div class="mod-viz" v-html="VIZ[m.id]"></div>
                     </div>
                 </div>
-                <div class="mods-divider">
-                    <span class="plugin-chip">PLUGIN</span>
-                    <span>{{ t('secModulesPlugin') }}</span>
-                </div>
-                <div class="mods">
-                    <div class="mod" :class="{on: selectedMods.includes(m.id)}"
-                         v-for="m in MODULES.filter(x => !x.pro && !x.data && !x.ai)" :key="m.id" @click="toggleMod(m.id)">
-                        <span class="mod-tag" v-if="m.tag">{{ m.tag }}</span>
-                        <div class="mod-icon">{{ m.icon }}</div>
-                        <div class="mod-name">{{ m.name }}</div>
-                        <div class="mod-desc">{{ locale === 'zh' ? m.descZh : m.desc }}</div>
-                        <div class="mod-viz" v-html="VIZ[m.id]"></div>
-                        <button class="mod-action" v-if="m.id === 'erupt-cloud-server'"
-                                :title="t('cloudNodeTip')"
-                                @click.stop="generateCloudNode">{{ t('cloudNodeBtn') }}</button>
+                </template>
+                <div class="mods-empty" v-if="!shownMods.length">{{ t('modEmpty') }}</div>
                     </div>
-                </div>
-                <div class="mods-divider">
-                    <span class="data-chip">DATA</span>
-                    <span>{{ t('secModulesData') }}</span>
-                </div>
-                <div class="mods">
-                    <div class="mod" :class="{on: selectedMods.includes(m.id)}"
-                         v-for="m in MODULES.filter(x => x.data)" :key="m.id" @click="toggleMod(m.id)">
-                        <span class="mod-tag" v-if="m.tag">{{ m.tag }}</span>
-                        <div class="mod-icon">{{ m.icon }}</div>
-                        <div class="mod-name">{{ m.name }}</div>
-                        <div class="mod-desc">{{ locale === 'zh' ? m.descZh : m.desc }}</div>
-                        <div class="mod-viz" v-html="VIZ[m.id]"></div>
+                </section>
+
+                <!-- ready-made apps built on erupt, each its own repository under github.com/erupt-io -->
+                <section class="step" v-if="form.kind === 'app'">
+                    <div class="step-hd"><span class="step-no">↗</span><span class="step-title">{{ t('secApps') }}</span><span class="step-hint">{{ t('secAppsHint') }}</span>
+                        <a class="step-link" href="https://github.com/erupt-io" target="_blank">github.com/erupt-io ↗</a></div>
+                    <div class="step-bd">
+                        <div class="apps">
+                            <a class="app" :href="'https://github.com/erupt-io/' + a.id" target="_blank" v-for="a in APPS" :key="a.id">
+                                <span class="app-ico">{{ a.icon }}</span>
+                                <span class="app-txt"><b>{{ a.name }}</b><small>{{ locale === 'zh' ? a.descZh : a.desc }}</small><i>{{ a.id }} ↗</i></span>
+                            </a>
+                        </div>
                     </div>
-                </div>
-                <div class="mods-divider">
-                    <span class="pro-chip">PRO</span>
-                    <span>{{ t('secModulesPro') }}</span>
-                </div>
-                <div class="mods">
-                    <div class="mod" :class="{on: selectedMods.includes(m.id)}"
-                         v-for="m in MODULES.filter(x => x.pro)" :key="m.id" @click="toggleMod(m.id)">
-                        <span class="mod-tag mod-tag-pro">PRO</span>
-                        <div class="mod-icon">{{ m.icon }}</div>
-                        <div class="mod-name">{{ m.name }}</div>
-                        <div class="mod-desc">{{ locale === 'zh' ? m.descZh : m.desc }}</div>
-                        <div class="mod-viz" v-html="VIZ[m.id]"></div>
+                </section>
+            </main>
+
+            <!-- live project panel: what you are about to download, always in view -->
+            <aside class="side">
+                <div class="side-in">
+                  <div class="ticket">
+                    <div class="ticket-hd">
+                        <span class="zip">ZIP</span>
+                        <div>
+                            <div class="side-label">{{ t('sumTitle') }}</div>
+                            <div class="side-name">{{ form.kind === 'node' ? nodeArtifact() : form.artifact }}</div>
+                        </div>
                     </div>
+                    <div class="sum">
+                        <div><span>{{ t('sumType') }}</span><b>{{ form.kind === 'node' ? t('kindNode') : t('kindApp') }}</b></div>
+                        <div v-if="form.kind === 'node'"><span>{{ t('sumLang') }}</span><b>{{ NODE_LANGS.find(l => l.k === form.nodeLang).name }}</b></div>
+                        <template v-if="form.kind === 'app' || form.nodeLang === 'java-spring'">
+                            <div><span>{{ t('fieldBuild') }}</span><b>{{ form.build === 'maven' ? 'Maven' : 'Gradle' }} · Java {{ form.java }}</b></div>
+                            <div><span>{{ t('fieldDb') }}</span><b>{{ form.db.toUpperCase() }}</b></div>
+                        </template>
+                        <div v-if="form.kind === 'node'"><span>{{ t('fServer') }}</span><b>{{ form.server }}</b></div>
+                        <div><span>{{ t('sumFiles') }}</span><b>{{ Object.keys(previewFiles).length }}</b></div>
+                    </div>
+                    <div v-if="form.kind === 'app'">
+                        <div class="side-label" style="margin-bottom:8px">{{ t('selLabel') }} · {{ selectedMods.length }}</div>
+                        <div class="chips">
+                            <span class="chips-empty" v-if="!selectedMods.length">{{ t('selEmpty') }}</span>
+                            <span class="chip-x" :class="{pro: MODULES.find(m => m.id === id)?.pro}" v-for="id in selectedMods" :key="id">
+                                {{ MODULES.find(m => m.id === id)?.name || id }}<button @click="toggleMod(id)" aria-label="remove">×</button>
+                            </span>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="side-label" style="margin-bottom:8px">{{ t('sumTree') }}</div>
+                        <div class="tree">
+                            <template v-for="(entry, i) in treeEntries" :key="i">
+                                <div class="t-dir" v-if="entry.type==='dir'">{{ entry.label }}/</div>
+                                <div class="t-file" :class="{indent: entry.indent}" v-else @click="openExplore(entry.path)">{{ entry.label }}</div>
+                            </template>
+                        </div>
+                    </div>
+                    <div class="side-btns">
+                        <button class="gen" @click="generate">
+                            <span class="gen-ico"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="square"><path d="M12 3v12M6 10l6 6 6-6M4 21h16"/></svg></span>
+                            <span class="gen-txt"><b>{{ t('genLabel') }}</b><small>{{ form.kind === 'node' ? nodeArtifact() : form.artifact }}.zip · {{ Object.keys(previewFiles).length }} {{ t('sumFiles').toLowerCase() }}</small></span>
+                            <kbd>⌘↵</kbd>
+                        </button>
+                        <button class="explore" @click="openExplore()">{{ t('exploreLink') }}</button>
+                    </div>
+                  </div>
                 </div>
-            </div>
-            <div class="selected">
-                <div class="sel-label">{{ t('selLabel') }}</div>
-                <div class="sel-tags">
-                    <span class="sel-empty" v-if="selectedMods.length===0">{{ t('selEmpty') }}</span>
-                    <el-tag
-                            v-for="id in selectedMods" :key="id"
-                            closable
-                            :type="MODULES.find(m => m.id === id)?.pro ? 'warning' : 'primary'"
-                            @close="toggleMod(id)"
-                    >
-                        {{ MODULES.find(m => m.id === id)?.icon }} {{ MODULES.find(m => m.id === id)?.name || id }}
-                        <template v-if="MODULES.find(m => m.id === id)?.pro"> · PRO</template>
-                    </el-tag>
-                </div>
-            </div>
-        </section>
-
-        <!-- ══ Commercial banner ══ -->
-        <section class="pro reveal">
-            <div class="pro-text">
-                <div class="pro-eyebrow">{{ t('proEyebrow') }}</div>
-                <div class="pro-title">{{ t('proTitle') }}</div>
-                <div class="pro-desc">{{ t('proDesc') }}</div>
-            </div>
-            <a class="btn btn-primary"
-               href="https://www.erupt.xyz/?utm_source=start&utm_medium=banner&utm_campaign=pro#!/pro"
-               target="_blank">
-                {{ t('proBtn') }}
-            </a>
-        </section>
-
-    </main>
-
-    <!-- ══ Action bar ══ -->
-    <div class="bar">
-        <span class="bar-hint">{{ t('barHint') }} <kbd>⌘</kbd> <kbd>↵</kbd> {{ t('barHintTo') }}</span>
-        <button class="btn" @click="openExplore">{{ t('btnExplore') }}</button>
-        <button class="btn btn-primary" @click="generate">{{ t('btnGenerate') }}</button>
+            </aside>
+        </div>
     </div>
+
+    <footer class="foot"><span>start.erupt.xyz · Apache-2.0</span><span>Erupt {{ ERUPT_VER }} · Spring Boot {{ BOOT_VER }}</span></footer>
 
     <!-- ══ Explorer dialog ══ -->
     <el-dialog
@@ -1580,13 +1073,26 @@
 
     const LANG = {
         en: {
+            genLabel: 'Generate project', exploreLink: 'Preview all files →',
+            fwLabel: 'Framework', fwCount: 'frameworks', kindLangs: 'languages',
+            ncLang: 'Language', ncConnect: 'Connect to the server',
+            sumTitle: 'Your project', sumType: 'Type', sumLang: 'Language', sumFiles: 'Files', sumTree: 'Files in the ZIP',
+            statMods: 'modules', statNodes: 'node langs',
+            secApps: 'Ready-made apps', secAppsHint: '— complete systems built on erupt, open on GitHub',
+            secKind: 'Project type', secKindHint: '— an Erupt app, or a node in any language',
+            kindApp: 'Erupt app', kindAppDesc: 'A complete Spring Boot admin app',
+            kindNode: 'Cloud node', kindNodeDesc: 'A service in any language, run by a Cloud Server',
+            fNodeName: 'Node name', fServer: 'Server address', fNodePort: 'Node port',
+            modAiDesc: 'agents, knowledge base, digital staff', modPluginDesc: 'admin capability extensions', modDataDesc: 'bind @Erupt models to any backend', modProDesc: 'commercial — added as a commented dependency',
+            modAll: 'All', modAi: 'AI', modPlugin: 'Plugins', modData: 'Data', modPro: 'Pro',
+            modSearch: 'Search modules…', modEmpty: 'No module matches',
             navWebsite: 'Website', navDocs: 'Docs', navSkill: 'No-Code Build', langToggle: '中文',
             logoSub: 'Project Generator',
             heroEyebrow: 'Project Generator',
             titleL1: 'Bootstrap your',
             titleHl: 'Erupt project.',
-            heroTitle: 'Bootstrap your <span class="hl">Erupt</span> project.',
-            heroSub: 'Generate a pre-configured Erupt + Spring Boot project. Pick your stack, choose modules, and download a ready-to-run ZIP.',
+            heroTitle: 'One click to a<br><span class="hl">model-driven enterprise app</span>',
+            heroSub: 'Generate a ready-to-run Erupt app on Spring Boot, or a cloud node in Java, Python, Go, TypeScript, PHP, .NET, Rust, Ruby or Swift. Pick, preview, download.',
             bullet1: 'Zero boilerplate — annotate a Java class and get a full CRUD admin UI',
             bullet2: 'Spring Boot 3 · JPA · multi-database support out of the box',
             bullet3: 'Extensible module ecosystem: AI, Terminal, Jobs, WebSocket and more',
@@ -1622,13 +1128,26 @@
             cloudNodeTip: 'Generate a worker-node project that registers to this server',
         },
         zh: {
+            genLabel: '生成项目', exploreLink: '预览全部文件 →',
+            fwLabel: '框架', fwCount: '种框架', kindLangs: '种语言',
+            ncLang: '语言', ncConnect: '连接到 Server',
+            sumTitle: '你的项目', sumType: '类型', sumLang: '语言', sumFiles: '文件数', sumTree: 'ZIP 内文件',
+            statMods: '个模块', statNodes: '种节点语言',
+            secApps: '成品应用', secAppsHint: '— 基于 erupt 的完整系统，到 GitHub 查看',
+            secKind: '项目类型', secKindHint: '— Erupt 应用，或任意语言的节点',
+            kindApp: 'Erupt 应用', kindAppDesc: '完整的 Spring Boot 后台应用',
+            kindNode: 'Cloud 节点', kindNodeDesc: '任意语言的服务，由 Cloud Server 统一管理',
+            fNodeName: '节点名称', fServer: 'Server 地址', fNodePort: '节点端口',
+            modAiDesc: '智能体、知识库、数字员工', modPluginDesc: '管理端能力扩展', modDataDesc: '把 @Erupt 模型绑定到任意数据源', modProDesc: '商业模块 — 以注释形式加入依赖',
+            modAll: '全部', modAi: 'AI', modPlugin: '插件', modData: '数据源', modPro: '商业',
+            modSearch: '搜索模块…', modEmpty: '没有匹配的模块',
             navWebsite: '官网', navDocs: '文档', navSkill: '零代码构建', langToggle: 'EN',
             logoSub: '项目生成器',
             heroEyebrow: '项目生成器',
             titleL1: '三分钟，启动你的',
             titleHl: 'Erupt 项目。',
-            heroTitle: '三分钟，启动你的 <span class="hl">Erupt</span> 项目。',
-            heroSub: '生成一个开箱即用的 Erupt + Spring Boot 项目。选择技术栈、勾选模块，下载即可运行。',
+            heroTitle: '一键创建<br><span class="hl">模型驱动的企业应用</span>',
+            heroSub: '生成开箱即用的 Erupt Spring Boot 应用，或 Java、Python、Go、TypeScript、PHP、.NET、Rust、Ruby、Swift 的 Cloud 节点。选择、预览、下载即可运行。',
             bullet1: '零样板代码 — 注解一个 Java 类，即得完整 CRUD 管理界面',
             bullet2: 'Spring Boot 3 · JPA · 开箱即用的多数据库支持',
             bullet3: '可扩展模块生态：AI、终端、定时任务、WebSocket 等',
@@ -1664,6 +1183,16 @@
             cloudNodeTip: '生成向本服务注册的 Node 节点项目',
         },
     };
+
+    // ready-made apps built on erupt — separate repositories under github.com/erupt-io, linked rather than added to the build
+    const APPS = [
+        {id: 'erupt-pm', name: 'Project Management', icon: '📋', desc: 'Projects, iterations, tasks, milestones — as board, gantt, calendar or table', descZh: '项目、迭代、任务与里程碑，看板 / 甘特 / 日历 / 表格多视图'},
+        {id: 'erupt-talent', name: 'Recruiting', icon: '🧑‍💼', desc: 'Resumes, screening, interviews, offers with approval and onboarding', descZh: '简历、筛选、面试、Offer 审批到入职的招聘全流程'},
+        {id: 'erupt-k8s-dashboard', name: 'Kubernetes Dashboard', icon: '☸️', desc: 'Pods, deployments, services, logs, web terminal and YAML editing', descZh: 'Pod、Deployment、Service、日志、Web 终端与 YAML 编辑'},
+        {id: 'erupt-wechat', name: 'WeChat Official Account', icon: '💬', desc: 'Fans, menus, materials, mass messages and customer service', descZh: '公众号后台：粉丝、菜单、素材、群发与客服'},
+        {id: 'erupt-miniapp', name: 'WeChat Mini Program', icon: '📱', desc: 'Users, subscribe messages, content checks, live rooms and stats', descZh: '小程序后台：用户、订阅消息、内容审核、直播与统计'},
+        {id: 'erupt-sms', name: 'SMS', icon: '✉️', desc: 'Multi-vendor channels, templates, send logs, codes and a blacklist', descZh: '多厂商短信：通道、模板、发送日志、验证码与黑名单'},
+    ];
 
     const MODULES = [
         {id: 'erupt-ai', ai: true, name: 'AI Harness', icon: '🤖', desc: 'Integrate 50+ LLMs: GPT, Claude, DeepSeek…', descZh: '集成 50+ 大模型：GPT、Claude、DeepSeek…'},
@@ -1805,9 +1334,38 @@
                 group: 'com.example', artifact: 'demo', name: 'Demo',
                 pkg: 'com.example.demo', version: '0.0.1-SNAPSHOT',
                 sample: true,
+                kind: 'app', nodeLang: 'java-spring', server: 'http://localhost:8080', nodePort: '9090',
             });
 
             const selectedMods = ref([]);
+
+            // modules: one category at a time plus a search box, so 34 modules fit in a few rows
+            const MOD_CATS = [{k: 'all', t: 'modAll'}, {k: 'ai', t: 'modAi'}, {k: 'plugin', t: 'modPlugin'}, {k: 'data', t: 'modData'}, {k: 'pro', t: 'modPro'}];
+            const modCat = ref('all');
+            const modQ = ref('');
+            const catOf = m => m.ai ? 'ai' : m.data ? 'data' : m.pro ? 'pro' : 'plugin';
+            const inCat = (m, k) => k === 'all' || catOf(m) === k;
+            function catCount(k) {
+                const all = MODULES.filter(m => inCat(m, k));
+                const on = all.filter(m => selectedMods.value.includes(m.id)).length;
+                return on ? `${on}/${all.length}` : all.length;
+            }
+            // the filtered list split by category, in tab order; "all" shows every group under its own heading
+            const shownGroups = computed(() => MOD_CATS.filter(c => c.k !== 'all')
+                .map(c => ({...c, mods: shownMods.value.filter(m => catOf(m) === c.k)}))
+                .filter(g => g.mods.length));
+            // JVM cloud nodes: one language tile, a row of frameworks (Spring Boot, lite, Solon, Quarkus, …)
+            const JVM_FWS = NODE_LANGS.filter(l => l.fw);
+            const isJvmNode = computed(() => form.nodeLang.startsWith('java-'));
+            let lastJvm = 'java-spring';
+            watch(() => form.nodeLang, v => { if (v.startsWith('java-')) lastJvm = v; });
+            function pickJvm() { if (!isJvmNode.value) form.nodeLang = lastJvm; }
+
+            const shownMods = computed(() => {
+                const q = modQ.value.trim().toLowerCase();
+                return MODULES.filter(m => inCat(m, modCat.value) &&
+                    (!q || [m.id, m.name, m.desc, m.descZh].some(x => x.toLowerCase().includes(q))));
+            });
             const pkgEdited = ref(false);
             const nameEdited = ref(false);
 
@@ -1837,6 +1395,8 @@
             }
 
             // ── module toggle ─────────────────────────────
+            function openLink(url) { window.open(url, '_blank', 'noopener'); }
+
             function toggleMod(id) {
                 const mod = MODULES.find(m => m.id === id);
                 const arr = selectedMods.value;
@@ -1853,8 +1413,6 @@
                     arr.push(id);
                 }
             }
-
-            function openLink(url) { window.open(url, '_blank', 'noopener'); }
 
             // ── template renderers ────────────────────────
             function renderPom() {
@@ -2158,7 +1716,9 @@ Erupt is a low-code framework that turns annotated Java classes into full-featur
             }
 
             // ── file map ──────────────────────────────────
-            const previewFiles = computed(() => {
+            const previewFiles = computed(() => form.kind === 'node' ? nodeFiles() : appFiles());
+
+            function appFiles() {
                 const pp = pkgToPath(form.pkg);
                 const cls = toClass(form.name) + 'Application';
                 const bf = form.build === 'maven' ? 'pom.xml' : 'build.gradle.kts';
@@ -2174,7 +1734,7 @@ Erupt is a low-code framework that turns annotated Java classes into full-featur
                 if (form.sample)
                     files[`src/main/java/${pp}/model/SampleModel.java`] = renderSample();
                 return files;
-            });
+            }
 
             // ── tree builder ──────────────────────────────
             const treeEntries = computed(() => {
@@ -2204,7 +1764,16 @@ Erupt is a low-code framework that turns annotated Java classes into full-featur
                 if (path.endsWith('.yml')) return 'yaml';
                 if (path.endsWith('.kts')) return 'kotlin';
                 if (path.endsWith('.md')) return 'markdown';
-                if (path.endsWith('.js')) return 'javascript';
+                if (path.endsWith('.js') || path.endsWith('.ts')) return 'javascript';
+                if (path.endsWith('.py')) return 'python';
+                if (path.endsWith('.go') || path === 'go.mod') return 'go';
+                if (path.endsWith('.php')) return 'php';
+                if (path.endsWith('.cs') || path.endsWith('.csproj')) return path.endsWith('.cs') ? 'csharp' : 'xml';
+                if (path.endsWith('.rs')) return 'rust';
+                if (path.endsWith('.rb') || path === 'Gemfile') return 'ruby';
+                if (path.endsWith('.swift')) return 'swift';
+                if (path.endsWith('.toml')) return 'ini';
+                if (path.endsWith('.json')) return 'json';
                 if (path === 'Dockerfile') return 'dockerfile';
                 return 'plaintext';
             }
@@ -2219,8 +1788,19 @@ Erupt is a low-code framework that turns annotated Java classes into full-featur
                 }
             });
 
-            function openExplore() {
-                modal.activeFile = Object.keys(previewFiles.value)[0];
+            const heroFile = computed(() => {
+                const keys = Object.keys(previewFiles.value);
+                // the model is the interesting part: show it when there is one, else the entry file
+                return keys.find(k => /(SampleModel|NodeDemo|Todo)\.java$/.test(k))
+                    || keys.find(k => /(Application|main|Main|Program|app)\.(java|kt|py|go|ts|php|cs|rs|rb|swift)$/.test(k)) || keys[0];
+            });
+            const heroCode = computed(() => {
+                const code = (previewFiles.value[heroFile.value] || '').split('\n').filter(l => !/^(import|using|package|from|require|use |#!)/.test(l.trim())).join('\n').trim().split('\n').slice(0, 11).join('\n');
+                try { return hljs.highlight(code, {language: hlLang(heroFile.value)}).value; } catch { return hljs.highlightAuto(code).value; }
+            });
+
+            function openExplore(path) {
+                modal.activeFile = path || Object.keys(previewFiles.value)[0];
                 modal.open = true;
             }
 
@@ -2267,19 +1847,22 @@ Erupt is a low-code framework that turns annotated Java classes into full-featur
             }
 
             async function generate() {
+                const node = form.kind === 'node', name = node ? nodeArtifact() : form.artifact;
                 const zip = new JSZip();
-                const folder = zip.folder(form.artifact);
+                const folder = zip.folder(name);
                 Object.entries(previewFiles.value).forEach(([path, content]) => folder.file(path, content));
-                if (form.build === 'maven')  await addMavenWrapper(folder);
-                if (form.build === 'gradle') await addGradleWrapper(folder, form.artifact);
+                // build wrappers only for JVM projects; the lite node always builds with Maven
+                const build = !node || form.nodeLang === 'java-spring' ? form.build : form.nodeLang.startsWith('java-') ? 'maven' : '';
+                if (build === 'maven')  await addMavenWrapper(folder);
+                if (build === 'gradle') await addGradleWrapper(folder, name);
                 const blob = await zip.generateAsync({type: 'blob', platform: 'UNIX'});
-                saveAs(blob, `${form.artifact}.zip`);
+                saveAs(blob, `${name}.zip`);
             }
 
             // ── cloud node project ────────────────────────
             // Worker node that registers to erupt-cloud-server (docs.erupt.xyz/modules/cloud-node).
             // Minimal dependencies by design: no erupt-spring-boot-starter / erupt-admin / erupt-security.
-            function nodeArtifact() { return `${form.artifact || 'demo'}-node`; }
+            function nodeArtifact() { return `${(form.artifact || 'demo').toLowerCase().replace(/[^a-z0-9-]/g, '')}-node`; }
             function nodeName() { return toClass(form.name || 'Demo') + 'Node'; }
 
             function renderNodePom() {
@@ -2367,7 +1950,7 @@ ${DB[form.db].gradle}
 
             function renderNodeYml() {
                 const dbName = `${(form.artifact || 'demo').replaceAll('-', '_')}_node`;
-                const nodePort = (parseInt(form.port) || 8080) + 1;
+                const nodePort = parseInt(form.nodePort) || 9090;
                 return `${DB[form.db].yml(dbName)}
 
 server:
@@ -2376,7 +1959,7 @@ server:
 erupt:
   cloud-node:
     # erupt-cloud-server addresses — the main project of this generator
-    server-addresses: ['http://localhost:${form.port || 8080}']
+    server-addresses: ['${(form.server || 'http://localhost:8080').replace(/[^\w.:/\-]/g, '')}']
     # access-token — create the node in the server console to get it
     access-token: <ACCESS_TOKEN>
     # must match the node name configured on the server
@@ -2464,27 +2047,31 @@ Docs: [docs.erupt.xyz/modules/cloud-node](https://docs.erupt.xyz/modules/cloud-n
 `;
             }
 
-            async function generateCloudNode() {
-                // a node needs a server — make sure the main project ships erupt-cloud-server
-                if (!selectedMods.value.includes('erupt-cloud-server')) toggleMod('erupt-cloud-server');
-                const pp = pkgToPath(form.pkg);
-                const cls = nodeName() + 'Application';
-                const files = {
-                    [form.build === 'maven' ? 'pom.xml' : 'build.gradle.kts']: form.build === 'maven' ? renderNodePom() : renderNodeGradle(),
-                    'src/main/resources/application.yml': renderNodeYml(),
-                    [`src/main/java/${pp}/${cls}.java`]: renderNodeApp(),
-                    '.gitignore': renderGitignore(),
-                    'README.md': renderNodeReadme(),
-                };
-                if (form.sample)
-                    files[`src/main/java/${pp}/model/NodeDemo.java`] = renderNodeSample();
-                const zip = new JSZip();
-                const folder = zip.folder(nodeArtifact());
-                Object.entries(files).forEach(([path, content]) => folder.file(path, content));
-                if (form.build === 'maven')  await addMavenWrapper(folder);
-                if (form.build === 'gradle') await addGradleWrapper(folder, nodeArtifact());
-                const blob = await zip.generateAsync({type: 'blob', platform: 'UNIX'});
-                saveAs(blob, `${nodeArtifact()}.zip`);
+            // cloud node project in the chosen language; user input is reduced to safe characters before it lands in code
+            function nodeFiles() {
+                if (form.nodeLang === 'java-spring') {
+                    const pp = pkgToPath(form.pkg);
+                    const files = {
+                        [form.build === 'maven' ? 'pom.xml' : 'build.gradle.kts']: form.build === 'maven' ? renderNodePom() : renderNodeGradle(),
+                        'src/main/resources/application.yml': renderNodeYml(),
+                        [`src/main/java/${pp}/${nodeName()}Application.java`]: renderNodeApp(),
+                        '.gitignore': renderGitignore(),
+                        'README.md': renderNodeReadme(),
+                    };
+                    if (form.sample) files[`src/main/java/${pp}/model/NodeDemo.java`] = renderNodeSample();
+                    return files;
+                }
+                const lang = NODE_LANGS.find(l => l.k === form.nodeLang);
+                return lang.files({
+                    name: nodeName(),
+                    artifact: nodeArtifact(),
+                    server: (form.server || 'http://localhost:8080').replace(/[^\w.:/\-]/g, ''),
+                    port: parseInt(form.nodePort) || 9090,
+                    pkg: (form.pkg || 'com.example.demo').replace(/[^\w.]/g, ''),
+                    cls: nodeName() + 'Application',
+                    ver: ERUPT_VER,
+                    java: form.java,
+                });
             }
 
             onMounted(() => {
@@ -2495,12 +2082,13 @@ Docs: [docs.erupt.xyz/modules/cloud-node](https://docs.erupt.xyz/modules/cloud-n
             });
 
             return {
-                ERUPT_VER, BOOT_VER, MODULES, DB, JAVA_VERSIONS, LOCALES, VIZ,
+                ERUPT_VER, BOOT_VER, MODULES, APPS, DB, JAVA_VERSIONS, LOCALES, VIZ, NODE_LANGS, MOD_CATS,
+                modCat, modQ, catCount, shownMods, shownGroups, heroFile, heroCode, JVM_FWS, isJvmNode, pickJvm, nodeName, nodeArtifact,
                 form, selectedMods, pkgEdited, nameEdited,
                 modal, previewFiles, treeEntries,
                 locale, t, toggleLang,
                 syncPkg, onArtifact, toggleMod, openLink,
-                openExplore, copyFile, generate, generateCloudNode, highlightedContent,
+                openExplore, copyFile, generate, highlightedContent,
             };
         }
     }).use(ElementPlus).mount('#app');

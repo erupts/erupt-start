@@ -19,7 +19,8 @@ Serve over HTTP rather than opening `index.html` directly — `generate()` fetch
 ## Files
 
 - `index.html` — the whole app: CSS (top `<style>`), Vue template (`#app`), and the app script (`createApp({setup(){...}})`). ~2500 lines, deliberately single-file.
-- `viz.js` — hover illustrations for module cards. An IIFE that builds one inline SVG string per module id and exposes `window.VIZ`; the template renders it with `v-html="VIZ[m.id]"`.
+- `nodes.js` — Erupt Cloud node templates. Exposes `window.NODE_LANGS`; each entry's `files(ctx)` returns `{path: content}`. JVM entries carry `fw: true` and are shown as one Java / Kotlin tile with a framework row: Spring Boot (rendered by the `renderNode*()` functions in `index.html`, no `files`), no framework (`erupt-cloud-node-lite`), Solon, Quarkus, Micronaut, Vert.x, Ktor and Servlet — framework versions follow erupt-cloud's own build. The other languages (Python, Go, TypeScript, PHP, .NET, Rust, Ruby, Swift) use the erupt-sdk packages.
+- `viz.js` — hover illustrations for module cards; exposes `window.VIZ`, rendered with `v-html="VIZ[m.id]"`.
 - `assets/` — Maven and Gradle wrapper files copied verbatim into generated ZIPs (`mvnw`, `gradlew`, `gradle-wrapper.jar`, `*.properties`).
 - `logo.svg` — favicon.
 
@@ -29,7 +30,7 @@ Data tables at the top of the script drive everything:
 
 - `ERUPT_VER` / `BOOT_VER` — version constants. Bumping Erupt is a one-line change to `ERUPT_VER` (see commit "Bump ERUPT_VER to 2.1.1").
 - `LANG` — en/zh UI strings. Every visible string goes through `t(key)`; module descriptions use `desc` / `descZh` on the module itself. Locale is auto-detected from `navigator.language` and toggled by the header button.
-- `MODULES` — the module catalogue. Flags control grouping and behavior: `ai: true` (AI section), `data: true` (data-source section), `pro: true` + `proUrl` (commercial; emitted as a *commented* dependency and links to pricing), `requires: '<id>'` (dependency chain, resolved recursively in `toggleMod` — selecting `erupt-ai-staff` pulls in `erupt-ai-claw` then `erupt-ai`; deselecting cascades the other way), `tag` (NEW / PRO badge). Adding a module = adding one entry here plus a `VIZ['<id>']` sketch in `viz.js`.
+- `MODULES` — the module catalogue. Flags control grouping and behavior: `ai: true` (AI section), `data: true` (data-source section), `pro: true` + `proUrl` (commercial; emitted as a *commented* dependency and links to pricing), `requires: '<id>'` (dependency chain, resolved recursively in `toggleMod` — selecting `erupt-ai-staff` pulls in `erupt-ai-claw` then `erupt-ai`; deselecting cascades the other way), `tag` (NEW / PRO badge). Adding a module = adding one entry here.
 - `DB` — per-database `mvn` / `gradle` dependency snippets and a `yml(artifact)` datasource template.
 - `JAVA_VERSIONS`, `LOCALES` — dropdown options.
 
@@ -40,10 +41,16 @@ Generation pipeline inside `setup()`:
 3. `previewFiles` (computed) maps output path → rendered content. This single map feeds **both** the preview dialog (tree + highlighted source) and the ZIP, so preview and download can never diverge.
 4. `generate()` writes `previewFiles` into a JSZip folder, appends the wrapper from `assets/` (`addMavenWrapper` / `addGradleWrapper` set the unix executable bit), and calls `saveAs`.
 
-A parallel set of `renderNode*()` functions plus `generateCloudNode()` produces a minimal **erupt-cloud-node** worker project (shown only when `erupt-cloud-server` is selected). It intentionally omits `erupt-spring-boot-starter` / `erupt-admin` / `erupt-security`.
+`form.kind` switches the whole page between an **Erupt app** and a **Cloud node** (step 00). For a node, `previewFiles` returns `nodeFiles()`: the Spring Boot node comes from the `renderNode*()` functions (no `erupt-spring-boot-starter` / `erupt-admin` / `erupt-security`), every other language from `NODE_LANGS`. User input is reduced to safe characters before it is interpolated into generated code. Configuration and modules are shown only for an app (configuration also for the Spring Boot node).
+
+Modules are shown one category at a time (`MOD_CATS` tabs: all / AI / plugins / data / pro) with a search box, as compact tiles; the `VIZ` sketch still pops up on hover.
 
 When adding a new generated file: write a `renderX()` and register it in `previewFiles`. When adding a new form field: add to `form`, wire it in the template, and consume it in the relevant renderer.
 
 ## Visual style
 
-The page uses the "Erupt Raft" neo-brutalist cream-paper style: 2px ink borders, hard offset shadows (`--shadow: 4px 4px 0 var(--ink)`), zero border-radius, candy accent palette (`--cyan`, `--pink`, `--yellow`, `--green`, `--purple`). CSS custom properties are declared at the top of the `<style>` block; Element Plus is re-themed through the `--el-color-primary*` overrides there. `viz.js` uses the same palette constants (`I`, `C`, `P`, `Y`, `G`, `V`) and animation classes (`ap` pop-in, `ad` draw, `ar` rise, `af` flow, etc.) whose keyframes live in `index.html`. The `erupt-raft` skill documents this design language; use it for any new UI.
+The page follows erupt.xyz's Playful-Brutalist language: white paper, a bounded 1200px frame with 2px ink side borders, a graph-paper intro, 2px ink lines between rows, hard offset shadows (`--shadow: 4px 4px 0 var(--ink)`), zero border-radius, cyan (`--cyan`) as the primary / selected colour with ink text. Tokens live at the top of the `<style>` block; Element Plus is re-themed through the `--el-color-primary*` overrides there.
+
+Layout: a sticky header, an intro row, then a two-column workspace — the numbered steps (project type → configuration → metadata → modules → ready-made apps) on the left, and a sticky "Your project" panel on the right with the summary, selected modules, the live file tree from `previewFiles` (click a file to open it in the preview dialog) and the Generate / Explore buttons. Commercial modules are only marked in the module list; their purchase links go into the generated build file as comments.
+
+`viz.js` provides the hover sketches on module cards (palette constants `I`, `C`, `P`, `Y`, `G`, `V`; animation classes `ap`, `ad`, `ar`, `af`… with keyframes in `index.html`).
